@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:geek_chat/i18n/translations.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:get/route_manager.dart';
 import 'package:window_manager/window_manager.dart';
@@ -40,6 +43,35 @@ class GeekerChat extends StatelessWidget {
         name: '/404',
         page: () => const UnkownRoutePage(),
       ),
+      theme: FlexThemeData.light(
+        scheme: FlexScheme.materialBaseline,
+        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+        blendLevel: 7,
+        subThemesData: const FlexSubThemesData(
+          blendOnLevel: 10,
+          blendOnColors: false,
+          useTextTheme: true,
+          useM2StyleDividerInM3: true,
+        ),
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        useMaterial3: true,
+        swapLegacyOnMaterial3: true,
+      ),
+      darkTheme: FlexThemeData.dark(
+        scheme: FlexScheme.materialBaseline,
+        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+        blendLevel: 13,
+        subThemesData: const FlexSubThemesData(
+          blendOnLevel: 20,
+          useTextTheme: true,
+          useM2StyleDividerInM3: true,
+        ),
+      ),
+      themeMode: ThemeMode.system,
+      locale: const Locale('zh'),
+      translations: GeekChatTranslations(),
+      builder: EasyLoading.init(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
