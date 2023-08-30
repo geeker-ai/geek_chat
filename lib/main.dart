@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/i18n/translations.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
-import 'package:get/route_manager.dart';
+import 'package:geek_chat/repository/localstore_repository.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:geek_chat/routers.dart';
 
@@ -23,12 +26,14 @@ void main() async {
       await windowManager.focus();
     });
   }
-  initServices();
+  // print("system locale: ${Get.deviceLocale}");
+  await GetStorage.init();
+  await initServices();
   runApp(const GeekerChat());
 }
 
 initServices() async {
-  // TODO
+  // TODO zh_Hans_CN, en_US
 }
 
 class GeekerChat extends StatelessWidget {
@@ -36,6 +41,9 @@ class GeekerChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(LocalStoreRepository());
+    Get.put(SettingsController());
+
     return GetMaterialApp(
       initialRoute: '/mobile',
       getPages: routers,
@@ -68,7 +76,7 @@ class GeekerChat extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.system,
-      locale: const Locale('zh'),
+      locale: const Locale('zh_Hans_CN'),
       translations: GeekChatTranslations(),
       builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,

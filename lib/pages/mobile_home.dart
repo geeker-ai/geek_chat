@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/pages/settings_page.dart';
 import 'package:get/get.dart';
 
 class MobileHomePage extends StatelessWidget {
@@ -7,7 +8,7 @@ class MobileHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: Text('Chat'.tr),
       ),
       drawer: Drawer(
         elevation: 8,
@@ -16,17 +17,17 @@ class MobileHomePage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'GeekerChat',
-                      style: TextStyle(
+                      'appTitle'.tr,
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     )
                   ],
@@ -40,9 +41,18 @@ class MobileHomePage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     children: [
                       ListTile(
-                        title: const Text('Chat List'),
+                        title: Text('Chat'.tr),
                         leading: const Icon(Icons.forum),
-                        onTap: () {},
+                        onTap: () {
+                          Get.back();
+                        },
+                      ),
+                      ListTile(
+                        title: Text('Settings'.tr),
+                        leading: const Icon(Icons.settings),
+                        onTap: () {
+                          Get.toNamed('/settings');
+                        },
                       ),
                     ],
                   ),

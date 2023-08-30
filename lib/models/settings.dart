@@ -25,7 +25,7 @@ class SettingsModel {
       this.showTokenCount = false,
       this.showModelName = true,
       this.theme = ThemeMode.system,
-      this.language = 'en',
+      this.language = 'en_US',
       this.fontSize = '13',
       this.license = '',
       this.isActived = false,

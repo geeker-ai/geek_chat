@@ -98,7 +98,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
+# flutter pub run flutter_launcher_icons
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
