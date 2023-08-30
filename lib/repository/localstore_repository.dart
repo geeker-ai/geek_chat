@@ -11,13 +11,14 @@ class LocalStoreRepository extends GetxService {
 
   SettingsModel getSettings() {
     String jsonstr = '';
+    SettingsModel settings = SettingsModel();
     if (store.hasData(_settingsKey)) {
       jsonstr = store.read(_settingsKey);
-    }
-    SettingsModel settings = SettingsModel();
-    if (jsonstr.isNotEmpty) {
       settings.settingsJson = jsonDecode(jsonstr);
+    } else {
+      settings.language = Get.deviceLocale.toString();
     }
+
     return settings;
   }
 
