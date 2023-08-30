@@ -27,25 +27,28 @@ class SettingsPage extends StatelessWidget {
                 RadioListTile(
                     title: Text('System'.tr),
                     value: ThemeMode.system,
-                    groupValue: controller.settingsEdit.theme,
+                    groupValue: controller.settings.theme,
                     onChanged: (value) {
-                      controller.settingsEdit.theme = ThemeMode.system;
+                      controller.settings.theme = ThemeMode.system;
+                      // controller.changeSettings();
                       controller.update();
                     }),
                 RadioListTile(
                     title: Text('Dark'.tr),
                     value: ThemeMode.dark,
-                    groupValue: controller.settingsEdit.theme,
+                    groupValue: controller.settings.theme,
                     onChanged: (value) {
-                      controller.settingsEdit.theme = ThemeMode.dark;
+                      controller.settings.theme = ThemeMode.dark;
+                      // controller.changeSettings();
                       controller.update();
                     }),
                 RadioListTile(
                     title: Text('Light'.tr),
                     value: ThemeMode.light,
-                    groupValue: controller.settingsEdit.theme,
+                    groupValue: controller.settings.theme,
                     onChanged: (value) {
-                      controller.settingsEdit.theme = ThemeMode.light;
+                      controller.settings.theme = ThemeMode.light;
+                      // controller.changeSettings();
                       controller.update();
                     }),
                 const Divider(),
@@ -54,22 +57,26 @@ class SettingsPage extends StatelessWidget {
                   title: Text('Language'.tr,
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
-                RadioListTile(
-                    title: const Text('Simplified Chinese'),
-                    value: 'zh_Hans_CN',
-                    groupValue: controller.settingsEdit.language,
-                    onChanged: (value) {
-                      controller.settingsEdit.language = 'zh_Hans_CN';
-                      controller.update();
-                    }),
-                RadioListTile(
-                    title: const Text('US English'),
-                    value: 'en_US',
-                    groupValue: controller.settingsEdit.language,
-                    onChanged: (value) {
-                      controller.settingsEdit.language = 'en_US';
-                      controller.update();
-                    })
+                for (var element in controller.locales)
+                  RadioListTile(
+                      title: Text("${element['name']}"),
+                      value: element['locale'],
+                      groupValue: controller.settings.language,
+                      onChanged: (value) {
+                        controller.settings.language = "${element['locale']}";
+                        // controller.changeSettings();
+                        controller.update();
+                      })
+
+                // RadioListTile(
+                //     title: const Text('US English'),
+                //     value: 'en_US',
+                //     groupValue: controller.settings.language,
+                //     onChanged: (value) {
+                //       controller.settings.language = 'en_US';
+                //       controller.changeSettings();
+                //       controller.update();
+                //     })
               ],
             );
           },
