@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geek_chat/pages/settings_page.dart';
 import 'package:get/get.dart';
 
 class MobileHomePage extends StatelessWidget {

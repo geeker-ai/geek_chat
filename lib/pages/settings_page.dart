@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/models/theme.dart';
 import 'package:get/get.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -24,33 +25,16 @@ class SettingsPage extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                RadioListTile(
-                    title: Text('System'.tr),
-                    value: ThemeMode.system,
-                    groupValue: controller.settings.theme,
-                    onChanged: (value) {
-                      controller.settings.theme = ThemeMode.system;
-                      // controller.changeSettings();
-                      controller.update();
-                    }),
-                RadioListTile(
-                    title: Text('Dark'.tr),
-                    value: ThemeMode.dark,
-                    groupValue: controller.settings.theme,
-                    onChanged: (value) {
-                      controller.settings.theme = ThemeMode.dark;
-                      // controller.changeSettings();
-                      controller.update();
-                    }),
-                RadioListTile(
-                    title: Text('Light'.tr),
-                    value: ThemeMode.light,
-                    groupValue: controller.settings.theme,
-                    onChanged: (value) {
-                      controller.settings.theme = ThemeMode.light;
-                      // controller.changeSettings();
-                      controller.update();
-                    }),
+                for (GCThemeMode themeMode in controller.themeModes)
+                  RadioListTile(
+                      title: Text(themeMode.name.tr),
+                      value: themeMode.themeMode,
+                      groupValue: controller.settings.theme,
+                      onChanged: (value) {
+                        controller.settings.theme = themeMode.themeMode;
+                        // controller.changeSettings();
+                        controller.update();
+                      }),
                 const Divider(),
                 ListTile(
                   dense: true,
@@ -66,17 +50,18 @@ class SettingsPage extends StatelessWidget {
                         controller.settings.language = "${element['locale']}";
                         // controller.changeSettings();
                         controller.update();
-                      })
-
-                // RadioListTile(
-                //     title: const Text('US English'),
-                //     value: 'en_US',
-                //     groupValue: controller.settings.language,
-                //     onChanged: (value) {
-                //       controller.settings.language = 'en_US';
-                //       controller.changeSettings();
-                //       controller.update();
-                //     })
+                      }),
+                const Divider(),
+                Row(
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton(child: const Text("Save"), onPressed: () {}),
+                    const SizedBox(width: 30.0),
+                    OutlinedButton(
+                        child: const Text("Cancel"), onPressed: () {}),
+                  ],
+                ),
               ],
             );
           },

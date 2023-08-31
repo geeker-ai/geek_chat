@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/models/settings.dart';
+import 'package:geek_chat/models/theme.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:get/get.dart';
 
@@ -21,10 +22,11 @@ class SettingsController extends GetxController {
     {'name': 'Chinese', 'locale': 'en_US'},
     {'name': 'English', 'locale': 'zh_Hans_CN'}
   ];
-  final themeModels = [
-    {'name': 'System', 'mode': ThemeMode.system},
-    {'name': 'Dark', 'mode': ThemeMode.dark},
-    {'name': 'Light', 'mode': ThemeMode.light}
+
+  final themeModes = [
+    GCThemeMode(name: 'System', themeMode: ThemeMode.system),
+    GCThemeMode(name: 'Dark', themeMode: ThemeMode.dark),
+    GCThemeMode(name: 'Light', themeMode: ThemeMode.light),
   ];
 
   @override
