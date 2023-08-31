@@ -19,6 +19,7 @@ class GeekChatTranslations extends Translations {
           "English": "English",
           "Save": "Save",
           "Cancel": "Cancel",
+          "OpenAI Settings": "OpenAI Settings"
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -36,6 +37,7 @@ class GeekChatTranslations extends Translations {
           "English": "英文",
           "Save": "保存",
           "Cancel": "取消",
+          "OpenAI Settings": "OpenAI 设置",
         }
       };
 }
