@@ -8,6 +8,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SettingsController.to.resetSettings();
     return Scaffold(
         appBar: AppBar(
           title: Text('Settings'.tr),
@@ -28,12 +29,13 @@ class SettingsPage extends StatelessWidget {
                 for (GCThemeMode themeMode in controller.themeModes)
                   RadioListTile(
                       title: Text(themeMode.name.tr),
-                      value: themeMode.themeMode,
+                      value: themeMode.name,
                       groupValue: controller.settings.theme,
                       onChanged: (value) {
-                        controller.settings.theme = themeMode.themeMode;
+                        controller.settings.theme = themeMode.name;
                         // controller.changeSettings();
                         controller.update();
+                        print(SettingsController.to.settings.theme);
                       }),
                 const Divider(),
                 ListTile(
@@ -43,7 +45,7 @@ class SettingsPage extends StatelessWidget {
                 ),
                 for (var element in controller.locales)
                   RadioListTile(
-                      title: Text("${element['name']}"),
+                      title: Text("${element['name']}".tr),
                       value: element['locale'],
                       groupValue: controller.settings.language,
                       onChanged: (value) {
@@ -56,10 +58,17 @@ class SettingsPage extends StatelessWidget {
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    OutlinedButton(child: const Text("Save"), onPressed: () {}),
+                    OutlinedButton(
+                        child: Text("Save".tr),
+                        onPressed: () {
+                          controller.save();
+                        }),
                     const SizedBox(width: 30.0),
                     OutlinedButton(
-                        child: const Text("Cancel"), onPressed: () {}),
+                        child: Text("Cancel".tr),
+                        onPressed: () {
+                          Get.back();
+                        }),
                   ],
                 ),
               ],

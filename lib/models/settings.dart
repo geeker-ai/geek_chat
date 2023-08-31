@@ -1,8 +1,6 @@
 // import 'dart:convert';
 // import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 class SettingsModel {
   String provider;
   String apiKey;
@@ -10,7 +8,7 @@ class SettingsModel {
   bool showWordCount;
   bool showTokenCount;
   bool showModelName;
-  ThemeMode theme;
+  String theme;
   String language;
   String fontSize;
   String license;
@@ -24,7 +22,7 @@ class SettingsModel {
       this.showWordCount = false,
       this.showTokenCount = false,
       this.showModelName = true,
-      this.theme = ThemeMode.system,
+      this.theme = 'System',
       this.language = 'en_US',
       this.fontSize = '13',
       this.license = '',
@@ -60,9 +58,4 @@ class SettingsModel {
         "isActived": isActived,
         "autoSyncEnabled": autoSyncEnabled
       };
-
-  ThemeMode get getTheme => theme;
-  set setTheme(ThemeMode theme) {
-    this.theme = theme;
-  }
 }

@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:geek_chat/controller/chat_controller.dart';
+import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/i18n/translations.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
@@ -14,6 +17,14 @@ import 'package:geek_chat/routers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await SystemChrome.setPreferredOrientations(
+  //   [
+  //     DeviceOrientation.portraitUp, // 竖屏 Portrait 模式
+  //     DeviceOrientation.portraitDown,
+  //     // DeviceOrientation.landscapeLeft, // 横屏 Landscape 模式
+  //     // DeviceOrientation.landscapeRight,
+  //   ],
+  // );
   if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
@@ -27,7 +38,7 @@ void main() async {
     });
   }
   // print("system locale: ${Get.deviceLocale}");
-  await GetStorage.init();
+  await GetStorage.init('geekchat');
   await initServices();
   runApp(const GeekerChat());
 }
@@ -43,9 +54,11 @@ class GeekerChat extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(LocalStoreRepository());
     Get.put(SettingsController());
+    Get.put(MainController());
+    Get.put(ChatController());
 
     return GetMaterialApp(
-      initialRoute: '/mobile',
+      initialRoute: '/',
       getPages: routers,
       unknownRoute: GetPage(
         name: '/404',
@@ -75,7 +88,7 @@ class GeekerChat extends StatelessWidget {
           useM2StyleDividerInM3: true,
         ),
       ),
-      themeMode: SettingsController.to.settings.theme,
+      themeMode: SettingsController.to.getThemeMode(),
       locale: Locale(SettingsController.to.settings.language),
       translations: GeekChatTranslations(),
       builder: EasyLoading.init(),

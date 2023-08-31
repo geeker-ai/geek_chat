@@ -17,3 +17,4 @@ samples, guidance on mobile development, and a full API reference.
 
 ### Docs
 - https://isar.dev/zh/recipes/string_ids.html
+- https://codewithandrea.com/articles/flutter-responsive-layouts-split-view-drawer-navigation/

@@ -15,12 +15,12 @@ class SettingsController extends GetxController {
 
   final LocalStoreRepository _localStoreRepository = Get.find();
 
-  var _oriTheme = ThemeMode.system;
+  var _oriTheme = 'System';
   var _oriLanguage = 'en_US';
 
   final locales = [
-    {'name': 'Chinese', 'locale': 'en_US'},
-    {'name': 'English', 'locale': 'zh_Hans_CN'}
+    {'name': 'Simplified Chinese', 'locale': 'zh_Hans_CN'},
+    {'name': 'English', 'locale': 'en_US'}
   ];
 
   final themeModes = [
@@ -31,24 +31,37 @@ class SettingsController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     resetSettings();
+    super.onInit();
   }
 
   void resetSettings() {
     settings.settingsJson = _localStoreRepository.getSettings().toJson();
+    // print(_localStoreRepository.getSettings().toJson());
     _oriTheme = settings.theme;
     _oriLanguage = settings.language;
   }
 
+  ThemeMode getThemeMode() {
+    ThemeMode themeMode = ThemeMode.system;
+    for (GCThemeMode gcThemeMode in themeModes) {
+      if (gcThemeMode.name == settings.theme) {
+        themeMode = gcThemeMode.themeMode;
+      }
+    }
+    // print(themeMode);
+    return themeMode;
+  }
+
   void save() {
-    settings.settingsJson = settingsEdit.toJson();
+    settings.settingsJson = settings.toJson();
     _localStoreRepository.saveSettings(settings);
+    changeSettings();
   }
 
   void changeSettings() async {
     if (settings.theme != _oriTheme) {
-      setThemeMode(settings.theme);
+      setThemeMode(getThemeMode());
     }
     if (settings.language != _oriLanguage) {
       setLocale(settings.language);
