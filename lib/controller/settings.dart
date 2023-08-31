@@ -42,6 +42,16 @@ class SettingsController extends GetxController {
     _oriLanguage = settings.language;
   }
 
+  String get locale {
+    String currentLocale = "${locales[0]['locale']}";
+    for (var element in locales) {
+      if ("${element['locale']}" == settings.language) {
+        currentLocale = "${element['name']}";
+      }
+    }
+    return currentLocale;
+  }
+
   ThemeMode getThemeMode() {
     ThemeMode themeMode = ThemeMode.system;
     for (GCThemeMode gcThemeMode in themeModes) {

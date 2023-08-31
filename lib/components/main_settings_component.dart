@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/components/settings/theme_switch.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +18,31 @@ class SettingsComponent extends StatelessWidget {
           ListTile(
             dense: true,
             title: Text(
+              'OpenAI Settings'.tr,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          ListTile(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("OpenAI Settings".tr),
+                const Text(
+                  "API Key, API Server ",
+                  style: TextStyle(fontSize: 12),
+                )
+              ],
+            ),
+            leading: const Icon(Icons.color_lens_outlined),
+            trailing: const Icon(Icons.chevron_right_outlined),
+            onTap: () {
+              // SmartSelect.single(selectedValue: selectedValue)
+            },
+          ),
+          const Divider(),
+          ListTile(
+            dense: true,
+            title: Text(
               'theme'.tr,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -26,58 +52,43 @@ class SettingsComponent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("theme".tr),
-                const Text(
-                  "跟随系统",
-                  style: TextStyle(fontSize: 12),
+                Text(
+                  controller.settings.theme.tr,
+                  style: const TextStyle(fontSize: 12),
                 )
               ],
             ),
             leading: const Icon(Icons.color_lens_outlined),
             trailing: const Icon(Icons.chevron_right_outlined),
+            onTap: () {
+              // showLangauageSelector();
+            },
           ),
+          ThemeSwitchComponent(),
           const Divider(),
           ListTile(
             dense: true,
             title: Text(
-              'OpenAI Settings'.tr,
+              'Language Settings'.tr,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          const ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("OpenAI 设置"),
-                Text(
-                  "API Key, API Server ",
-                  style: TextStyle(fontSize: 12),
-                )
-              ],
-            ),
-            leading: Icon(Icons.color_lens_outlined),
-            trailing: Icon(Icons.chevron_right_outlined),
-          ),
-          const Divider(),
           ListTile(
-            dense: true,
-            title: Text(
-              'langauage'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          const ListTile(
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("语言设置"),
+                Text("Language Settings".tr),
                 Text(
-                  "简体中文",
-                  style: TextStyle(fontSize: 12),
+                  controller.locale.tr,
+                  style: const TextStyle(fontSize: 12),
                 )
               ],
             ),
-            leading: Icon(Icons.language_outlined),
-            trailing: Icon(Icons.chevron_right_outlined),
+            leading: const Icon(Icons.language_outlined),
+            trailing: const Icon(Icons.chevron_right_outlined),
+            onTap: () {
+              // showLangauageSelector();
+            },
           ),
         ],
       );
