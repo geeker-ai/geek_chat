@@ -131,15 +131,15 @@ class SettingsController extends GetxController {
   set settingsTheme(String theme) {
     settings.theme = theme;
     setThemeMode(getThemeMode());
-    update();
     save();
+    update();
   }
 
   set settingsLanguage(String language) {
     settings.language = language;
+    setLocale(settings.language);
     update();
     save();
-    setLocale(settings.language);
   }
 
   setThemeMode(ThemeMode themeMode) {

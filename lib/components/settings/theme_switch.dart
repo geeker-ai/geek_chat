@@ -40,7 +40,7 @@ class ThemeSwitchComponent extends StatelessWidget {
     // init theme
     options.clear();
     for (GCThemeMode theme in settingsController.themeModes) {
-      options.add(S2Choice<String>(value: theme.name, title: theme.name));
+      options.add(S2Choice<String>(value: theme.name, title: theme.name.tr));
     }
 
     return SmartSelect.single(
