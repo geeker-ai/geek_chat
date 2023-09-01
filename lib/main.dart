@@ -72,11 +72,11 @@ class GeekerChat extends StatelessWidget {
           blendOnLevel: 10,
           blendOnColors: false,
           useTextTheme: true,
-          useM2StyleDividerInM3: true,
+          // useM2StyleDividerInM3: true,
         ),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         useMaterial3: true,
-        swapLegacyOnMaterial3: true,
+        // swapLegacyOnMaterial3: true,
       ),
       darkTheme: FlexThemeData.dark(
         scheme: FlexScheme.materialBaseline,
@@ -86,7 +86,7 @@ class GeekerChat extends StatelessWidget {
         subThemesData: const FlexSubThemesData(
           blendOnLevel: 20,
           useTextTheme: true,
-          useM2StyleDividerInM3: true,
+          // useM2StyleDividerInM3: true,
         ),
       ),
       themeMode: SettingsController.to.getThemeMode(),

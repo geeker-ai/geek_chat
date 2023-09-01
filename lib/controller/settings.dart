@@ -54,6 +54,25 @@ class SettingsController extends GetxController {
     _oriLanguage = settings.language;
   }
 
+  String get apiHost {
+    String apiHost = '';
+    if (settings.apiHost.isEmpty) {
+      apiHost = getProviderServerDefaultUrl();
+      // print(apiHost);
+    } else {
+      apiHost = settings.apiHost;
+    }
+    return apiHost;
+  }
+
+  String get apiKey {
+    String apiKey = '';
+    if (settings.apiKey.isNotEmpty) {
+      apiKey = settings.apiKey;
+    }
+    return apiKey;
+  }
+
   String get locale {
     String currentLocale = "${locales[0]['locale']}";
     for (var element in locales) {

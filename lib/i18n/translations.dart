@@ -23,6 +23,7 @@ class GeekChatTranslations extends Translations {
           "Cancel": "Cancel",
           "OpenAI Settings": "OpenAI Settings",
           "API Server Settings": "API Server Settings",
+          "Server Configuration": "Server Configuration",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -44,6 +45,7 @@ class GeekChatTranslations extends Translations {
           "Cancel": "取消",
           "OpenAI Settings": "OpenAI 设置",
           "API Server Settings": "API服务器设置",
+          "Server Configuration": "服务器配置"
         }
       };
 }
