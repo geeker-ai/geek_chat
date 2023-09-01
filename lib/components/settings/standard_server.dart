@@ -55,6 +55,15 @@ class StandardServerSettingsComponent extends StatelessWidget {
                 OutlinedButton(
                   onPressed: () {
                     controller.save();
+                    Get.snackbar(
+                      "Saved successfully!".tr,
+                      "The configuration has been updated!".tr,
+                      icon: const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ),
+                      snackPosition: SnackPosition.TOP,
+                    );
                   },
                   child: Text('Save'.tr),
                 ),

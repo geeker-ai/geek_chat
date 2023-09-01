@@ -24,6 +24,9 @@ class GeekChatTranslations extends Translations {
           "OpenAI Settings": "OpenAI Settings",
           "API Server Settings": "API Server Settings",
           "Server Configuration": "Server Configuration",
+          "Saved successfully!": "Saved successfully!",
+          "The configuration has been updated!":
+              "The configuration has been updated!",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -45,7 +48,9 @@ class GeekChatTranslations extends Translations {
           "Cancel": "取消",
           "OpenAI Settings": "OpenAI 设置",
           "API Server Settings": "API服务器设置",
-          "Server Configuration": "服务器配置"
+          "Server Configuration": "服务器配置",
+          "Saved successfully!": "保存成功!",
+          "The configuration has been updated!": "配置已成功更新!",
         }
       };
 }

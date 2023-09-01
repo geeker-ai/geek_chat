@@ -19,3 +19,13 @@ samples, guidance on mobile development, and a full API reference.
 - https://isar.dev/zh/recipes/string_ids.html
 - https://codewithandrea.com/articles/flutter-responsive-layouts-split-view-drawer-navigation/
 - https://flutterawesome.com/
+
+### Todo
+
+- v0.0.1
+  - [x] Settings Page
+  - [ ] Save Settings toast
+  - [ ] GeekerChat Active
+  - [ ] Chat List Page
+  - [ ] Chat Message Page
+  - [ ] Prompts Page
