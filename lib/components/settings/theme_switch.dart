@@ -60,7 +60,7 @@ class ThemeSwitchComponent extends StatelessWidget {
             hideValue: true,
             trailing: const Icon(Icons.chevron_right_outlined),
             padding: const EdgeInsets.only(
-                left: 0.0, top: 0.0, right: 20.0, bottom: 0),
+                left: 0.0, top: 0.0, right: 18.0, bottom: 0),
             onTap: () {
               state.showModal();
             },

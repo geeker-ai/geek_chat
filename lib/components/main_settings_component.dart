@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/components/settings/language_switch.dart';
 import 'package:geek_chat/components/settings/theme_switch.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:get/get.dart';
@@ -71,7 +72,8 @@ class SettingsComponent extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          ListTile(
+          LanguageSwitchComponent(
+              tile: ListTile(
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -83,11 +85,11 @@ class SettingsComponent extends StatelessWidget {
               ],
             ),
             leading: const Icon(Icons.language_outlined),
-            trailing: const Icon(Icons.chevron_right_outlined),
-            onTap: () {
-              // showLangauageSelector();
-            },
-          ),
+            // trailing: const Icon(Icons.chevron_right_outlined),
+            // onTap: () {
+            //   // showLangauageSelector();
+            // },
+          )),
         ],
       );
     }));

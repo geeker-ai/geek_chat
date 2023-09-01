@@ -18,7 +18,7 @@ class SettingsController extends GetxController {
   var _oriTheme = 'System';
   var _oriLanguage = 'en_US';
 
-  final locales = [
+  final List<Map<String, String>> locales = [
     {'name': 'Simplified Chinese', 'locale': 'zh_Hans_CN'},
     {'name': 'English', 'locale': 'en_US'}
   ];
@@ -85,11 +85,18 @@ class SettingsController extends GetxController {
     save();
   }
 
+  set settingsLanguage(String language) {
+    settings.language = language;
+    update();
+    save();
+    setLocale(settings.language);
+  }
+
   void setThemeMode(ThemeMode themeMode) async {
     Get.changeThemeMode(themeMode);
   }
 
-  void setLocale(String locale) async {
+  setLocale(String locale) {
     Get.updateLocale(Locale(locale));
   }
 }
