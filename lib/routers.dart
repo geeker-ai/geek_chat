@@ -1,6 +1,7 @@
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
 import 'package:geek_chat/pages/mobile_home_page.dart';
+import 'package:geek_chat/pages/settings/server_settings.dart';
 import 'package:geek_chat/pages/settings_page.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/route_manager.dart';
@@ -15,5 +16,5 @@ final routers = [
         }
         return const MobileHomePage();
       }),
-  GetPage(name: '/settings', page: () => SettingsPage()),
+  GetPage(name: '/settings', page: () => ServerSettingsPage()),
 ];

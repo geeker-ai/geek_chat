@@ -38,6 +38,7 @@ class SettingsComponent extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right_outlined),
             onTap: () {
               // SmartSelect.single(selectedValue: selectedValue)
+              Get.toNamed('/settings');
             },
           ),
           const Divider(),

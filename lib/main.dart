@@ -82,6 +82,7 @@ class GeekerChat extends StatelessWidget {
         scheme: FlexScheme.materialBaseline,
         surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
         blendLevel: 13,
+        useMaterial3: true,
         subThemesData: const FlexSubThemesData(
           blendOnLevel: 20,
           useTextTheme: true,
@@ -93,6 +94,7 @@ class GeekerChat extends StatelessWidget {
       translations: GeekChatTranslations(),
       builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
+      defaultTransition: Transition.rightToLeft,
     );
   }
 }

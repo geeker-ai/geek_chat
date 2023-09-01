@@ -16,7 +16,7 @@ class LanguageSwitchComponent extends StatelessWidget {
   ];
 
   initOptions() {
-    print("init language options ${settingsController.settings.language}");
+    // print("init language options ${settingsController.settings.language}");
     options.clear();
     for (var lang in settingsController.locales) {
       options.add(S2Choice<String>(

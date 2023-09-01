@@ -23,6 +23,19 @@ class SettingsController extends GetxController {
     {'name': 'English', 'locale': 'en_US'}
   ];
 
+  final List<Map<String, String>> serverList = [
+    {
+      'id': 'openai',
+      'name': 'OpenAI',
+      'url': 'https://api.openai.com',
+    },
+    {
+      'id': 'geekerchat',
+      'name': 'Geeker Chat',
+      'url': 'https://capi.fucklina.com',
+    }
+  ];
+
   final themeModes = [
     GCThemeMode(name: 'System', themeMode: ThemeMode.system),
     GCThemeMode(name: 'Dark', themeMode: ThemeMode.dark),
@@ -37,7 +50,6 @@ class SettingsController extends GetxController {
 
   void resetSettings() {
     settings.settingsJson = _localStoreRepository.getSettings().toJson();
-    // print(_localStoreRepository.getSettings().toJson());
     _oriTheme = settings.theme;
     _oriLanguage = settings.language;
   }
@@ -52,6 +64,26 @@ class SettingsController extends GetxController {
     return currentLocale;
   }
 
+  String getProviderServer() {
+    String server = '';
+    for (var item in serverList) {
+      if (item['id'] == settings.provider) {
+        server = "${item['name']}";
+      }
+    }
+    return server;
+  }
+
+  String getProviderServerDefaultUrl() {
+    String url = '';
+    for (var item in serverList) {
+      if (item['id'] == settings.provider) {
+        url = "${item['url']}";
+      }
+    }
+    return url;
+  }
+
   ThemeMode getThemeMode() {
     ThemeMode themeMode = ThemeMode.system;
     for (GCThemeMode gcThemeMode in themeModes) {
@@ -59,16 +91,15 @@ class SettingsController extends GetxController {
         themeMode = gcThemeMode.themeMode;
       }
     }
-    // print(themeMode);
     return themeMode;
   }
 
   void save() {
     settings.settingsJson = settings.toJson();
     _localStoreRepository.saveSettings(settings);
-    // changeSettings();
   }
 
+  @Deprecated("message")
   void changeSettings() async {
     if (settings.theme != _oriTheme) {
       setThemeMode(getThemeMode());
@@ -92,7 +123,7 @@ class SettingsController extends GetxController {
     setLocale(settings.language);
   }
 
-  void setThemeMode(ThemeMode themeMode) async {
+  setThemeMode(ThemeMode themeMode) {
     Get.changeThemeMode(themeMode);
   }
 
