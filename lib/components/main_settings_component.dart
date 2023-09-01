@@ -47,24 +47,22 @@ class SettingsComponent extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("theme".tr),
-                Text(
-                  controller.settings.theme.tr,
-                  style: const TextStyle(fontSize: 12),
-                )
-              ],
+          ThemeSwitchComponent(
+            tile: ListTile(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("theme".tr),
+                  Text(
+                    controller.settings.theme.tr,
+                    style: const TextStyle(fontSize: 12),
+                  )
+                ],
+              ),
+              leading: const Icon(Icons.color_lens_outlined),
+              // trailing: const Icon(Icons.chevron_right_outlined),
             ),
-            leading: const Icon(Icons.color_lens_outlined),
-            trailing: const Icon(Icons.chevron_right_outlined),
-            onTap: () {
-              // showLangauageSelector();
-            },
           ),
-          ThemeSwitchComponent(),
           const Divider(),
           ListTile(
             dense: true,

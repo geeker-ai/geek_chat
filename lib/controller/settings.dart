@@ -66,7 +66,7 @@ class SettingsController extends GetxController {
   void save() {
     settings.settingsJson = settings.toJson();
     _localStoreRepository.saveSettings(settings);
-    changeSettings();
+    // changeSettings();
   }
 
   void changeSettings() async {
@@ -76,6 +76,13 @@ class SettingsController extends GetxController {
     if (settings.language != _oriLanguage) {
       setLocale(settings.language);
     }
+  }
+
+  set settingsTheme(String theme) {
+    settings.theme = theme;
+    setThemeMode(getThemeMode());
+    update();
+    save();
   }
 
   void setThemeMode(ThemeMode themeMode) async {
