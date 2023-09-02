@@ -53,7 +53,7 @@ class SettingsComponent extends StatelessWidget {
                 )
               ],
             ),
-            leading: const Icon(Icons.color_lens_outlined),
+            leading: const Icon(Icons.smart_toy_outlined),
             trailing: const Icon(Icons.chevron_right_outlined),
             onTap: () {
               // SmartSelect.single(selectedValue: selectedValue)

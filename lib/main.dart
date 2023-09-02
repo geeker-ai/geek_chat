@@ -64,6 +64,7 @@ class GeekerChat extends StatelessWidget {
         name: '/404',
         page: () => const UnkownRoutePage(),
       ),
+
       theme: FlexThemeData.light(
         scheme: FlexScheme.materialBaseline,
         surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
@@ -81,7 +82,7 @@ class GeekerChat extends StatelessWidget {
       darkTheme: FlexThemeData.dark(
         scheme: FlexScheme.materialBaseline,
         surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-        blendLevel: 13,
+        // blendLevel: 13,
         useMaterial3: true,
         subThemesData: const FlexSubThemesData(
           blendOnLevel: 20,
@@ -89,6 +90,8 @@ class GeekerChat extends StatelessWidget {
           // useM2StyleDividerInM3: true,
         ),
       ),
+      // theme: ThemeData.light(useMaterial3: true),
+      // darkTheme: ThemeData.dark(useMaterial3: true),
       themeMode: SettingsController.to.getThemeMode(),
       locale: Locale(SettingsController.to.settings.language),
       translations: GeekChatTranslations(),
