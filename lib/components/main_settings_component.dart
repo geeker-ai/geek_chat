@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:geek_chat/components/settings/language_switch.dart';
-import 'package:geek_chat/components/settings/theme_switch.dart';
+import 'package:geek_chat/components/settings/bottom_sheet_switcher.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/models/theme.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class SettingsComponent extends StatelessWidget {
   const SettingsComponent({super.key});
+
+  // late List<Map<String, String>> options;
+
+  List<Map<String, String>> getLanguageOptions() {
+    List<Map<String, String>> options = [];
+    for (Map<String, String> item in SettingsController.to.locales) {
+      options.add({'name': item['locale'] ?? '', 'title': item['name'] ?? ''});
+    }
+    return options;
+  }
+
+  List<Map<String, String>> getThemeOptions() {
+    List<Map<String, String>> themeOptions = [];
+    for (GCThemeMode theme in SettingsController.to.themeModes) {
+      themeOptions.add({'name': theme.name, 'title': theme.name});
+    }
+    return themeOptions;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,21 +68,16 @@ class SettingsComponent extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          ThemeSwitchComponent(
-            tile: ListTile(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("theme".tr),
-                  Text(
-                    controller.settings.theme.tr,
-                    style: const TextStyle(fontSize: 12),
-                  )
-                ],
-              ),
-              leading: const Icon(Icons.color_lens_outlined),
-              // trailing: const Icon(Icons.chevron_right_outlined),
-            ),
+          BottomSheetSwitcherComponent(
+            title: "Theme Settings",
+            subTitle: controller.settings.theme,
+            selectedValue: controller.settings.theme,
+            options: getThemeOptions(),
+            leadingIcon: Icons.color_lens_outlined,
+            onTapCallback: (value) {
+              controller.settingsTheme = value;
+              controller.save();
+            },
           ),
           const Divider(),
           ListTile(
@@ -73,24 +87,17 @@ class SettingsComponent extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          LanguageSwitchComponent(
-              tile: ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Language Settings".tr),
-                Text(
-                  controller.locale.tr,
-                  style: const TextStyle(fontSize: 12),
-                )
-              ],
-            ),
-            leading: const Icon(Icons.language_outlined),
-            // trailing: const Icon(Icons.chevron_right_outlined),
-            // onTap: () {
-            //   // showLangauageSelector();
-            // },
-          )),
+          BottomSheetSwitcherComponent(
+            title: "Language Settings",
+            subTitle: controller.locale,
+            selectedValue: controller.settings.language,
+            options: getLanguageOptions(),
+            leadingIcon: Icons.language_outlined,
+            onTapCallback: (value) {
+              controller.settingsLanguage = value;
+              controller.save();
+            },
+          ),
         ],
       );
     }));

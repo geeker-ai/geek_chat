@@ -149,4 +149,13 @@ class SettingsController extends GetxController {
   setLocale(String locale) {
     Get.updateLocale(Locale(locale));
   }
+
+  String _switcherSelected = '';
+  get switcherSelected {
+    return _switcherSelected;
+  }
+
+  set switcherSelected(value) {
+    _switcherSelected = value;
+  }
 }
