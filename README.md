@@ -15,6 +15,11 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+### isar
+```
+flutter pub run build_runner build
+```
+
 ### Docs
 - https://isar.dev/zh/recipes/string_ids.html
 - https://codewithandrea.com/articles/flutter-responsive-layouts-split-view-drawer-navigation/
