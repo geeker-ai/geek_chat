@@ -39,24 +39,33 @@ class SessionRepository {
   late Directory dir;
   late Isar isar;
 
-  SessionRepository._internal();
-  static late SessionRepository _instance;
-  static Future<SessionRepository> getInstance() async {
-    // ignore: unnecessary_null_comparison
-    if (_instance == null) {
-      _instance = SessionRepository._internal();
-      await _instance.initSession();
-    }
-    return _instance;
-  }
+  // SessionRepository._internal();
+  // static late SessionRepository _instance;
+  // static Future<SessionRepository> getInstance() async {
+  //   // ignore: unnecessary_null_comparison
+  //   if (_instance == null) {
+  //     _instance = SessionRepository._internal();
+  //     await _instance.initSession();
+  //   }
+  //   return _instance;
+  // }
 
-  initSession() async {
-    dir = await getApplicationDocumentsDirectory();
+  SessionRepository(this.dir) {
     isar = Isar.openSync([SessionTableSchema], directory: dir.path);
   }
 
+  // initSession() async {
+  //   dir = await getApplicationDocumentsDirectory();
+  //   isar = Isar.openSync([SessionTableSchema], directory: dir.path);
+  // }
+
   int save(SessionTable session) {
-    return isar.sessionTables.putSync(session);
+    SessionTable? st = findBySessionId(session.sid);
+    SessionTable st2 = session;
+    if (st != null) {
+      st2.id = st.id;
+    }
+    return isar.writeTxnSync(() => isar.sessionTables.putSync(st2));
   }
 
   List<SessionTable> findAll(int status) {
@@ -72,6 +81,12 @@ class SessionRepository {
   SessionTable? findBySessionId(String sid) {
     SessionTable? st;
     st = isar.sessionTables.where().sidEqualTo(sid).findFirstSync();
+    return st;
+  }
+
+  SessionTable? findFirst() {
+    SessionTable? st;
+    st = isar.sessionTables.where().statusEqualToAnyUpdated(1).findFirstSync();
     return st;
   }
 

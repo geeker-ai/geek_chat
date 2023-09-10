@@ -4,7 +4,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:geek_chat/controller/chat_controller.dart';
+import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/i18n/translations.dart';
@@ -12,6 +12,7 @@ import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:geek_chat/routers.dart';
 
@@ -45,6 +46,13 @@ void main() async {
 
 initServices() async {
   // TODO zh_Hans_CN, en_US
+  Get.put(LocalStoreRepository());
+  Directory dir = await getApplicationDocumentsDirectory();
+  Get.put(SettingsController());
+  SettingsController.to.dataDir = dir;
+
+  Get.put(MainController());
+  Get.put(ChatListController());
 }
 
 class GeekerChat extends StatelessWidget {
@@ -52,11 +60,6 @@ class GeekerChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(LocalStoreRepository());
-    Get.put(SettingsController());
-    Get.put(MainController());
-    Get.put(ChatController());
-
     return GetMaterialApp(
       initialRoute: '/',
       getPages: routers,

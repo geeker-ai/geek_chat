@@ -16,6 +16,12 @@ class MobileHomePage extends StatelessWidget {
         title: GetBuilder<MainController>(builder: (controller) {
           return Text(controller.getTitle().tr);
         }),
+        actions: [
+          GetBuilder<MainController>(builder: (controller) {
+            return appBarAddChatAction(controller.navIndex);
+          }),
+          const SizedBox(width: 5.0)
+        ],
       ),
       bottomNavigationBar: GetBuilder<MainController>(builder: (controller) {
         return BottomNavigationBar(
@@ -46,6 +52,18 @@ class MobileHomePage extends StatelessWidget {
       }),
     );
   }
+}
+
+Widget appBarAddChatAction(int index) {
+  Widget widget = const SizedBox();
+  if (index == 0) {
+    widget = IconButton(
+        onPressed: () {
+          Get.toNamed('/editchat', parameters: {'opt': 'new', 'sid': ''});
+        },
+        icon: const Icon(Icons.add));
+  }
+  return widget;
 }
 
 Widget navigationRoute(int index) {

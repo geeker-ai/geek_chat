@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
@@ -15,8 +18,40 @@ class SettingsController extends GetxController {
 
   final LocalStoreRepository _localStoreRepository = Get.find();
 
+  late Directory _dataDir;
+
   var _oriTheme = 'System';
   var _oriLanguage = 'en_US';
+
+  final List<AiModel> _aiModels = [
+    AiModel(
+        modelName: 'gpt-3.5-turbo',
+        alias: 'gpt-3.5',
+        aiType: AiType.chatgpt,
+        modelType: ModelType.chat,
+        temperature: 0.7,
+        maxContextSize: 4000,
+        modelMaxContextSize: 4000,
+        maxTokens: 0),
+    AiModel(
+        modelName: 'gpt-3.5-turbo-16k',
+        alias: 'gpt-3.5-16k',
+        aiType: AiType.chatgpt,
+        modelType: ModelType.chat,
+        temperature: 0.7,
+        maxContextSize: 10000,
+        modelMaxContextSize: 16000,
+        maxTokens: 0),
+    AiModel(
+        modelName: 'gpt-4',
+        alias: 'gpt-4',
+        aiType: AiType.chatgpt,
+        modelType: ModelType.chat,
+        temperature: 0.7,
+        maxContextSize: 4000,
+        modelMaxContextSize: 4000,
+        maxTokens: 0),
+  ];
 
   final List<Map<String, String>> locales = [
     {'name': 'Simplified Chinese', 'locale': 'zh_Hans_CN'},
@@ -46,6 +81,20 @@ class SettingsController extends GetxController {
   void onInit() {
     resetSettings();
     super.onInit();
+  }
+
+  List<AiModel> get models {
+    return _aiModels;
+  }
+
+  AiModel getModelByName(String name) {
+    AiModel model = _aiModels.first;
+    for (AiModel item in _aiModels) {
+      if (item.modelName == name) {
+        model = item;
+      }
+    }
+    return model;
   }
 
   void resetSettings() {
@@ -157,5 +206,13 @@ class SettingsController extends GetxController {
 
   set switcherSelected(value) {
     _switcherSelected = value;
+  }
+
+  set dataDir(value) {
+    _dataDir = value;
+  }
+
+  Directory get dataDir {
+    return _dataDir;
   }
 }

@@ -27,6 +27,8 @@ class GeekChatTranslations extends Translations {
           "Saved successfully!": "Saved successfully!",
           "The configuration has been updated!":
               "The configuration has been updated!",
+          "Session Name": "Session Name",
+          "Prompt": "Prompt",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -51,6 +53,8 @@ class GeekChatTranslations extends Translations {
           "Server Configuration": "服务器配置",
           "Saved successfully!": "保存成功!",
           "The configuration has been updated!": "配置已成功更新!",
+          "Session Name": "会话名称",
+          "Prompt": "提示词",
         }
       };
 }

@@ -1,4 +1,6 @@
+import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
+import 'package:uuid/uuid.dart';
 
 class SessionModel {
   //
@@ -16,6 +18,8 @@ class SessionModel {
   bool synced;
   int status; // 1 = show, 0 = delete
 
+  late MessageModel prompt;
+
   SessionModel({
     required this.sid,
     required this.name,
@@ -30,7 +34,10 @@ class SessionModel {
     required this.updated,
     required this.synced,
     required this.status,
-  });
+  }) {
+    prompt = MessageModel(
+        msgId: const Uuid().v4(), role: 'system', content: promptContent);
+  }
 
   factory SessionModel.fromTable(SessionTable session) {
     return SessionModel(
@@ -47,5 +54,23 @@ class SessionModel {
         updated: session.updated ?? 0,
         synced: session.synced,
         status: session.status);
+  }
+
+  SessionTable toSessionTable() {
+    SessionTable st = SessionTable();
+    st.sid = sid;
+    st.name = name;
+    st.promptContent = prompt.content;
+    st.type = type;
+    st.modelType = modelType;
+    st.model = model;
+    st.maxContextSize = maxContextSize;
+    st.maxContextMsgCount = maxContextMsgCount;
+    st.temperature = temperature;
+    st.maxTokens = maxTokens;
+    st.updated = updated;
+    st.synced = synced;
+    st.status = status;
+    return st;
   }
 }
