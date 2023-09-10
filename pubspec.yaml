@@ -46,6 +46,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   uuid: ^4.0.0
   path_provider: ^2.1.1
+  flutter_slidable: ^3.0.0
+  moment_dart: ^1.0.1
 
 dev_dependencies:
   flutter_test:

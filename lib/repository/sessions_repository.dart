@@ -65,6 +65,7 @@ class SessionRepository {
     if (st != null) {
       st2.id = st.id;
     }
+    print(st2.updated);
     return isar.writeTxnSync(() => isar.sessionTables.putSync(st2));
   }
 
@@ -76,6 +77,14 @@ class SessionRepository {
         .sortByUpdatedDesc()
         .findAllSync();
     return chatList;
+  }
+
+  void remove(String sid) {
+    SessionTable? st = findBySessionId(sid);
+    if (st != null) {
+      st.status = 0;
+      save(st);
+    }
   }
 
   SessionTable? findBySessionId(String sid) {

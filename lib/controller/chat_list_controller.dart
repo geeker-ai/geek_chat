@@ -5,6 +5,7 @@ import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:get/get.dart';
+import 'package:moment_dart/moment_dart.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatListController extends GetxController {
@@ -47,7 +48,9 @@ class ChatListController extends GetxController {
         maxContextMsgCount: 22,
         temperature: model.temperature,
         maxTokens: model.maxTokens,
-        updated: 0, // TODO updated
+        updated: int.parse(Moment.now()
+            .format("YYYYMMDDHHmmssSSS")
+            .toString()), // TODO updated
         synced: false,
         status: 1);
     return currentSession;
@@ -69,5 +72,9 @@ class ChatListController extends GetxController {
   void save() {
     _sessionRepository.save(currentSession.toSessionTable());
     getSessionBysid(currentSession.sid);
+  }
+
+  void remove(String sid) {
+    _sessionRepository.remove(sid);
   }
 }

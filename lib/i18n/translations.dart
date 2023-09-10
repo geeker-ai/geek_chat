@@ -29,6 +29,10 @@ class GeekChatTranslations extends Translations {
               "The configuration has been updated!",
           "Session Name": "Session Name",
           "Prompt": "Prompt",
+          "Delete": "Delete",
+          "New Chat": "New Chat",
+          "Edit Chat": "Edit Chat",
+          "Model": "Model",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -55,6 +59,10 @@ class GeekChatTranslations extends Translations {
           "The configuration has been updated!": "配置已成功更新!",
           "Session Name": "会话名称",
           "Prompt": "提示词",
+          "Delete": "删除",
+          "New Chat": "创建新对话",
+          "Edit Chat": "编辑对话",
+          "Model": "模型",
         }
       };
 }

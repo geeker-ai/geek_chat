@@ -41,13 +41,13 @@ class ChatEditPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: GetBuilder<ChatListController>(builder: (controller) {
-          return Text(getTitle(data['opt']));
+          return Text(getTitle(data['opt']).tr);
         }),
       ),
       body: GetBuilder<ChatListController>(builder: (controller) {
         return ListView(
           padding: const EdgeInsets.only(
-              left: 10.0, top: 0.0, right: 20.0, bottom: 0.0),
+              left: 10.0, top: 0.0, right: 10.0, bottom: 0.0),
           children: [
             const Divider(),
             ListTile(
@@ -104,19 +104,22 @@ class ChatEditPage extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, top: 0, bottom: 10, right: 10),
-              child: TextFormField(
-                initialValue: controller.currentSession.temperature.toString(),
-                decoration: InputDecoration(
-                  labelText: 'temperature'.tr,
-                  filled: false,
-                ),
+            SliderTheme(
+              // padding: const EdgeInsets.only(
+              //     left: 10, top: 0, bottom: 10, right: 10),
+              data: const SliderThemeData(
+                showValueIndicator: ShowValueIndicator.always,
+              ),
+              child: Slider(
+                value: controller.currentSession.temperature,
+                max: 1,
+                min: 0,
+                divisions: 10,
                 onChanged: (value) {
-                  // controller.settings.apiKey = value;
-                  controller.currentSession.temperature = double.parse(value);
+                  controller.currentSession.temperature = value;
+                  controller.update();
                 },
+                label: controller.currentSession.temperature.toString(),
               ),
             ),
             ListTile(
@@ -126,21 +129,22 @@ class ChatEditPage extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, top: 0, bottom: 10, right: 10),
-              child: TextFormField(
-                initialValue:
-                    controller.currentSession.maxContextMsgCount.toString(),
-                decoration: InputDecoration(
-                  labelText: 'History Message'.tr,
-                  filled: false,
-                ),
+            SliderTheme(
+              data: const SliderThemeData(
+                showValueIndicator: ShowValueIndicator.always,
+              ),
+              child: Slider(
                 onChanged: (value) {
-                  // controller.settings.apiKey = value;
-                  controller.currentSession.maxContextMsgCount =
-                      int.parse(value);
+                  // print(value);
+                  int count = value.floor();
+                  controller.currentSession.maxContextMsgCount = count;
+                  controller.update();
                 },
+                value: controller.currentSession.maxContextMsgCount.toDouble(),
+                min: 0,
+                max: 22,
+                divisions: 22,
+                label: controller.currentSession.maxContextMsgCount.toString(),
               ),
             ),
             ListTile(
@@ -155,7 +159,7 @@ class ChatEditPage extends StatelessWidget {
                 subTitle: controller.currentSession.model,
                 selectedValue: controller.currentSession.model,
                 options: options,
-                leadingIcon: Icons.mode,
+                leadingIcon: Icons.smart_toy_outlined,
                 onTapCallback: (value) {
                   controller.currentSession.model = value;
                   controller.update();
@@ -170,14 +174,16 @@ class ChatEditPage extends StatelessWidget {
                       controller.save();
                       chatListController.reloadSessions();
                       chatListController.update();
+                      Get.back();
                       Get.snackbar(
                         "Saved successfully!".tr,
-                        "The configuration has been updated!".tr,
+                        "New chat created successful!".tr,
                         icon: const Icon(
                           Icons.check,
                           color: Colors.green,
                         ),
                         snackPosition: SnackPosition.TOP,
+                        duration: const Duration(seconds: 2),
                       );
                     },
                     child: Text('Save'.tr),

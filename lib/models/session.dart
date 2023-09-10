@@ -57,6 +57,8 @@ class SessionModel {
   }
 
   SessionTable toSessionTable() {
+    prompt.content = promptContent;
+
     SessionTable st = SessionTable();
     st.sid = sid;
     st.name = name;
