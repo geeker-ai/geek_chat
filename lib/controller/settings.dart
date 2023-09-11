@@ -7,9 +7,16 @@ import 'package:geek_chat/models/theme.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:get/get.dart';
 
+class ChatGPTRoles {
+  final String system = 'system';
+  final String assistant = 'assistant';
+  final String user = 'user';
+}
+
 class SettingsController extends GetxController {
   final settings = SettingsModel();
   final settingsEdit = SettingsModel();
+  final chatGPTRoles = ChatGPTRoles();
 
   // final themeMode = ThemeMode.dark;
   static SettingsController get to => Get.find();

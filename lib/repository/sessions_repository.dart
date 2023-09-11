@@ -65,7 +65,7 @@ class SessionRepository {
     if (st != null) {
       st2.id = st.id;
     }
-    print(st2.updated);
+    // print(st2.updated);
     return isar.writeTxnSync(() => isar.sessionTables.putSync(st2));
   }
 

@@ -44,7 +44,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flex_color_scheme: ^7.1.2
   flutter_easyloading: ^3.0.5
-  uuid: ^4.0.0
+  uuid: ^3.0.7
   path_provider: ^2.1.1
   flutter_slidable: ^3.0.0
   moment_dart: ^1.0.1

@@ -22,48 +22,38 @@ const MessageTableSchema = CollectionSchema(
       name: r'content',
       type: IsarType.string,
     ),
-    r'generating': PropertySchema(
-      id: 1,
-      name: r'generating',
-      type: IsarType.bool,
-    ),
     r'mid': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'mid',
       type: IsarType.string,
     ),
     r'model': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'model',
       type: IsarType.string,
     ),
-    r'msgType': PropertySchema(
-      id: 4,
-      name: r'msgType',
-      type: IsarType.string,
-    ),
     r'role': PropertySchema(
-      id: 5,
+      id: 3,
       name: r'role',
       type: IsarType.string,
     ),
     r'sid': PropertySchema(
-      id: 6,
+      id: 4,
       name: r'sid',
       type: IsarType.string,
     ),
     r'status': PropertySchema(
-      id: 7,
+      id: 5,
       name: r'status',
       type: IsarType.long,
     ),
     r'synced': PropertySchema(
-      id: 8,
+      id: 6,
       name: r'synced',
       type: IsarType.bool,
     ),
     r'updated': PropertySchema(
-      id: 9,
+      id: 7,
       name: r'updated',
       type: IsarType.long,
     )
@@ -73,7 +63,52 @@ const MessageTableSchema = CollectionSchema(
   deserialize: _messageTableDeserialize,
   deserializeProp: _messageTableDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'mid': IndexSchema(
+      id: -3947900453981461092,
+      name: r'mid',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'mid',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'sid_status': IndexSchema(
+      id: -4529230322533708827,
+      name: r'sid_status',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'sid',
+          type: IndexType.hash,
+          caseSensitive: true,
+        ),
+        IndexPropertySchema(
+          name: r'status',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'status': IndexSchema(
+      id: -107785170620420283,
+      name: r'status',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'status',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _messageTableGetId,
@@ -106,7 +141,6 @@ int _messageTableEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.msgType.length * 3;
   {
     final value = object.role;
     if (value != null) {
@@ -129,15 +163,13 @@ void _messageTableSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.content);
-  writer.writeBool(offsets[1], object.generating);
-  writer.writeString(offsets[2], object.mid);
-  writer.writeString(offsets[3], object.model);
-  writer.writeString(offsets[4], object.msgType);
-  writer.writeString(offsets[5], object.role);
-  writer.writeString(offsets[6], object.sid);
-  writer.writeLong(offsets[7], object.status);
-  writer.writeBool(offsets[8], object.synced);
-  writer.writeLong(offsets[9], object.updated);
+  writer.writeString(offsets[1], object.mid);
+  writer.writeString(offsets[2], object.model);
+  writer.writeString(offsets[3], object.role);
+  writer.writeString(offsets[4], object.sid);
+  writer.writeLong(offsets[5], object.status);
+  writer.writeBool(offsets[6], object.synced);
+  writer.writeLong(offsets[7], object.updated);
 }
 
 MessageTable _messageTableDeserialize(
@@ -148,16 +180,14 @@ MessageTable _messageTableDeserialize(
 ) {
   final object = MessageTable();
   object.content = reader.readStringOrNull(offsets[0]);
-  object.generating = reader.readBoolOrNull(offsets[1]);
   object.id = id;
-  object.mid = reader.readStringOrNull(offsets[2]);
-  object.model = reader.readStringOrNull(offsets[3]);
-  object.msgType = reader.readString(offsets[4]);
-  object.role = reader.readStringOrNull(offsets[5]);
-  object.sid = reader.readStringOrNull(offsets[6]);
-  object.status = reader.readLong(offsets[7]);
-  object.synced = reader.readBool(offsets[8]);
-  object.updated = reader.readLongOrNull(offsets[9]);
+  object.mid = reader.readStringOrNull(offsets[1]);
+  object.model = reader.readStringOrNull(offsets[2]);
+  object.role = reader.readStringOrNull(offsets[3]);
+  object.sid = reader.readStringOrNull(offsets[4]);
+  object.status = reader.readLong(offsets[5]);
+  object.synced = reader.readBool(offsets[6]);
+  object.updated = reader.readLongOrNull(offsets[7]);
   return object;
 }
 
@@ -171,22 +201,18 @@ P _messageTableDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
-    case 6:
-      return (reader.readStringOrNull(offset)) as P;
-    case 7:
       return (reader.readLong(offset)) as P;
-    case 8:
+    case 6:
       return (reader.readBool(offset)) as P;
-    case 9:
+    case 7:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -206,11 +232,74 @@ void _messageTableAttach(
   object.id = id;
 }
 
+extension MessageTableByIndex on IsarCollection<MessageTable> {
+  Future<MessageTable?> getByMid(String? mid) {
+    return getByIndex(r'mid', [mid]);
+  }
+
+  MessageTable? getByMidSync(String? mid) {
+    return getByIndexSync(r'mid', [mid]);
+  }
+
+  Future<bool> deleteByMid(String? mid) {
+    return deleteByIndex(r'mid', [mid]);
+  }
+
+  bool deleteByMidSync(String? mid) {
+    return deleteByIndexSync(r'mid', [mid]);
+  }
+
+  Future<List<MessageTable?>> getAllByMid(List<String?> midValues) {
+    final values = midValues.map((e) => [e]).toList();
+    return getAllByIndex(r'mid', values);
+  }
+
+  List<MessageTable?> getAllByMidSync(List<String?> midValues) {
+    final values = midValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'mid', values);
+  }
+
+  Future<int> deleteAllByMid(List<String?> midValues) {
+    final values = midValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'mid', values);
+  }
+
+  int deleteAllByMidSync(List<String?> midValues) {
+    final values = midValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'mid', values);
+  }
+
+  Future<Id> putByMid(MessageTable object) {
+    return putByIndex(r'mid', object);
+  }
+
+  Id putByMidSync(MessageTable object, {bool saveLinks = true}) {
+    return putByIndexSync(r'mid', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByMid(List<MessageTable> objects) {
+    return putAllByIndex(r'mid', objects);
+  }
+
+  List<Id> putAllByMidSync(List<MessageTable> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'mid', objects, saveLinks: saveLinks);
+  }
+}
+
 extension MessageTableQueryWhereSort
     on QueryBuilder<MessageTable, MessageTable, QWhere> {
   QueryBuilder<MessageTable, MessageTable, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhere> anyStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'status'),
+      );
     });
   }
 }
@@ -279,6 +368,324 @@ extension MessageTableQueryWhere
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> midIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'mid',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> midIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'mid',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> midEqualTo(
+      String? mid) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'mid',
+        value: [mid],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> midNotEqualTo(
+      String? mid) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'mid',
+              lower: [],
+              upper: [mid],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'mid',
+              lower: [mid],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'mid',
+              lower: [mid],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'mid',
+              lower: [],
+              upper: [mid],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause>
+      sidIsNullAnyStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'sid_status',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause>
+      sidIsNotNullAnyStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'sid_status',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause>
+      sidEqualToAnyStatus(String? sid) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'sid_status',
+        value: [sid],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause>
+      sidNotEqualToAnyStatus(String? sid) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sid_status',
+              lower: [],
+              upper: [sid],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sid_status',
+              lower: [sid],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sid_status',
+              lower: [sid],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sid_status',
+              lower: [],
+              upper: [sid],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> sidStatusEqualTo(
+      String? sid, int status) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'sid_status',
+        value: [sid, status],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause>
+      sidEqualToStatusNotEqualTo(String? sid, int status) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sid_status',
+              lower: [sid],
+              upper: [sid, status],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sid_status',
+              lower: [sid, status],
+              includeLower: false,
+              upper: [sid],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sid_status',
+              lower: [sid, status],
+              includeLower: false,
+              upper: [sid],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sid_status',
+              lower: [sid],
+              upper: [sid, status],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause>
+      sidEqualToStatusGreaterThan(
+    String? sid,
+    int status, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'sid_status',
+        lower: [sid, status],
+        includeLower: include,
+        upper: [sid],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause>
+      sidEqualToStatusLessThan(
+    String? sid,
+    int status, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'sid_status',
+        lower: [sid],
+        upper: [sid, status],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause>
+      sidEqualToStatusBetween(
+    String? sid,
+    int lowerStatus,
+    int upperStatus, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'sid_status',
+        lower: [sid, lowerStatus],
+        includeLower: includeLower,
+        upper: [sid, upperStatus],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> statusEqualTo(
+      int status) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'status',
+        value: [status],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> statusNotEqualTo(
+      int status) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'status',
+              lower: [],
+              upper: [status],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'status',
+              lower: [status],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'status',
+              lower: [status],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'status',
+              lower: [],
+              upper: [status],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> statusGreaterThan(
+    int status, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'status',
+        lower: [status],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> statusLessThan(
+    int status, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'status',
+        lower: [],
+        upper: [status],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterWhereClause> statusBetween(
+    int lowerStatus,
+    int upperStatus, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'status',
+        lower: [lowerStatus],
+        includeLower: includeLower,
+        upper: [upperStatus],
         includeUpper: includeUpper,
       ));
     });
@@ -437,34 +844,6 @@ extension MessageTableQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'content',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      generatingIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'generating',
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      generatingIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'generating',
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      generatingEqualTo(bool? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'generating',
-        value: value,
       ));
     });
   }
@@ -818,142 +1197,6 @@ extension MessageTableQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'model',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'msgType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'msgType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'msgType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'msgType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'msgType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'msgType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'msgType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'msgType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'msgType',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
-      msgTypeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'msgType',
         value: '',
       ));
     });
@@ -1419,19 +1662,6 @@ extension MessageTableQuerySortBy
     });
   }
 
-  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> sortByGenerating() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'generating', Sort.asc);
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterSortBy>
-      sortByGeneratingDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'generating', Sort.desc);
-    });
-  }
-
   QueryBuilder<MessageTable, MessageTable, QAfterSortBy> sortByMid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'mid', Sort.asc);
@@ -1453,18 +1683,6 @@ extension MessageTableQuerySortBy
   QueryBuilder<MessageTable, MessageTable, QAfterSortBy> sortByModelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'model', Sort.desc);
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> sortByMsgType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'msgType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> sortByMsgTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'msgType', Sort.desc);
     });
   }
 
@@ -1543,19 +1761,6 @@ extension MessageTableQuerySortThenBy
     });
   }
 
-  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> thenByGenerating() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'generating', Sort.asc);
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterSortBy>
-      thenByGeneratingDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'generating', Sort.desc);
-    });
-  }
-
   QueryBuilder<MessageTable, MessageTable, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1589,18 +1794,6 @@ extension MessageTableQuerySortThenBy
   QueryBuilder<MessageTable, MessageTable, QAfterSortBy> thenByModelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'model', Sort.desc);
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> thenByMsgType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'msgType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> thenByMsgTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'msgType', Sort.desc);
     });
   }
 
@@ -1674,12 +1867,6 @@ extension MessageTableQueryWhereDistinct
     });
   }
 
-  QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByGenerating() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'generating');
-    });
-  }
-
   QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByMid(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1691,13 +1878,6 @@ extension MessageTableQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'model', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByMsgType(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'msgType', caseSensitive: caseSensitive);
     });
   }
 
@@ -1748,12 +1928,6 @@ extension MessageTableQueryProperty
     });
   }
 
-  QueryBuilder<MessageTable, bool?, QQueryOperations> generatingProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'generating');
-    });
-  }
-
   QueryBuilder<MessageTable, String?, QQueryOperations> midProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'mid');
@@ -1763,12 +1937,6 @@ extension MessageTableQueryProperty
   QueryBuilder<MessageTable, String?, QQueryOperations> modelProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'model');
-    });
-  }
-
-  QueryBuilder<MessageTable, String, QQueryOperations> msgTypeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'msgType');
     });
   }
 
