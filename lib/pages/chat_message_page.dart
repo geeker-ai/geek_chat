@@ -16,6 +16,8 @@ class ChatMessagePage extends StatelessWidget {
 
   ScrollController scrollController = ScrollController();
 
+  final double radius = 14;
+
   @override
   Widget build(BuildContext context) {
     var data = Get.parameters;
@@ -35,15 +37,19 @@ class ChatMessagePage extends StatelessWidget {
               itemCount: 15,
               controller: scrollController,
               itemBuilder: (BuildContext ctxt, int index) {
-                return const Padding(
-                  padding: EdgeInsets.only(
-                    left: 18,
-                    right: 18,
+                return Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(radius),
+                      topLeft: Radius.circular(radius),
+                      // bottomLeft: Radius.circular(18),
+                      bottomRight: Radius.circular(radius),
+                    ),
                   ),
-                  child: Card(
-                    child: Text(
-                        "为了正确理解带状态部件中的 ListView.builder(..)，可以使用带状态 Widget 创建一个非常简"),
-                  ),
+                  child: const Text(
+                      "为了正确理解带状态部件中的 ListView.builder(..)，可以使用带状态 Widget 创建一个非常简"),
                 );
               },
             ),
