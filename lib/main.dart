@@ -10,6 +10,7 @@ import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/i18n/translations.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
+import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,11 +49,13 @@ initServices() async {
   // TODO zh_Hans_CN, en_US
   Get.put(LocalStoreRepository());
   Directory dir = await getApplicationDocumentsDirectory();
+  Get.put(SessionRepository(dir));
   Get.put(SettingsController());
   SettingsController.to.dataDir = dir;
 
   Get.put(MainController());
   Get.put(ChatListController());
+  // SessionRepository sessionRepository = SessionRepository(dir);
 }
 
 class GeekerChat extends StatelessWidget {

@@ -13,12 +13,12 @@ class ChatListController extends GetxController {
 
   late SessionModel currentSession;
 
-  late SessionRepository _sessionRepository;
+  final SessionRepository _sessionRepository = Get.find<SessionRepository>();
 
   ChatListController() {
     // _sessionRepository = SessionRepository.getInstance();
-    Directory dir = SettingsController.to.dataDir;
-    _sessionRepository = SessionRepository(dir);
+    // Directory dir = SettingsController.to.dataDir;
+    // _sessionRepository = SessionRepository(dir);
   }
 
   @override

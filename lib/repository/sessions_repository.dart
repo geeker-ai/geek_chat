@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 
 // part 'chat';
 part 'sessions_repository.g.dart';
@@ -35,6 +34,28 @@ class SessionTable {
   int? updated; // 最后更新时间 YYYYMMDDHHmmssSSS
 }
 
+@collection
+class MessageTable {
+  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
+  String? mid;
+
+  @Index(composite: [CompositeIndex('status')])
+  String? sid;
+
+  String? model;
+  String? role;
+  String? content;
+  int? updated; // 最后更新时间 YYYYMMDDHHmmssSSS
+  // bool? generating;
+  // String msgType = 'new'; // new, refresh
+  bool synced = false; //
+
+  @Index()
+  int status = 1; // 1 = show, 0 = delete
+}
+
 class SessionRepository {
   late Directory dir;
   late Isar isar;
@@ -51,7 +72,8 @@ class SessionRepository {
   // }
 
   SessionRepository(this.dir) {
-    isar = Isar.openSync([SessionTableSchema], directory: dir.path);
+    isar = Isar.openSync([SessionTableSchema, MessageTableSchema],
+        directory: dir.path);
   }
 
   // initSession() async {
@@ -105,5 +127,40 @@ class SessionRepository {
       return true;
     }
     return false;
+  }
+
+  List<MessageTable> findMessagesBySessionId(String? sid, int status) {
+    List<MessageTable> messageList;
+    messageList = isar.messageTables
+        .where()
+        .sidStatusEqualTo(sid, status)
+        .sortByUpdatedDesc()
+        .findAllSync();
+    return messageList;
+  }
+
+  List<MessageTable> findAllMessages(int status) {
+    List<MessageTable> messageList;
+    messageList = isar.messageTables
+        .where()
+        .statusEqualTo(status)
+        .sortByUpdated()
+        .findAllSync();
+    return messageList;
+  }
+
+  MessageTable? findMessageBymid(String? mid) {
+    MessageTable? mt;
+    mt = isar.messageTables.where().midEqualTo(mid).findFirstSync();
+    return mt;
+  }
+
+  int saveMessage(MessageTable mt) {
+    MessageTable? mtInDb = findMessageBymid(mt.mid);
+    MessageTable savedmt = mt;
+    if (mtInDb != null && mtInDb.id > 0) {
+      savedmt.id = mtInDb.id;
+    }
+    return isar.writeTxnSync(() => isar.messageTables.putSync(savedmt));
   }
 }

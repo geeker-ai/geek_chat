@@ -1,4 +1,4 @@
-import 'package:geek_chat/repository/message_repository.dart';
+import 'package:geek_chat/repository/sessions_repository.dart';
 
 class MessageModel {
   String msgId;

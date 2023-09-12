@@ -294,6 +294,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.3"
+  flutter_markdown:
+    dependency: "direct main"
+    description:
+      name: flutter_markdown
+      sha256: d4a1cb250c4e059586af0235f32e02882860a508e189b61f2b31b8810c1e1330
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.6.17+2"
   flutter_slidable:
     dependency: "direct main"
     description:
@@ -443,6 +451,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.0"
+  markdown:
+    dependency: transitive
+    description:
+      name: markdown
+      sha256: acf35edccc0463a9d7384e437c015a3535772e09714cf60e07eeef3a15870dcd
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "7.1.1"
   matcher:
     dependency: transitive
     description:
