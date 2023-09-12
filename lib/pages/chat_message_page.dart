@@ -28,7 +28,7 @@ class ChatMessagePage extends StatelessWidget {
     SessionModel session = chatListController.getSessionBysid(data['sid']);
     List<MessageModel> messages =
         chatMessageController.findBySessionId(data['sid']);
-    print("messages.length: ${messages.length}");
+    // print("messages.length: ${messages.length}");
     return Scaffold(
       appBar: AppBar(
         title: GetBuilder<ChatListController>(builder: (controller) {

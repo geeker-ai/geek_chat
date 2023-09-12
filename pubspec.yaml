@@ -50,6 +50,9 @@ dependencies:
   moment_dart: ^1.0.1
   flutter_markdown: ^0.6.17+2
 
+  flutter_highlighter: ^0.1.1
+  google_fonts: ^5.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

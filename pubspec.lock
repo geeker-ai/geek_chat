@@ -278,6 +278,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.5"
+  flutter_highlighter:
+    dependency: "direct main"
+    description:
+      name: flutter_highlighter
+      sha256: "93173afd47a9ada53f3176371755e7ea4a1065362763976d06d6adfb4d946e10"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.1"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -355,6 +363,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.2"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      sha256: e20ff62b158b96f392bfc8afe29dee1503c94fbea2cbe8186fd59b756b8ae982
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.1.0"
   graphs:
     dependency: transitive
     description:
@@ -363,6 +379,22 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.1"
+  highlighter:
+    dependency: transitive
+    description:
+      name: highlighter
+      sha256: "92180c72b9da8758e1acf39a45aa305a97dcfe2fdc8f3d1d2947c23f2772bfbc"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.1"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.0"
   http_multi_server:
     dependency: transitive
     description:
