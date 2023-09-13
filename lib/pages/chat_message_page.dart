@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
-import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class ChatMessagePage extends StatelessWidget {
-  ChatMessagePage({super.key});
+  ChatMessagePage({super.key}) {
+    var data = Get.parameters;
+    sid = data['sid'];
+    Get.put(ChatMessageController());
+    ChatMessageController chatMessageController =
+        Get.find<ChatMessageController>();
+    chatMessageController.findBySessionId(data['sid']);
+  }
+
+  // late SessionModel session;
+  late String? sid;
 
   ChatListController chatListController = Get.find<ChatListController>();
-  final ChatMessageController chatMessageController = ChatMessageController();
+  TextEditingController textEditingController = TextEditingController();
+  // final ChatMessageController chatMessageController = ChatMessageController();
 
   void scrollToBottom() {
     scrollController.animateTo(scrollController.position.maxScrollExtent,
@@ -24,11 +34,8 @@ class ChatMessagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = Get.parameters;
-    SessionModel session = chatListController.getSessionBysid(data['sid']);
-    List<MessageModel> messages =
-        chatMessageController.findBySessionId(data['sid']);
     // print("messages.length: ${messages.length}");
+    SessionModel session = chatListController.getSessionBysid(sid);
     return Scaffold(
       appBar: AppBar(
         title: GetBuilder<ChatListController>(builder: (controller) {
@@ -39,31 +46,19 @@ class ChatMessagePage extends StatelessWidget {
           child: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              reverse: true,
-              itemCount: messages.length,
-              controller: scrollController,
-              // scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext ctxt, int index) {
-                // print("builder: index: $index");
-                return MessageBlock(message: messages.elementAt(index));
-                // return Container(
-                //   padding: const EdgeInsets.all(14),
-                //   decoration: BoxDecoration(
-                //     color: Colors.grey[300],
-                //     borderRadius: BorderRadius.only(
-                //       topRight: Radius.circular(radius),
-                //       topLeft: Radius.circular(radius),
-                //       // bottomLeft: Radius.circular(18),
-                //       bottomRight: Radius.circular(radius),
-                //     ),
-                //   ),
-                //   child: const Text(
-                //       "为了正确理解带状态部件中的 ListView.builder(..)，可以使用带状态 Widget 创建一个非常简"),
-                // );
-              },
-            ),
+            child: GetBuilder<ChatMessageController>(builder: (controller) {
+              return ListView.builder(
+                reverse: true,
+                itemCount: controller.messages.length,
+                controller: scrollController,
+                // scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext ctxt, int index) {
+                  return MessageBlock(
+                      message: controller.messages.elementAt(index));
+                },
+              );
+            }),
           ),
           Container(
             width: MediaQuery.of(context).size.width,
@@ -81,27 +76,36 @@ class ChatMessagePage extends StatelessWidget {
             child:
                 Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.only(top: 1),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          minLines: 1,
-                          maxLines: 3,
-                          decoration: const InputDecoration(filled: false),
-                          onChanged: (value) {},
-                          onSubmitted: (String value) {
-                            // onSubmit();
-                          },
-                          onTap: () {
-                            //
-                          },
+                child: GetBuilder<ChatMessageController>(builder: (controller) {
+                  textEditingController.text = controller.inputQuestion;
+                  return Container(
+                    padding: const EdgeInsets.only(top: 1),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: textEditingController,
+                            minLines: 1,
+                            maxLines: 3,
+                            textInputAction: TextInputAction.go,
+                            decoration: const InputDecoration(filled: false),
+                            onChanged: (value) {
+                              controller.inputQuestion = value;
+                            },
+                            onSubmitted: (String value) {
+                              // onSubmit();
+                              controller.submit();
+                              controller.update();
+                            },
+                            onTap: () {
+                              //
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
+                      ],
+                    ),
+                  );
+                }),
               ),
             ]),
           ),

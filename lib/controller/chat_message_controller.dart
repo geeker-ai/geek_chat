@@ -47,6 +47,18 @@ class ChatMessageController extends GetxController {
     return messages;
   }
 
+  String inputQuestion = '';
+
+  void submit() {
+    MessageModel input = createNewMessage(const Uuid().v4(),
+        settingsController.chatGPTRoles.user, inputQuestion, false);
+    // messages.add(input);
+    messages.insert(0, input);
+    inputQuestion = '';
+    // _sessionRepository.saveMessage(input.toMessageTable());
+    // update();
+  }
+
   List<MessageModel> getDefaultChatList() {
     //c9518d4b-fdd1-4826-b783-fc1ba4f4b83b
     String sid = 'c9518d4b-fdd1-4826-b783-fc1ba4f4b83b';
