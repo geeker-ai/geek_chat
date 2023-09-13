@@ -1,10 +1,13 @@
-import 'dart:io';
+// import 'dart:io';
+
+import 'dart:convert';
 
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
+import 'package:geek_chat/service/openai_service.dart';
 import 'package:get/get.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:uuid/uuid.dart';
@@ -13,10 +16,13 @@ class ChatMessageController extends GetxController {
   ChatListController chatListController = Get.find<ChatListController>();
   SettingsController settingsController = Get.find<SettingsController>();
   final SessionRepository _sessionRepository = Get.find<SessionRepository>();
+  // late OpenAIService openAIService;
 
   @override
   void onInit() {
     super.onInit();
+    // openAIService = Get.put(OpenAIService());
+    // openAIService = Get.putAsync(() => OpenAIService());
   }
 
   MessageModel createNewMessage(
@@ -49,14 +55,73 @@ class ChatMessageController extends GetxController {
 
   String inputQuestion = '';
 
-  void submit() {
+  void submit(String sid) {
     MessageModel input = createNewMessage(const Uuid().v4(),
         settingsController.chatGPTRoles.user, inputQuestion, false);
-    // messages.add(input);
+    input.sId = sid;
     messages.insert(0, input);
     inputQuestion = '';
     // _sessionRepository.saveMessage(input.toMessageTable());
-    // update();
+    update();
+    replyFromOpenAIWithSSE(input, sid);
+  }
+
+  void saveMessage(MessageModel mm) {
+    _sessionRepository.saveMessage(mm.toMessageTable());
+  }
+
+  void replyFromOpenAIWithSSE(MessageModel input, String sid) {
+    MessageModel targetMessage = createNewMessage(const Uuid().v4(),
+        settingsController.chatGPTRoles.assistant, '...', true);
+    targetMessage.sId = sid;
+    messages.insert(0, targetMessage);
+    var chatMessage = {
+      "model": "gpt-3.5-turbo",
+      "stream": true,
+      "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "请用flask框架写一个sse的例子"}
+      ]
+    };
+    var headers = {
+      'Accept': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Authorization': 'Bearer ${settingsController.apiKey}',
+      'Content-Type': 'application/json',
+      // 'Accept-Language': settingsController.locale
+    }; //http://ip-api.com/json/
+
+    var openai = SSEClient.subscribeToSSE(
+      url: "${settingsController.apiHost}/v1/chat/completions",
+      headers: headers,
+      body: chatMessage,
+    );
+
+    openai.listen((event) async {
+      if (targetMessage.content == '...') {
+        targetMessage.content = '';
+      }
+      if (event.isNotEmpty) {
+        try {
+          var data = jsonDecode(event);
+          // String model = "${data['model']}";
+          String content = "${data['choices'][0]['delta']['content']}";
+          String finished = "${data['choices'][0]['finish_reason']}".trim();
+          if (content.trim().isNotEmpty && content.trim() != 'null') {
+            // print(content);
+            targetMessage.content = "${targetMessage.content}$content";
+            update();
+            // await Future.delayed(const Duration(milliseconds: 100000));
+          }
+          if (finished == 'stop') {
+            saveMessage(input);
+            saveMessage(targetMessage);
+          }
+        } catch (e, s) {
+          print("error: $e, $s");
+        }
+      }
+    });
   }
 
   List<MessageModel> getDefaultChatList() {

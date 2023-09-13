@@ -38,7 +38,7 @@ dependencies:
   get_storage: ^2.1.1
   dio: ^5.3.2
   window_manager: ^0.3.6
-  auto_updater: ^0.1.7
+  # auto_updater: ^0.1.7
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
   flutter_launcher_icons: ^0.13.1
@@ -48,10 +48,14 @@ dependencies:
   path_provider: ^2.1.1
   flutter_slidable: ^3.0.0
   moment_dart: ^1.0.1
-  flutter_markdown: ^0.6.17+2
+  flutter_markdown: ^0.6.17+3
 
   flutter_highlighter: ^0.1.1
+  # google_fonts: ^4.0.4
   google_fonts: ^5.1.0
+
+  # flutter_client_sse: ^2.0.0
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:

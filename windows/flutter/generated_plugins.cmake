@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  auto_updater
   isar_flutter_libs
   screen_retriever
   window_manager

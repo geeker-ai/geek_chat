@@ -7,14 +7,16 @@ import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class ChatMessagePage extends StatelessWidget {
+  late ChatMessageController chatMessageController;
   ChatMessagePage({super.key}) {
     var data = Get.parameters;
     sid = data['sid'];
-    Get.put(ChatMessageController());
-    ChatMessageController chatMessageController =
-        Get.find<ChatMessageController>();
+    chatMessageController = Get.put(ChatMessageController());
     chatMessageController.findBySessionId(data['sid']);
+    session = chatListController.getSessionBysid(sid);
   }
+
+  late SessionModel session;
 
   // late SessionModel session;
   late String? sid;
@@ -35,7 +37,7 @@ class ChatMessagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // print("messages.length: ${messages.length}");
-    SessionModel session = chatListController.getSessionBysid(sid);
+    // SessionModel session = chatListController.getSessionBysid(sid);
     return Scaffold(
       appBar: AppBar(
         title: GetBuilder<ChatListController>(builder: (controller) {
@@ -61,7 +63,7 @@ class ChatMessagePage extends StatelessWidget {
             }),
           ),
           Container(
-            width: MediaQuery.of(context).size.width,
+            // width: MediaQuery.of(context).size.width,
             // padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
             padding:
                 const EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
@@ -94,8 +96,8 @@ class ChatMessagePage extends StatelessWidget {
                             },
                             onSubmitted: (String value) {
                               // onSubmit();
-                              controller.submit();
-                              controller.update();
+                              controller.submit(sid ?? '');
+                              // controller.update();
                             },
                             onTap: () {
                               //
