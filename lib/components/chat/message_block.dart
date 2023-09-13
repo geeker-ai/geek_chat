@@ -10,6 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
+// import 'package:markdown_widget/markdown_widget.dart';
+// import 'package:markdown_widget/widget/markdown.dart';
 
 // ignore: must_be_immutable
 class MessageBlock extends StatelessWidget {
@@ -70,6 +72,7 @@ class MessageBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
       child: Row(
@@ -82,7 +85,7 @@ class MessageBlock extends StatelessWidget {
           Expanded(
             child: Container(
               // height: MediaQuery.of(context).size.height,
-              // height: 400,
+              // height: double.infinity,
               padding:
                   const EdgeInsets.only(right: 0, left: 0, top: 0, bottom: 0),
               decoration: BoxDecoration(
@@ -102,6 +105,13 @@ class MessageBlock extends StatelessWidget {
                 builders: {
                   'code': CodeElementBuilder(),
                 },
+                // child: MarkdownWidget(
+                //   data: message.content.trim(),
+                //   // tocController: TocController(),
+                //   config: isDark
+                //       ? MarkdownConfig.darkConfig
+                //       : MarkdownConfig.defaultConfig,
+                // ),
                 // syntaxHighlighter: SyntaxHighlighter(),
                 // styleSheet: MarkdownStyleSheet(
                 //   code: const TextStyle(backgroundColor: Colors.transparent),

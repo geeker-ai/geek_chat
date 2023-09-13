@@ -29,7 +29,7 @@ class ChatMessageController extends GetxController {
       String sid, String role, String content, bool generating) {
     MessageModel mm =
         MessageModel(msgId: const Uuid().v4(), role: role, content: content);
-    SessionModel session = chatListController.getSessionBysid(sid);
+    SessionModel? session = chatListController.getSessionBysid(sid);
     mm.model = session.model;
     mm.msgType = 1;
     mm.generating = generating;
@@ -80,7 +80,7 @@ class ChatMessageController extends GetxController {
       "stream": true,
       "messages": [
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "请用flask框架写一个sse的例子"}
+        {"role": "user", "content": "请用中文介绍一下flutter"}
       ]
     };
     var headers = {

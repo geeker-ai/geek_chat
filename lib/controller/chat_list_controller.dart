@@ -1,4 +1,4 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/model.dart';
@@ -56,10 +56,16 @@ class ChatListController extends GetxController {
     return currentSession;
   }
 
-  SessionModel getSessionBysid(String? sid) {
+  SessionModel getSessionBysid(String sid) {
+    // SessionModel? currentSession;
     late SessionTable? st;
     if (sid != null && sid.isNotEmpty) {
       st = _sessionRepository.findBySessionId(sid);
+      // if (st != null) {
+      //   print(st.sid);
+      // } else {
+      //   print("not found: $sid");
+      // }
     } else {
       st = _sessionRepository.findFirst();
     }

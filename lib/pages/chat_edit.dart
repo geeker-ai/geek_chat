@@ -36,7 +36,7 @@ class ChatEditPage extends StatelessWidget {
     if (data['opt'] == 'new') {
       chatListController.createNewSession();
     } else {
-      chatListController.getSessionBysid(data['sid']);
+      chatListController.getSessionBysid(data['sid']!);
     }
     return Scaffold(
       appBar: AppBar(

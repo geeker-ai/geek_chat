@@ -11,9 +11,11 @@ class ChatMessagePage extends StatelessWidget {
   ChatMessagePage({super.key}) {
     var data = Get.parameters;
     sid = data['sid'];
+    print("ChatMessageController: $sid ");
     chatMessageController = Get.put(ChatMessageController());
-    chatMessageController.findBySessionId(data['sid']);
-    session = chatListController.getSessionBysid(sid);
+    // session = chatMessageController.findBySessionId(sid);
+    session = chatListController.getSessionBysid(sid!);
+    chatMessageController.findBySessionId(sid);
   }
 
   late SessionModel session;
