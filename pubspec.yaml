@@ -57,6 +57,11 @@ dependencies:
   # flutter_client_sse: ^2.0.0
   http: ^1.1.0
 
+  rxdart: ^0.27.7
+
+  # https://pub.dev/packages/flutter_gpt_tokenizer
+  flutter_gpt_tokenizer: ^0.1.0
+
   markdown_widget: ^2.2.0
 
 dev_dependencies:

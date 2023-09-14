@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:geek_chat/repository/sessions_repository.dart';
 
 class MessageModel {
@@ -11,6 +13,7 @@ class MessageModel {
   int? msgType; // 1=new, 2=refresh
   bool? synced;
   int? status; // 1 = show, 2=delete
+  StreamController<String>? contentStream;
 
   MessageModel(
       {required this.msgId,
@@ -22,7 +25,13 @@ class MessageModel {
       this.generating,
       this.msgType,
       this.synced,
-      this.status});
+      this.status}) {
+    if (generating == true) {
+      // print("contentStream = StreamController<String>();");
+      contentStream = StreamController<String>();
+      streamContent = content;
+    }
+  }
   //: this.updated = int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString())
 
   factory MessageModel.fromMessageTable(MessageTable mt) {
@@ -38,6 +47,13 @@ class MessageModel {
     mm.synced = mt.synced;
     mm.status = mt.status;
     return mm;
+  }
+
+  set streamContent(String word) {
+    if (contentStream != null) {
+      contentStream!.add(word);
+      // content = "${content}${word}";
+    }
   }
 
   MessageTable toMessageTable() {

@@ -27,12 +27,15 @@ class ChatMessageController extends GetxController {
 
   MessageModel createNewMessage(
       String sid, String role, String content, bool generating) {
-    MessageModel mm =
-        MessageModel(msgId: const Uuid().v4(), role: role, content: content);
+    MessageModel mm = MessageModel(
+        msgId: const Uuid().v4(),
+        role: role,
+        content: content,
+        generating: generating);
     SessionModel? session = chatListController.getSessionBysid(sid);
     mm.model = session.model;
     mm.msgType = 1;
-    mm.generating = generating;
+    // mm.generating = generating;
     mm.synced = false;
     mm.updated = int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString());
     return mm;
@@ -80,7 +83,7 @@ class ChatMessageController extends GetxController {
       "stream": true,
       "messages": [
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "请用中文介绍一下flutter"}
+        {"role": "user", "content": "请用英文介绍一下flutter, 200字"}
       ]
     };
     var headers = {
@@ -91,7 +94,7 @@ class ChatMessageController extends GetxController {
       // 'Accept-Language': settingsController.locale
     }; //http://ip-api.com/json/
 
-    var openai = SSEClient.subscribeToSSE(
+    Stream openai = SSEClient.subscribeToSSE(
       url: "${settingsController.apiHost}/v1/chat/completions",
       headers: headers,
       body: chatMessage,
@@ -110,12 +113,19 @@ class ChatMessageController extends GetxController {
           if (content.trim().isNotEmpty && content.trim() != 'null') {
             // print(content);
             targetMessage.content = "${targetMessage.content}$content";
-            update();
-            // await Future.delayed(const Duration(milliseconds: 100000));
+            if (targetMessage.generating == true) {
+              targetMessage.streamContent = targetMessage.content;
+            }
+            // update();
           }
           if (finished == 'stop') {
             saveMessage(input);
             saveMessage(targetMessage);
+            if (targetMessage.generating == true) {
+              targetMessage.contentStream!.close();
+              targetMessage.generating = false;
+              update();
+            }
           }
         } catch (e, s) {
           print("error: $e, $s");
