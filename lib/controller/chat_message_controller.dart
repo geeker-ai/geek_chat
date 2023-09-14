@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
@@ -23,6 +24,7 @@ class ChatMessageController extends GetxController {
     super.onInit();
     // openAIService = Get.put(OpenAIService());
     // openAIService = Get.putAsync(() => OpenAIService());
+    Get.put(Tokenizer());
   }
 
   MessageModel createNewMessage(
@@ -73,65 +75,98 @@ class ChatMessageController extends GetxController {
     _sessionRepository.saveMessage(mm.toMessageTable());
   }
 
-  void replyFromOpenAIWithSSE(MessageModel input, String sid) {
+  Future<List<Map<String, String>>> getRequestMessages(
+      MessageModel input) async {
+    SessionModel currentSession = chatListController.currentSession;
+    Tokenizer tokenizer = Get.find<Tokenizer>();
+    var requestMessages = [
+      {"role": "system", "content": currentSession.promptContent},
+    ];
+    int tokenCount = 0;
+    tokenCount = await tokenizer.count(currentSession.promptContent,
+        modelName: currentSession.model);
+    tokenCount = tokenCount +
+        await tokenizer.count(input.content, modelName: currentSession.model);
+    print("count message: ${messages.length}");
+    for (MessageModel message in messages) {
+      // print("message id: ${message.updated}");
+      tokenCount = tokenCount +
+          await tokenizer.count(message.content,
+              modelName: currentSession.model) +
+          200;
+      if (tokenCount > currentSession.maxContextSize) {
+        break;
+      }
+      requestMessages.add({"role": message.role, "content": message.content});
+    }
+    requestMessages.add({"role": input.role, "content": input.content});
+    print("request messages length: ${requestMessages.length}");
+    print(
+        "total token count: $tokenCount, model token count: ${currentSession.maxContextSize}");
+    return requestMessages;
+  }
+
+  void replyFromOpenAIWithSSE(MessageModel input, String sid) async {
+    SessionModel currentSession = chatListController.currentSession;
     MessageModel targetMessage = createNewMessage(const Uuid().v4(),
         settingsController.chatGPTRoles.assistant, '...', true);
     targetMessage.sId = sid;
-    messages.insert(0, targetMessage);
     var chatMessage = {
-      "model": "gpt-3.5-turbo",
+      "model": currentSession.model,
       "stream": true,
-      "messages": [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "请用英文介绍一下flutter, 200字"}
-      ]
+      "messages": await getRequestMessages(input)
     };
+    messages.insert(0, targetMessage);
+    update();
     var headers = {
       'Accept': 'text/event-stream',
       'Cache-Control': 'no-cache',
       'Authorization': 'Bearer ${settingsController.apiKey}',
       'Content-Type': 'application/json',
       // 'Accept-Language': settingsController.locale
-    }; //http://ip-api.com/json/
+    };
 
     Stream openai = SSEClient.subscribeToSSE(
       url: "${settingsController.apiHost}/v1/chat/completions",
       headers: headers,
       body: chatMessage,
+      debounce: const Duration(milliseconds: 20),
     );
 
-    openai.listen((event) async {
-      if (targetMessage.content == '...') {
-        targetMessage.content = '';
-      }
-      if (event.isNotEmpty) {
-        try {
-          var data = jsonDecode(event);
-          // String model = "${data['model']}";
-          String content = "${data['choices'][0]['delta']['content']}";
-          String finished = "${data['choices'][0]['finish_reason']}".trim();
-          if (content.trim().isNotEmpty && content.trim() != 'null') {
-            // print(content);
-            targetMessage.content = "${targetMessage.content}$content";
-            if (targetMessage.generating == true) {
-              targetMessage.streamContent = targetMessage.content;
-            }
-            // update();
-          }
-          if (finished == 'stop') {
-            saveMessage(input);
-            saveMessage(targetMessage);
-            if (targetMessage.generating == true) {
-              targetMessage.contentStream!.close();
-              targetMessage.generating = false;
-              update();
-            }
-          }
-        } catch (e, s) {
-          print("error: $e, $s");
+    openai.listen(
+      (event) async {
+        if (targetMessage.content == '...') {
+          targetMessage.content = '';
         }
-      }
-    });
+        if (event.isNotEmpty) {
+          try {
+            var data = jsonDecode(event);
+            // String model = "${data['model']}";
+            String content = "${data['choices'][0]['delta']['content']}";
+            // String finished = "${data['choices'][0]['finish_reason']}".trim();
+            if (content.trim().isNotEmpty && content.trim() != 'null') {
+              // print(content);
+              targetMessage.content = "${targetMessage.content}$content";
+              if (targetMessage.generating == true) {
+                targetMessage.streamContent = targetMessage.content;
+              }
+            }
+          } catch (e, s) {
+            print("error: $e, $s");
+          }
+        }
+      },
+      onDone: () {
+        // print("doen ------------------- ");
+        saveMessage(input);
+        saveMessage(targetMessage);
+        if (targetMessage.generating == true) {
+          targetMessage.contentStream!.close();
+          targetMessage.generating = false;
+          update();
+        }
+      },
+    );
   }
 
   List<MessageModel> getDefaultChatList() {

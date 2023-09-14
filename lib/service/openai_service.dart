@@ -26,14 +26,22 @@ class SSEClient {
             .toStringStream()
             .transform(const LineSplitter())
             .asyncExpand((event) => Rx.timer(event, debounce))
-            .listen((event) {
-          if (event.isNotEmpty) {
-            String value = event.replaceFirst('data:', '').trim();
-            streamController.add(value);
-          }
-        }, onError: (e, s) {
-          streamController.addError(e, s);
-        });
+            .listen(
+          (event) {
+            if (event.isNotEmpty) {
+              String value = event.replaceFirst('data:', '').trim();
+              streamController.add(value);
+            }
+          },
+          onError: (e, s) {
+            streamController.addError(e, s);
+          },
+          onDone: () {
+            // print("stream done");
+            streamController.done;
+            streamController.close();
+          },
+        );
       }, onError: (e, s) {
         streamController.addError(e, s);
       });

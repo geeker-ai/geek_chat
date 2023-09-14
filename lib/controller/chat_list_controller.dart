@@ -59,13 +59,8 @@ class ChatListController extends GetxController {
   SessionModel getSessionBysid(String sid) {
     // SessionModel? currentSession;
     late SessionTable? st;
-    if (sid != null && sid.isNotEmpty) {
+    if (sid.isNotEmpty) {
       st = _sessionRepository.findBySessionId(sid);
-      // if (st != null) {
-      //   print(st.sid);
-      // } else {
-      //   print("not found: $sid");
-      // }
     } else {
       st = _sessionRepository.findFirst();
     }
