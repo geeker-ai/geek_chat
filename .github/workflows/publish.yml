@@ -1,0 +1,22 @@
+# name: "Publish"
+# on:
+#   push:
+#     tags: [v\d+\.\d+\.\d+]
+# jobs:
+#   publish-flutter:
+#     permissions:
+#       content: write
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         include:
+#           - target: aarch64-apple-darwin
+#             platform: macos-latest
+#           - target: x86_64-apple-darwin
+#             platform: macos-latest
+#           - target: x86_64-pc-windows-msvc
+#             platform: windows-latest
+
+#   runs-on: ${{ matrix.platform }}
+#   steps:
+#     - uses: actions/checkout@v3

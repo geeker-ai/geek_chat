@@ -138,13 +138,14 @@ class ChatMessageController extends GetxController {
         if (targetMessage.content == '...') {
           targetMessage.content = '';
         }
-        if (event.isNotEmpty) {
+        if (true) {
           try {
             var data = jsonDecode(event);
             // String model = "${data['model']}";
             String content = "${data['choices'][0]['delta']['content']}";
             // String finished = "${data['choices'][0]['finish_reason']}".trim();
-            if (content.trim().isNotEmpty && content.trim() != 'null') {
+            //if (content.trim().isNotEmpty && content.trim() != 'null') {
+            if (content.trim() != 'null') {
               // print(content);
               targetMessage.content = "${targetMessage.content}$content";
               if (targetMessage.generating == true) {
@@ -157,7 +158,7 @@ class ChatMessageController extends GetxController {
         }
       },
       onDone: () {
-        // print("doen ------------------- ");
+        print("done ------------------- ");
         saveMessage(input);
         saveMessage(targetMessage);
         if (targetMessage.generating == true) {

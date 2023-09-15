@@ -4,13 +4,13 @@ import 'package:flutter_highlighter/themes/atom-one-dark.dart';
 import 'package:flutter_highlighter/themes/atom-one-light.dart';
 // import 'package:flutter_highlighter/themes/github.dart';
 // import 'package:flutter_highlighter/themes/github.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+// import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
 // ignore: depend_on_referenced_packages
-import 'package:markdown/markdown.dart' as md;
+// import 'package:markdown/markdown.dart' as md;
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
-// import 'package:markdown_widget/markdown_widget.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 // import 'package:markdown_widget/widget/markdown.dart';
 
 // ignore: must_be_immutable
@@ -72,11 +72,12 @@ class MessageBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
       child: Row(
         mainAxisAlignment: getMainAxisAligment(),
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
@@ -84,13 +85,15 @@ class MessageBlock extends StatelessWidget {
           ),
           Expanded(
             child: Container(
+              // width: double.infinity,
               padding:
-                  const EdgeInsets.only(right: 0, left: 0, top: 0, bottom: 0),
+                  const EdgeInsets.only(right: 5, left: 5, top: 10, bottom: 10),
               decoration: BoxDecoration(
                 color: getMessageBackgroundColor(context),
                 borderRadius: getBorderRadius(),
               ),
-              child: markDownWidgetWithStream(message),
+              // constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
+              child: markDownWidgetWithStream(message, isDark),
             ),
           ),
           SizedBox(
@@ -102,81 +105,90 @@ class MessageBlock extends StatelessWidget {
   }
 }
 
-Widget markDownWidgetWithStream(MessageModel message) {
+Widget markDownWidgetWithStream(MessageModel message, bool isDark) {
   if (message.generating == false) {
-    return markDownWidget(message.content);
+    return markDownWidget(message.content, isDark);
   } else {
     return StreamBuilder<String>(
         stream: message.contentStream!.stream,
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          return markDownWidget(snapshot.data ?? '');
+          return markDownWidget(snapshot.data ?? '', isDark);
         });
   }
 }
 
-Widget markDownWidget(String message) {
-  Widget markdown = Markdown(
-    data: message,
-    selectable: true,
-    shrinkWrap: true,
-    controller: ScrollController(),
-    builders: {
-      'code': CodeElementBuilder(),
-    },
-    // syntaxHighlighter: SyntaxHighlighter(),
-    // styleSheet: MarkdownStyleSheet(
-    //   code: const TextStyle(backgroundColor: Colors.transparent),
-    // ),
-    // syntaxHighlighter: ,
-    // styleSheet: MarkdownStyleSheet(code: config),
-    // extensionSet: md.ExtensionSet(
-    //   md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-    //   <md.InlineSyntax>[
-    //     md.EmojiSyntax(),
-    //     ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-    //   ],
-    // ),
-  );
+Widget markDownWidget(String message, bool isDark) {
+  // Widget markdown = Markdown(
+  //   data: message,
+  //   selectable: true,
+  //   shrinkWrap: true,
+  //   controller: ScrollController(),
+  //   builders: {
+  //     'code': CodeElementBuilder(),
+  //   },
+  // syntaxHighlighter: SyntaxHighlighter(),
+  // styleSheet: MarkdownStyleSheet(
+  //   code: const TextStyle(backgroundColor: Colors.transparent),
+  // ),
+  // syntaxHighlighter: ,
+  // styleSheet: MarkdownStyleSheet(code: config),
+  // extensionSet: md.ExtensionSet(
+  //   md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+  //   <md.InlineSyntax>[
+  //     md.EmojiSyntax(),
+  //     ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
+  //   ],
+  // ),
+  // );
   // markdown = Text(message);
-  // Widget markdownWidget = MarkdownWidget(data: message);
-  return markdown;
+  Widget markdownWidget = MarkdownWidget(
+    data: message,
+    shrinkWrap: true,
+    // tocController: TocController(),
+    config: isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig,
+    // physics: const ScrollPhysics(),
+    // config: MarkdownConfig(configs: [
+    //   PreConfig(theme: isDark ? atomOneDarkTheme : atomOneLightTheme)
+    // ]),
+  );
+  return markdownWidget;
 }
 
-class CodeElementBuilder extends MarkdownElementBuilder {
-  @override
-  Widget? visitElementAfterWithContext(BuildContext context, md.Element element,
-      TextStyle? preferredStyle, TextStyle? parentStyle) {
-    // return super.visitElementAfterWithContext(context, element, preferredStyle, parentStyle);
-    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    var language = '';
-    if (element.attributes['class'] != null) {
-      String lg = element.attributes['class'] as String;
-      language = lg.substring(9);
-    }
-    // return SizedBox(child:,)
-    return HighlightView(
-      // The original code to be highlighted
-      element.textContent,
+// class CodeElementBuilder extends MarkdownElementBuilder {
+//   @override
+//   Widget? visitElementAfterWithContext(BuildContext context, md.Element element,
+//       TextStyle? preferredStyle, TextStyle? parentStyle) {
+//     // return super.visitElementAfterWithContext(context, element, preferredStyle, parentStyle);
+//     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+//     var language = '';
+//     if (element.attributes['class'] != null) {
+//       String lg = element.attributes['class'] as String;
+//       language = lg.substring(9);
+//     }
+//     // return SizedBox(child:,)
+//     return HighlightView(
+//       // The original code to be highlighted
+//       element.textContent,
 
-      // Specify language
-      // It is recommended to give it a value for performance
-      language: language,
+//       // Specify language
+//       // It is recommended to give it a value for performance
+//       language: language,
 
-      // Specify highlight theme
-      // All available themes are listed in `themes` folder
-      // theme: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
-      //             .platformBrightness ==
-      //         Brightness.light
-      //     ? atomOneLightTheme
-      //     : atomOneDarkTheme,
-      theme: isDark ? atomOneDarkTheme : atomOneLightTheme,
-      // theme: githubTheme,
+//       // Specify highlight theme
+//       // All available themes are listed in `themes` folder
+//       // theme: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
+//       //             .platformBrightness ==
+//       //         Brightness.light
+//       //     ? atomOneLightTheme
+//       //     : atomOneDarkTheme,
+//       theme: isDark ? atomOneDarkTheme : atomOneLightTheme,
+//       // theme: githubTheme,
 
-      // Specify padding
-      // padding: const EdgeInsets.all(8),
+//       // Specify padding
+//       // padding: const EdgeInsets.all(8),
 
-      // Specify text style
-      textStyle: GoogleFonts.robotoMono(),
-    );
-  }
-}
+//       // Specify text style
+//       textStyle: GoogleFonts.robotoMono(),
+//     );
+//   }
+// }

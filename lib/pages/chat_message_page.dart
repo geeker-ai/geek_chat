@@ -47,74 +47,77 @@ class ChatMessagePage extends StatelessWidget {
         }),
       ),
       body: SafeArea(
-          child: Column(
-        children: [
-          Expanded(
-            child: GetBuilder<ChatMessageController>(builder: (controller) {
-              return ListView.builder(
-                reverse: true,
-                itemCount: controller.messages.length,
-                controller: scrollController,
-                // scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext ctxt, int index) {
-                  return MessageBlock(
-                      message: controller.messages.elementAt(index));
-                },
-              );
-            }),
-          ),
-          Container(
-            // width: MediaQuery.of(context).size.width,
-            // padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
-            padding:
-                const EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
-            decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  width: 0,
-                  color: Colors.transparent,
+        child: Column(
+          children: [
+            Expanded(
+              child: GetBuilder<ChatMessageController>(builder: (controller) {
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: controller.messages.length,
+                  controller: scrollController,
+                  scrollDirection: Axis.vertical,
+                  physics: const ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext ctxt, int index) {
+                    return MessageBlock(
+                        message: controller.messages.elementAt(index));
+                  },
+                );
+              }),
+            ),
+            Container(
+              // width: MediaQuery.of(context).size.width,
+              // padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
+              padding:
+                  const EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    width: 0,
+                    color: Colors.transparent,
+                  ),
                 ),
               ),
-            ),
-            child:
-                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              Expanded(
-                child: GetBuilder<ChatMessageController>(builder: (controller) {
-                  textEditingController.text = controller.inputQuestion;
-                  return Container(
-                    padding: const EdgeInsets.only(top: 1),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: textEditingController,
-                            minLines: 1,
-                            maxLines: 3,
-                            textInputAction: TextInputAction.go,
-                            decoration: const InputDecoration(filled: false),
-                            onChanged: (value) {
-                              controller.inputQuestion = value;
-                            },
-                            onSubmitted: (String value) {
-                              // onSubmit();
-                              controller.submit(sid ?? '');
-                              // controller.update();
-                            },
-                            onTap: () {
-                              //
-                            },
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                Expanded(
+                  child:
+                      GetBuilder<ChatMessageController>(builder: (controller) {
+                    textEditingController.text = controller.inputQuestion;
+                    return Container(
+                      padding: const EdgeInsets.only(top: 1),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: textEditingController,
+                              minLines: 1,
+                              maxLines: 3,
+                              textInputAction: TextInputAction.go,
+                              decoration: const InputDecoration(filled: false),
+                              onChanged: (value) {
+                                controller.inputQuestion = value;
+                              },
+                              onSubmitted: (String value) {
+                                // onSubmit();
+                                controller.submit(sid ?? '');
+                                // controller.update();
+                              },
+                              onTap: () {
+                                //
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            ]),
-          ),
-        ],
-      )),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ]),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
