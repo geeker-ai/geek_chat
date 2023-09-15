@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_highlighter/flutter_highlighter.dart';
-import 'package:flutter_highlighter/themes/atom-one-dark.dart';
-import 'package:flutter_highlighter/themes/atom-one-light.dart';
+import 'package:geek_chat/components/markdown/latex.dart';
+// import 'package:flutter_highlighter/flutter_highlighter.dart';
+// import 'package:flutter_highlighter/themes/atom-one-dark.dart';
+// import 'package:flutter_highlighter/themes/atom-one-light.dart';
 // import 'package:flutter_highlighter/themes/github.dart';
 // import 'package:flutter_highlighter/themes/github.dart';
 // import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 // ignore: depend_on_referenced_packages
 // import 'package:markdown/markdown.dart' as md;
 import 'package:geek_chat/controller/settings.dart';
@@ -126,20 +127,21 @@ Widget markDownWidget(String message, bool isDark) {
   //   builders: {
   //     'code': CodeElementBuilder(),
   //   },
-  // syntaxHighlighter: SyntaxHighlighter(),
-  // styleSheet: MarkdownStyleSheet(
-  //   code: const TextStyle(backgroundColor: Colors.transparent),
-  // ),
-  // syntaxHighlighter: ,
-  // styleSheet: MarkdownStyleSheet(code: config),
-  // extensionSet: md.ExtensionSet(
-  //   md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-  //   <md.InlineSyntax>[
-  //     md.EmojiSyntax(),
-  //     ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-  //   ],
-  // ),
+  //   // syntaxHighlighter: SyntaxHighlighter(),
+  //   // styleSheet: MarkdownStyleSheet(
+  //   //   code: const TextStyle(backgroundColor: Colors.transparent),
+  //   // ),
+  //   // syntaxHighlighter: ,
+  //   // styleSheet: MarkdownStyleSheet(code: config),
+  //   // extensionSet: md.ExtensionSet(
+  //   //   md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+  //   //   <md.InlineSyntax>[
+  //   //     md.EmojiSyntax(),
+  //   //     ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
+  //   //   ],
+  //   // ),
   // );
+  // return SelectionArea(child: markdown);
   // markdown = Text(message);
   Widget markdownWidget = MarkdownWidget(
     data: message,
@@ -150,6 +152,10 @@ Widget markDownWidget(String message, bool isDark) {
     // config: MarkdownConfig(configs: [
     //   PreConfig(theme: isDark ? atomOneDarkTheme : atomOneLightTheme)
     // ]),
+    markdownGeneratorConfig: MarkdownGeneratorConfig(
+      generators: [latexGenerator],
+      inlineSyntaxList: [LatexSyntax()],
+    ),
   );
   return markdownWidget;
 }

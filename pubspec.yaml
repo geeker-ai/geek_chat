@@ -65,9 +65,13 @@ dependencies:
   flutter_gpt_tokenizer: ^0.1.0
 
   markdown_widget: ^2.2.0
+  # https://pub.dev/packages/bubble
+  # bubble: ^1.2.1
 
   # https://pub.dev/packages/in_app_purchase
   # in_app_purchase: ^3.1.10
+
+  flutter_math_fork: ^0.7.1
 
 dev_dependencies:
   flutter_test:
