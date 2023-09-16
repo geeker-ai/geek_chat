@@ -66,6 +66,7 @@ dependencies:
 
   markdown_widget: ^2.2.0
   # https://pub.dev/packages/bubble
+  # https://github.com/vi-k/bubble/blob/master/README.md
   # bubble: ^1.2.1
 
   # https://pub.dev/packages/in_app_purchase

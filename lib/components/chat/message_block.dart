@@ -64,10 +64,9 @@ class MessageBlock extends StatelessWidget {
   Color getMessageBackgroundColor(BuildContext context) {
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
     if (isDark) {
-      return Colors.black54;
+      return Colors.grey[900]!;
     } else {
       return Colors.black12;
-      // return Colors.white;
     }
   }
 
