@@ -144,7 +144,7 @@ class ChatEditPage extends StatelessWidget {
                 min: 0,
                 max: 22,
                 divisions: 22,
-                label: controller.currentSession.maxContextMsgCount.toString(),
+                label: controller.currentSession.maxContextMsgCountLabel,
               ),
             ),
             ListTile(

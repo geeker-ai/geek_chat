@@ -20,6 +20,13 @@ class SessionModel {
 
   late MessageModel prompt;
 
+  String get maxContextMsgCountLabel {
+    if (maxContextMsgCount >= 22) {
+      return "Unlimited";
+    }
+    return maxContextMsgCount.toString();
+  }
+
   SessionModel({
     required this.sid,
     required this.name,
