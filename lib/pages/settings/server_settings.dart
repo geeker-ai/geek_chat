@@ -13,6 +13,17 @@ class ServerSettingsPage extends StatelessWidget {
     {'name': 'openai', 'title': 'OpenAI'},
     {'name': 'geekerchat', 'title': 'GeekerChat'}
   ];
+
+  String getServerTitle(String name) {
+    String title = '';
+    for (Map<String, String> option in options) {
+      if (option['name'] == name) {
+        title = option['title']!;
+      }
+    }
+    return title;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +45,7 @@ class ServerSettingsPage extends StatelessWidget {
             ),
             BottomSheetSwitcherComponent(
               title: "OpenAI Settings",
-              subTitle: controller.locale,
+              subTitle: getServerTitle(controller.settings.provider),
               selectedValue: controller.settings.provider,
               options: options,
               leadingIcon: Icons.computer_outlined,

@@ -33,6 +33,8 @@ class GeekChatTranslations extends Translations {
           "New Chat": "New Chat",
           "Edit Chat": "Edit Chat",
           "Model": "Model",
+          "OpenAI": "OpenAI Server",
+          "GeekerChat": "GeekerChat (EasyAccess)",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -63,6 +65,8 @@ class GeekChatTranslations extends Translations {
           "New Chat": "创建新对话",
           "Edit Chat": "编辑对话",
           "Model": "模型",
+          "OpenAI": "OpenAI 服务器",
+          "GeekerChat": "GeekerChat (轻松访问)",
         }
       };
 }
