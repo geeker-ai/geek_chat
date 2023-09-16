@@ -129,7 +129,7 @@ class ChatMessageController extends GetxController {
       'Cache-Control': 'no-cache',
       'Authorization': 'Bearer ${settingsController.apiKey}',
       'Content-Type': 'application/json',
-      // 'Accept-Language': settingsController.locale
+      'Accept-Language': settingsController.settings.language
     };
 
     Stream openai = SSEClient.subscribeToSSE(
@@ -166,6 +166,7 @@ class ChatMessageController extends GetxController {
       onDone: () {
         print("done ------------------- ");
         saveMessage(input);
+        // await Future.delayed(const Duration(milliseconds: 10));
         saveMessage(targetMessage);
         if (targetMessage.generating == true) {
           targetMessage.contentStream!.close();
