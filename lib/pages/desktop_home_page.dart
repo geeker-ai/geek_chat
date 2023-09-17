@@ -83,8 +83,8 @@ class DesktopHomePage extends StatelessWidget {
                       onPressed: () {
                         // Get.toNamed("/settings");
                         Get.snackbar(
-                          'Sorry!',
-                          'This feature will coming soon!',
+                          'Sorry!'.tr,
+                          'This feature will coming soon!'.tr,
                           duration: const Duration(seconds: 2),
                           snackPosition: SnackPosition.TOP,
                         );

@@ -55,8 +55,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     Get.snackbar(
-                      'Sorry!',
-                      'This feature will coming soon!',
+                      'Sorry!'.tr,
+                      'This feature will coming soon!'.tr,
                       duration: const Duration(seconds: 2),
                       snackPosition: SnackPosition.TOP,
                     );
@@ -66,8 +66,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     Get.snackbar(
-                      'Sorry!',
-                      'This feature will coming soon!',
+                      'Sorry!'.tr,
+                      'This feature will coming soon!'.tr,
                       duration: const Duration(seconds: 2),
                       snackPosition: SnackPosition.TOP,
                     );
@@ -77,8 +77,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     Get.snackbar(
-                      'Sorry!',
-                      'This feature will coming soon!',
+                      'Sorry!'.tr,
+                      'This feature will coming soon!'.tr,
                       duration: const Duration(seconds: 2),
                       snackPosition: SnackPosition.TOP,
                     );
