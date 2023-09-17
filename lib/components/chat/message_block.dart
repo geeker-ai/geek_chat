@@ -28,7 +28,7 @@ class MessageBlock extends StatelessWidget {
   }
 
   BorderRadiusGeometry getBorderRadius() {
-    double radius = 14;
+    double radius = 10;
     if (message.role == SettingsController.to.chatGPTRoles.assistant) {
       return BorderRadius.only(
         topRight: Radius.circular(radius),

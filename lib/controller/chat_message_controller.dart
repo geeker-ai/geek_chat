@@ -75,6 +75,10 @@ class ChatMessageController extends GetxController {
     _sessionRepository.saveMessage(mm.toMessageTable());
   }
 
+  void cleanSessionMessages(String sid) {
+    // _sessionRepository
+  }
+
   Future<List<Map<String, String>>> getRequestMessages(
       MessageModel input) async {
     SessionModel currentSession = chatListController.currentSession;

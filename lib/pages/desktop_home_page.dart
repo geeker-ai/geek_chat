@@ -33,7 +33,6 @@ class DesktopHomePage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(3))),
                     onPressed: () {
-                      //TODO new chat
                       Get.toNamed('/editchat',
                           parameters: {'opt': 'new', 'sid': ''});
                     },
@@ -80,6 +79,12 @@ class DesktopHomePage extends StatelessWidget {
                       title: "About Me".tr,
                       onPressed: () {
                         // Get.toNamed("/settings");
+                        Get.snackbar(
+                          'Sorry!',
+                          'This feature will coming soon!',
+                          duration: const Duration(seconds: 2),
+                          snackPosition: SnackPosition.TOP,
+                        );
                       },
                       icon: Icons.info_outline,
                     ),
@@ -95,7 +100,7 @@ class DesktopHomePage extends StatelessWidget {
           Expanded(
             child: GetBuilder<ChatListController>(builder: (controller) {
               return chatListController.currentSessionId.isEmpty
-                  ? Text("data")
+                  ? const Text("Error!")
                   : DeskTopMainRightComponent(
                       sid: chatListController.currentSession.sid);
             }),

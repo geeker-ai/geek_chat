@@ -27,10 +27,23 @@ flutter pub run build_runner build
 
 ### Todo
 
+- TODO list
+  - [ ] About me page
+  - [ ] Prompt Page
+  - [ ] Clear session messages
+  - [ ] Auto sync
+  - [ ] Save as pdf
+  - [ ] 消息模块 copy, del
+  - [ ] 消息模块 code block 美化
+  - [ ] 重构 httpRequestWithSSE代码，使用Dio
+  - [ ] 重构 ChatListController，解决 currentSession 空安全
+  - [ ] 支付接入 stripe，实现应用内支付
+
+- v0.0.2
+  - [ ] 自动发布版本
+  - [ ] 自动更新
+
 - v0.0.1
-  - [x] Settings Page
-  - [ ] Save Settings toast
-  - [ ] GeekerChat Active
-  - [ ] Chat List Page
-  - [ ] Chat Message Page
-  - [ ] Prompts Page
+  - [x] Support desktop
+  - [x] Support mobile
+  - [x] Support OpenAI models

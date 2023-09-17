@@ -53,10 +53,38 @@ class DeskTopMainRightComponent extends StatelessWidget {
                   child: Text(''),
                 ),
                 IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.cleaning_services)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.sync)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.save))
+                  onPressed: () {
+                    Get.snackbar(
+                      'Sorry!',
+                      'This feature will coming soon!',
+                      duration: const Duration(seconds: 2),
+                      snackPosition: SnackPosition.TOP,
+                    );
+                  },
+                  icon: const Icon(Icons.cleaning_services),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Get.snackbar(
+                      'Sorry!',
+                      'This feature will coming soon!',
+                      duration: const Duration(seconds: 2),
+                      snackPosition: SnackPosition.TOP,
+                    );
+                  },
+                  icon: const Icon(Icons.sync),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Get.snackbar(
+                      'Sorry!',
+                      'This feature will coming soon!',
+                      duration: const Duration(seconds: 2),
+                      snackPosition: SnackPosition.TOP,
+                    );
+                  },
+                  icon: const Icon(Icons.save),
+                )
                 // IconButton(onPressed: () {}, icon: Icon(Icons.edit))
               ],
             ),
