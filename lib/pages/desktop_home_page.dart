@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/components/chat/menu_button.dart';
+import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:get/get.dart';
 
 class DesktopHomePage extends StatelessWidget {
@@ -28,7 +30,17 @@ class DesktopHomePage extends StatelessWidget {
                     icon: const Icon(Icons.add),
                   ),
                 ),
-                const Expanded(child: Text("Chat List")),
+                Expanded(
+                  child: GetBuilder<ChatListController>(builder: (controller) {
+                    return ListView.builder(
+                        itemCount: controller.sessions.length,
+                        controller: ScrollController(),
+                        itemBuilder: (BuildContext ctxt, int index) {
+                          return Text(
+                              controller.sessions.elementAt(index).name);
+                        });
+                  }),
+                ),
                 const Padding(
                   padding: EdgeInsets.only(left: 5, right: 10),
                   child: Divider(),
@@ -36,35 +48,16 @@ class DesktopHomePage extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: Column(children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 40,
-                      child: TextButton.icon(
-                        style: TextButton.styleFrom(
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.only(left: 35),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(1)),
-                        ),
-                        onPressed: () {},
-                        icon: const Icon(Icons.settings),
-                        label: Text("Settings".tr),
-                      ),
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 40,
-                      child: TextButton.icon(
-                          style: TextButton.styleFrom(
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 35),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(1)),
-                          ),
-                          onPressed: () {},
-                          icon: const Icon(Icons.info_outline),
-                          label: Text("About me".tr)),
-                    ),
+                    LeftMenuButtonComponent(
+                        title: "Settings".tr,
+                        onPressed: () {
+                          Get.toNamed("/settings");
+                        }),
+                    LeftMenuButtonComponent(
+                        title: "About Me".tr,
+                        onPressed: () {
+                          // Get.toNamed("/settings");
+                        }),
                   ]),
                 ),
               ],
