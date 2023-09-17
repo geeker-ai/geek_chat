@@ -4,7 +4,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
+// import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
@@ -14,6 +14,8 @@ import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:logger/logger.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:geek_chat/routers.dart';
@@ -49,15 +51,18 @@ void main() async {
 
 initServices() async {
   // TODO zh_Hans_CN, en_US
+  Get.put(Logger());
+
   Get.put(LocalStoreRepository());
   Directory dir = await getApplicationDocumentsDirectory();
   Get.put(SessionRepository(dir));
-  Get.put(SettingsController());
+  SettingsController settingsController = Get.put(SettingsController());
   SettingsController.to.dataDir = dir;
 
   Get.put(MainController());
   Get.put(ChatListController());
-  // SessionRepository sessionRepository = SessionRepository(dir);
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  settingsController.packageInfo = packageInfo;
 }
 
 class GeekerChat extends StatelessWidget {

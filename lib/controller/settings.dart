@@ -6,6 +6,7 @@ import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ChatGPTRoles {
   final String system = 'system';
@@ -24,6 +25,8 @@ class SettingsController extends GetxController {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final LocalStoreRepository _localStoreRepository = Get.find();
+
+  late PackageInfo packageInfo;
 
   late Directory _dataDir;
 

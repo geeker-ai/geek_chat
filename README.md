@@ -38,10 +38,14 @@ flutter pub run build_runner build
   - [ ] 重构 httpRequestWithSSE代码，使用Dio
   - [ ] 重构 ChatListController，解决 currentSession 空安全
   - [ ] 支付接入 stripe，实现应用内支付
-
-- v0.0.2
   - [ ] 自动发布版本
   - [ ] 自动更新
+
+- v0.0.2
+  - [x] logging
+  - [ ] github action: auto build macos packages.
+  - [ ] github action: auto build android packages.
+  - [ ] Message copy
 
 - v0.0.1
   - [x] Support desktop

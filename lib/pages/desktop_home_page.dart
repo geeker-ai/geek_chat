@@ -3,6 +3,7 @@ import 'package:geek_chat/components/chat/chat_list_menu_item.dart';
 import 'package:geek_chat/components/chat/menu_button.dart';
 import 'package:geek_chat/components/desktop_main_right_component.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/settings.dart';
 import 'package:get/get.dart';
 
 class DesktopHomePage extends StatelessWidget {
@@ -16,6 +17,7 @@ class DesktopHomePage extends StatelessWidget {
     // }
 
     // if (chatListController.currentSession)
+    SettingsController settingsController = Get.find<SettingsController>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 4, left: 8, bottom: 10),
@@ -76,7 +78,8 @@ class DesktopHomePage extends StatelessWidget {
                       icon: Icons.settings,
                     ),
                     LeftMenuButtonComponent(
-                      title: "About Me".tr,
+                      title:
+                          "${'About Me'.tr}(v${settingsController.packageInfo.version})",
                       onPressed: () {
                         // Get.toNamed("/settings");
                         Get.snackbar(

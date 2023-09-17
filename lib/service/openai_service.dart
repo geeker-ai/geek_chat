@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx;
 
 class SSEClient {
   static final http.Client _client = http.Client();
@@ -25,7 +25,7 @@ class SSEClient {
         value.stream
             .toStringStream()
             .transform(const LineSplitter())
-            .asyncExpand((event) => Rx.timer(event, debounce))
+            .asyncExpand((event) => rx.Rx.timer(event, debounce))
             .listen(
           (event) {
             if (event.isNotEmpty) {

@@ -10,6 +10,7 @@ import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/service/openai_service.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,6 +27,8 @@ class ChatMessageController extends GetxController {
     // openAIService = Get.putAsync(() => OpenAIService());
     Get.put(Tokenizer());
   }
+
+  Logger logger = Get.find<Logger>();
 
   MessageModel createNewMessage(
       String sid, String role, String content, bool generating) {
@@ -91,7 +94,7 @@ class ChatMessageController extends GetxController {
         modelName: currentSession.model);
     tokenCount = tokenCount +
         await tokenizer.count(input.content, modelName: currentSession.model);
-    print("count message: ${messages.length}");
+    logger.d("count message: ${messages.length}");
     int i = 0;
     for (MessageModel message in messages) {
       // print("message id: ${message.updated}");
@@ -110,8 +113,8 @@ class ChatMessageController extends GetxController {
       i++;
     }
     requestMessages.add({"role": input.role, "content": input.content});
-    print("request messages length: ${requestMessages.length}");
-    print(
+    logger.d("request messages length: ${requestMessages.length}");
+    logger.d(
         "total token count: $tokenCount, model token count: ${currentSession.maxContextSize}");
     return requestMessages;
   }
@@ -135,6 +138,7 @@ class ChatMessageController extends GetxController {
       'Content-Type': 'application/json',
       'Accept-Language': settingsController.settings.language
     };
+    logger.d(headers);
 
     Stream openai = SSEClient.subscribeToSSE(
       url: "${settingsController.apiHost}/v1/chat/completions",
@@ -163,12 +167,12 @@ class ChatMessageController extends GetxController {
               }
             }
           } catch (e, s) {
-            print("error: $e, $s");
+            logger.e("error: $e, $s");
           }
         }
       },
       onDone: () {
-        print("done ------------------- ");
+        logger.d("done ------------------- ");
         saveMessage(input);
         // await Future.delayed(const Duration(milliseconds: 10));
         saveMessage(targetMessage);
