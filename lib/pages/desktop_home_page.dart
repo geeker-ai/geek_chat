@@ -31,7 +31,7 @@ class DesktopHomePage extends StatelessWidget {
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(1))),
+                            borderRadius: BorderRadius.circular(3))),
                     onPressed: () {
                       //TODO new chat
                       Get.toNamed('/editchat',
@@ -70,15 +70,19 @@ class DesktopHomePage extends StatelessWidget {
                   width: double.infinity,
                   child: Column(children: [
                     LeftMenuButtonComponent(
-                        title: "Settings".tr,
-                        onPressed: () {
-                          Get.toNamed("/dsettings");
-                        }),
+                      title: "Settings".tr,
+                      onPressed: () {
+                        Get.toNamed("/dsettings");
+                      },
+                      icon: Icons.settings,
+                    ),
                     LeftMenuButtonComponent(
-                        title: "About Me".tr,
-                        onPressed: () {
-                          // Get.toNamed("/settings");
-                        }),
+                      title: "About Me".tr,
+                      onPressed: () {
+                        // Get.toNamed("/settings");
+                      },
+                      icon: Icons.info_outline,
+                    ),
                   ]),
                 ),
               ],

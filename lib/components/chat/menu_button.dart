@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class LeftMenuButtonComponent extends StatelessWidget {
@@ -7,10 +7,12 @@ class LeftMenuButtonComponent extends StatelessWidget {
       {super.key,
       required this.title,
       // required this.routeName,
-      required this.onPressed});
+      required this.onPressed,
+      required this.icon});
 
   String title;
   Function onPressed;
+  IconData icon;
   // String routeName;
 
   @override
@@ -28,7 +30,7 @@ class LeftMenuButtonComponent extends StatelessWidget {
           // Get.toNamed(routeName);
           onPressed();
         },
-        icon: const Icon(Icons.settings),
+        icon: Icon(icon),
         label: Text(title),
       ),
     );

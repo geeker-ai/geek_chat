@@ -21,9 +21,6 @@ class DeskTopMainRightComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    // throw UnimplementedError();
-    // return Text(sid);
     SessionModel session = chatListController.currentSession;
     chatMessageController.findBySessionId(sid);
 
@@ -34,7 +31,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
         children: [
           // ConstrainedBox(constraints: BoxConstraints(minWidth: 400)),
           Container(
-            padding: const EdgeInsets.only(left: 12, right: 5, top: 0),
+            padding: const EdgeInsets.only(left: 12, right: 20, top: 0),
             alignment: Alignment.centerLeft,
             height: 50,
             width: double.infinity,
@@ -52,6 +49,14 @@ class DeskTopMainRightComponent extends StatelessWidget {
                   icon: const Icon(Icons.tune),
                   label: Text(session.model),
                 ),
+                const Expanded(
+                  child: Text(''),
+                ),
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.cleaning_services)),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.sync)),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.save))
                 // IconButton(onPressed: () {}, icon: Icon(Icons.edit))
               ],
             ),
@@ -95,7 +100,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
                         },
                         onSubmitted: (String value) {
                           // onSubmit();
-                          controller.submit(sid ?? '');
+                          controller.submit(sid);
                           // controller.update();
                         },
                         onTap: () {
