@@ -12,6 +12,7 @@ class ChatListController extends GetxController {
   List<SessionModel> sessions = [];
 
   late SessionModel currentSession;
+  String currentSessionId = '';
 
   final SessionRepository _sessionRepository = Get.find<SessionRepository>();
 
@@ -33,6 +34,10 @@ class ChatListController extends GetxController {
     for (SessionTable st in sessionTables) {
       sessions.add(SessionModel.fromTable(st));
     }
+    if (sessions.isNotEmpty) {
+      currentSession = sessions.first;
+      currentSessionId = currentSession.sid;
+    }
   }
 
   SessionModel createNewSession() {
@@ -53,6 +58,7 @@ class ChatListController extends GetxController {
             .toString()), // TODO updated
         synced: false,
         status: 1);
+    currentSessionId = currentSession.sid;
     return currentSession;
   }
 
@@ -66,8 +72,13 @@ class ChatListController extends GetxController {
     }
     if (st != null) {
       currentSession = SessionModel.fromTable(st);
+      currentSessionId = currentSession.sid;
     }
     return currentSession;
+  }
+
+  SessionModel switchSession(String sid) {
+    return getSessionBysid(sid);
   }
 
   void save() {

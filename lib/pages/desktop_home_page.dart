@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/components/chat/chat_list_menu_item.dart';
 import 'package:geek_chat/components/chat/menu_button.dart';
+import 'package:geek_chat/components/desktop_main_right_component.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +10,13 @@ class DesktopHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ChatListController chatListController = Get.find();
+    // if (chatListController.currentSession?) {
+    //   //
+    // }
+
+    // if (chatListController.currentSession)
+
     return Padding(
       padding: const EdgeInsets.only(top: 4, left: 8, bottom: 10),
       child: Row(
@@ -25,10 +34,15 @@ class DesktopHomePage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(1))),
                     onPressed: () {
                       //TODO new chat
+                      Get.toNamed('/editchat',
+                          parameters: {'opt': 'new', 'sid': ''});
                     },
                     label: const Text("New Chat"),
                     icon: const Icon(Icons.add),
                   ),
+                ),
+                const SizedBox(
+                  height: 5,
                 ),
                 Expanded(
                   child: GetBuilder<ChatListController>(builder: (controller) {
@@ -36,8 +50,15 @@ class DesktopHomePage extends StatelessWidget {
                         itemCount: controller.sessions.length,
                         controller: ScrollController(),
                         itemBuilder: (BuildContext ctxt, int index) {
-                          return Text(
-                              controller.sessions.elementAt(index).name);
+                          // return Text(
+                          //     controller.sessions.elementAt(index).name);
+                          return ChatListMenuItemComponent(
+                              session: controller.sessions.elementAt(index),
+                              onTap: (String sid) {
+                                controller.switchSession(sid);
+                                controller.update();
+                              },
+                              currentSession: controller.currentSession);
                         });
                   }),
                 ),
@@ -51,7 +72,7 @@ class DesktopHomePage extends StatelessWidget {
                     LeftMenuButtonComponent(
                         title: "Settings".tr,
                         onPressed: () {
-                          Get.toNamed("/settings");
+                          Get.toNamed("/dsettings");
                         }),
                     LeftMenuButtonComponent(
                         title: "About Me".tr,
@@ -65,9 +86,16 @@ class DesktopHomePage extends StatelessWidget {
           ),
           Container(
             width: 0.5,
-            color: Colors.black,
+            // color: Colors.black,
           ),
-          const Expanded(child: Text("data"))
+          Expanded(
+            child: GetBuilder<ChatListController>(builder: (controller) {
+              return chatListController.currentSessionId.isEmpty
+                  ? Text("data")
+                  : DeskTopMainRightComponent(
+                      sid: chatListController.currentSession.sid);
+            }),
+          )
         ],
       ),
     );

@@ -28,18 +28,19 @@ void main() async {
   //     // DeviceOrientation.landscapeRight,
   //   ],
   // );
-  // if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
-  //   await windowManager.ensureInitialized();
-  //   WindowOptions windowOptions = const WindowOptions(
-  //     size: Size(1280, 900),
-  //     center: true,
-  //     windowButtonVisibility: false,
-  //   );
-  //   windowManager.waitUntilReadyToShow(windowOptions, () async {
-  //     await windowManager.show();
-  //     await windowManager.focus();
-  //   });
-  // }
+  if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+    await windowManager.ensureInitialized();
+    // WindowOptions windowOptions = const WindowOptions(
+    //     // size: Size(1280, 900),
+    //     // center: true,
+    //     // windowButtonVisibility: false,
+    //     minimumSize: Size(800, 600));
+    // windowManager.waitUntilReadyToShow(windowOptions, () async {
+    //   await windowManager.show();
+    //   await windowManager.focus();
+    // });
+    windowManager.setMinimumSize(const Size(800, 600));
+  }
   // print("system locale: ${Get.deviceLocale}");
   await GetStorage.init('geekchat');
   await initServices();
