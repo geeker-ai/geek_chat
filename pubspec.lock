@@ -57,14 +57,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
-  build_cli_annotations:
-    dependency: transitive
-    description:
-      name: build_cli_annotations
-      sha256: b59d2769769efd6c9ff6d4c4cede0be115a566afc591705c2040b707534b1172
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   build_config:
     dependency: transitive
     description:
@@ -278,14 +270,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.5"
-  flutter_gpt_tokenizer:
-    dependency: "direct main"
-    description:
-      name: flutter_gpt_tokenizer
-      sha256: dfb96231b76641e661703abb9150d16abbabdcfd2f4ece5aa5b63237333a55dd
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
   flutter_highlight:
     dependency: transitive
     description:
@@ -326,14 +310,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.1"
-  flutter_rust_bridge:
-    dependency: transitive
-    description:
-      name: flutter_rust_bridge
-      sha256: a2ff791f96ed03be0d4a8d249130688371ab3612ef95efeddef23600b904a1ef
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.81.0"
   flutter_slidable:
     dependency: "direct main"
     description:
@@ -363,6 +339,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_tiktoken:
+    dependency: "direct main"
+    description:
+      name: flutter_tiktoken
+      sha256: a9fa91490c627e630d7feaefc0d6ade6fa56f21c4338a4a7bab9eadcbb07164f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -408,14 +392,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-  gpt_tokenizer:
-    dependency: transitive
-    description:
-      name: gpt_tokenizer
-      sha256: "8d4b250ffd16b743526005fdffb28e8285e5ed0db0a0c61720359cc20897b006"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
   graphs:
     dependency: transitive
     description:
@@ -760,14 +736,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
-  puppeteer:
-    dependency: transitive
-    description:
-      name: puppeteer
-      sha256: "59e723cc5b69537159a7c34efd645dc08a6a1ac4647d7d7823606802c0f93cdb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.0"
   rxdart:
     dependency: "direct main"
     description:
@@ -800,14 +768,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  shelf_static:
-    dependency: transitive
-    description:
-      name: shelf_static
-      sha256: a41d3f53c4adf0f57480578c1d61d90342cd617de7fc8077b1304643c2d85c1e
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.2"
   shelf_web_socket:
     dependency: transitive
     description:

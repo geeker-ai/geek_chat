@@ -112,7 +112,11 @@ Widget markDownWidgetWithStream(MessageModel message, bool isDark) {
     return StreamBuilder<String>(
         stream: message.contentStream!.stream,
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          return markDownWidget(snapshot.data ?? '', isDark);
+          String text = snapshot.data ?? '';
+          if (message.generating == true) {
+            text = "$text ...";
+          }
+          return markDownWidget(text, isDark);
         });
   }
 }

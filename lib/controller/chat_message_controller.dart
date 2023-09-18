@@ -2,13 +2,14 @@
 
 import 'dart:convert';
 
-import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
+// import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/service/openai_service.dart';
+import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:moment_dart/moment_dart.dart';
@@ -25,7 +26,7 @@ class ChatMessageController extends GetxController {
     super.onInit();
     // openAIService = Get.put(OpenAIService());
     // openAIService = Get.putAsync(() => OpenAIService());
-    Get.put(Tokenizer());
+    // Get.put(Tokenizer());
   }
 
   Logger logger = Get.find<Logger>();
@@ -85,15 +86,19 @@ class ChatMessageController extends GetxController {
   Future<List<Map<String, String>>> getRequestMessages(
       MessageModel input) async {
     SessionModel currentSession = chatListController.currentSession;
-    Tokenizer tokenizer = Get.find<Tokenizer>();
+    // Tokenizer tokenizer = Get.find<Tokenizer>();
     var requestMessages = [
       {"role": "system", "content": currentSession.promptContent},
     ];
     int tokenCount = 0;
-    tokenCount = await tokenizer.count(currentSession.promptContent,
-        modelName: currentSession.model);
-    tokenCount = tokenCount +
-        await tokenizer.count(input.content, modelName: currentSession.model);
+    // tokenCount = await tokenizer.count(currentSession.promptContent,
+    //     modelName: currentSession.model);
+    tokenCount =
+        numTokenCounter(currentSession.model, currentSession.promptContent);
+    // tokenCount = tokenCount +
+    //     await tokenizer.count(input.content, modelName: currentSession.model);
+    tokenCount =
+        tokenCount + numTokenCounter(currentSession.model, input.content);
     logger.d("count message: ${messages.length}");
     int i = 0;
     for (MessageModel message in messages) {
@@ -102,9 +107,12 @@ class ChatMessageController extends GetxController {
       if (i >= currentSession.maxContextMsgCount) {
         break;
       }
+      // tokenCount = tokenCount +
+      //     await tokenizer.count(message.content,
+      //         modelName: currentSession.model) +
+      //     200;
       tokenCount = tokenCount +
-          await tokenizer.count(message.content,
-              modelName: currentSession.model) +
+          numTokenCounter(currentSession.model, message.content) +
           200;
       if (tokenCount > currentSession.maxContextSize) {
         break;
@@ -121,8 +129,8 @@ class ChatMessageController extends GetxController {
 
   void replyFromOpenAIWithSSE(MessageModel input, String sid) async {
     SessionModel currentSession = chatListController.currentSession;
-    MessageModel targetMessage = createNewMessage(const Uuid().v4(),
-        settingsController.chatGPTRoles.assistant, '...', true);
+    MessageModel targetMessage = createNewMessage(
+        const Uuid().v4(), settingsController.chatGPTRoles.assistant, '', true);
     targetMessage.sId = sid;
     var chatMessage = {
       "model": currentSession.model,
@@ -149,9 +157,9 @@ class ChatMessageController extends GetxController {
 
     openai.listen(
       (event) async {
-        if (targetMessage.content == '...') {
-          targetMessage.content = '';
-        }
+        // if (targetMessage.content == '...') {
+        //   targetMessage.content = '';
+        // }
         if (true) {
           try {
             var data = jsonDecode(event);

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter_tiktoken/flutter_tiktoken.dart';
+
 enum DeviceType { small, wide }
 
 DeviceType getDeviceType() {
@@ -13,4 +15,10 @@ DeviceType getDeviceType() {
     return DeviceType.wide;
   }
   return DeviceType.small;
+}
+
+int numTokenCounter(String model, String content) {
+  final encoding = encodingForModel(model);
+  final numTokens = encoding.encode(content).length;
+  return numTokens;
 }

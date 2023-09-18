@@ -62,7 +62,10 @@ dependencies:
   rxdart: ^0.27.7
 
   # https://pub.dev/packages/flutter_gpt_tokenizer
-  flutter_gpt_tokenizer: ^0.1.0
+  # flutter_gpt_tokenizer: ^0.1.0
+
+  # https://pub.dev/packages/flutter_tiktoken
+  flutter_tiktoken: ^0.0.1
 
   markdown_widget: ^2.2.0
   # https://pub.dev/packages/bubble
@@ -78,6 +81,8 @@ dependencies:
 
   # https://pub.dev/packages/logger
   logger: ^2.0.2
+
+
 
 dev_dependencies:
   flutter_test:

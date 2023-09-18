@@ -1,5 +1,4 @@
 PODS:
-  - flutter_gpt_tokenizer (0.1.0)
   - FlutterMacOS (1.0.0)
   - isar_flutter_libs (1.0.0):
     - FlutterMacOS
@@ -16,7 +15,6 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
-  - flutter_gpt_tokenizer (from `Flutter/ephemeral/.symlinks/plugins/flutter_gpt_tokenizer/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - isar_flutter_libs (from `Flutter/ephemeral/.symlinks/plugins/isar_flutter_libs/macos`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
@@ -26,8 +24,6 @@ DEPENDENCIES:
   - window_manager (from `Flutter/ephemeral/.symlinks/plugins/window_manager/macos`)
 
 EXTERNAL SOURCES:
-  flutter_gpt_tokenizer:
-    :path: Flutter/ephemeral/.symlinks/plugins/flutter_gpt_tokenizer/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   isar_flutter_libs:
@@ -44,7 +40,6 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/window_manager/macos
 
 SPEC CHECKSUMS:
-  flutter_gpt_tokenizer: 0b19cc0e359a0d5903c2086ac28a71573f1a4eff
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   isar_flutter_libs: 43385c99864c168fadba7c9adeddc5d38838ca6a
   package_info_plus: 02d7a575e80f194102bef286361c6c326e4c29ce
