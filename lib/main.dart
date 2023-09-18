@@ -65,7 +65,7 @@ initServices() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   settingsController.packageInfo = packageInfo;
 
-  await TiktokenDataProcessCenter().initata();
+  TiktokenDataProcessCenter().initata();
 }
 
 class GeekerChat extends StatelessWidget {

@@ -73,9 +73,15 @@ class LatexNode extends SpanNode {
         alignment: PlaceholderAlignment.middle,
         child: !isInline
             ? Container(
+                alignment: Alignment.center,
                 width: double.infinity,
-                child: Center(child: latex),
-                margin: EdgeInsets.symmetric(vertical: 16),
+                // child: Center(child: latex),
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                child: SelectableMath(
+                  ast: latex.ast,
+                  mathStyle: MathStyle.display,
+                  textStyle: const TextStyle(fontSize: 16),
+                ),
               )
             : latex);
   }
