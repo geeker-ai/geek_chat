@@ -50,6 +50,14 @@ jobs:
         run: |
           flutter build macos --release
 
+      - name: Publish Artefacts
+        uses: actions/upload-artifact@v1
+        env:
+          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
+        with:
+          name: release-$VERSION
+          path: "build/macos/Build/Products/Release/Geek Chat.app"
+
       - name: Build windows destop
         if: matrix.platform == 'windows-latest'
         run: |
