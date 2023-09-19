@@ -25,13 +25,13 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
+      - name: Check Out
+        uses: actions/checkout@v3
+
       - name: Change Version
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         run: make change-version
-
-      - name: Check Out
-        uses: actions/checkout@v3
 
       - name: Install Android dep
         run: echo ""
