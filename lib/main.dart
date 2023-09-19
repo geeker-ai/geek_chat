@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_tiktoken/flutter_tiktoken.dart';
@@ -52,7 +54,11 @@ void main() async {
 
 initServices() async {
   // TODO zh_Hans_CN, en_US
-  Get.put(Logger());
+
+  await dotenv.load(fileName: ".env");
+
+  Logger logger = Get.put(Logger());
+  logger.d("env: channel: ${dotenv.get('CHANNEL')}");
 
   Get.put(LocalStoreRepository());
   Directory dir = await getApplicationDocumentsDirectory();

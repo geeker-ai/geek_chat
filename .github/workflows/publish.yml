@@ -1,22 +1,61 @@
-# name: "Publish"
-# on:
-#   push:
-#     tags: [v\d+\.\d+\.\d+]
-# jobs:
-#   publish-flutter:
-#     permissions:
-#       content: write
-#     strategy:
-#       fail-fast: false
-#       matrix:
-#         include:
-#           - target: aarch64-apple-darwin
-#             platform: macos-latest
-#           - target: x86_64-apple-darwin
-#             platform: macos-latest
-#           - target: x86_64-pc-windows-msvc
-#             platform: windows-latest
+name: "Publish"
+on:
+  push:
+    tags: [v\d+\.\d+\.\d+]
+jobs:
+  publish-flutter:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          #   - target: aarch64-apple-darwin
+          # platform: macos-latest
+          - target: x86_64-apple-darwin
+            platform: macos-latest
+        #   - target: x86_64-unknown-linux-gnu
+        # platform: ubuntu-20.04
+        #   - target: x86_64-pc-windows-msvc
+        # platform: windows-latest
 
-#   runs-on: ${{ matrix.platform }}
-#   steps:
-#     - uses: actions/checkout@v3
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Get version
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Change Version
+        env:
+          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
+        run: make change-version
+
+      - name: Check Out
+        uses: actions/checkout@v3
+
+      - name: Install Android dep
+        run: echo ""
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache
+          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
+          architecture: arm64 # optional, x64 or arm64
+
+      - name: Build macos ios and android
+        if: matrix.platform == 'macos-latest'
+        run: |
+          flutter build macos --release
+
+      - name: Build windows destop
+        if: matrix.platform == 'windows-latest'
+        run: |
+          echo ""
+
+      - name: Build Linux destop
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          echo ""

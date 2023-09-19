@@ -133,12 +133,17 @@ class SettingsController extends GetxController {
   }
 
   String get locale {
-    String currentLocale = "${locales[0]['locale']}";
+    String currentLocale = "${locales[0]['name']}";
+    // print(currentLocale);
+    // print(settings.language);
     for (var element in locales) {
+      // print("${element['locale']}");
       if ("${element['locale']}" == settings.language) {
         currentLocale = "${element['name']}";
+        break;
       }
     }
+    // print(currentLocale);
     return currentLocale;
   }
 
