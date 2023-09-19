@@ -95,15 +95,17 @@ jobs:
         uses: battila7/get-version-action@v2
 
       - name: Download Release Files
+        id: download
         uses: actions/download-artifact@v3
         with:
           name: GeekChat-${{ steps.get_version.outputs.version-without-v }}
-          path: ~/downloads
+          path: ~/downloads/files
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
 
       - name: Display structure of downloaded files
         run: ls -R
+        working-directory: ~/downloads
 
       - name: Create Release # https://trstringer.com/github-actions-create-release-upload-artifacts/
         id: create_release
@@ -123,6 +125,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ~/downloads
+          asset_path: ${{steps.download.outputs.download-path}}
           asset_name: GeekChat-macos.zip
           asset_content_type: application/zip
