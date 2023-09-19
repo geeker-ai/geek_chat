@@ -54,9 +54,9 @@ jobs:
         run: |
           mkdir releases
           cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
-          cd release
+          cd releases
           zip -r GeekChat.zip "Geek Chat.app"
-          rm "Geek Chat.app"
+          rm -rf "Geek Chat.app"
           cd ..
 
       - name: Publish Artefacts
