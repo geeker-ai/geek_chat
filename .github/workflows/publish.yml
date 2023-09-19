@@ -89,6 +89,7 @@ jobs:
           echo ""
 
   flutter-release:
+    permissions: write-all
     name: Release
     needs: fullter-build
     runs-on: ubuntu-latest
@@ -115,8 +116,8 @@ jobs:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         with:
           draft: true
-          tag_name: Release-${{ steps.get_version.outputs.version-without-v }}
-          release_name: Release-${{ steps.get_version.outputs.version-without-v }}
+          tag_name: Release-v${{ steps.get_version.outputs.version-without-v }}
+          release_name: Release-v${{ steps.get_version.outputs.version-without-v }}
 
       - name: Upload Releases
         id: upload_release_asset
