@@ -3,7 +3,7 @@ on:
   push:
     tags: [v\d+\.\d+\.\d+]
 jobs:
-  publish-flutter:
+  fullter-build:
     permissions:
       contents: write
     strategy:
@@ -49,22 +49,33 @@ jobs:
         if: matrix.platform == 'macos-latest'
         run: |
           flutter build macos --release
-
-      - name: Package Release Files
-        run: |
-          mkdir releases
+          if [ ! -d "releases" ]; then
+            mkdir releases
+          fi
           cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
           cd releases
-          zip -r GeekChat.zip "Geek Chat.app"
+          zip -r GeekChat-macos.zip "Geek Chat.app"
           rm -rf "Geek Chat.app"
           cd ..
 
+      #   - name: Package Release Files
+      #     run: |
+      #       if [ ! -d "releases" ]; then
+      #         mkdir releases
+      #       fi
+      #       cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
+      #       cd releases
+      #       zip -r GeekChat-macos.zip "Geek Chat.app"
+      #       rm -rf "Geek Chat.app"
+      #       cd ..
+
       - name: Publish Artefacts
-        uses: actions/upload-artifact@v1
+        # if: matrix.platform == 'macos-latest'
+        uses: actions/upload-artifact@v3
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         with:
-          name: release-${VERSION}
+          name: GeekChat-${VERSION}
           path: releases/
 
       - name: Build windows destop
@@ -76,3 +87,42 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: |
           echo ""
+
+  flutter-release:
+    name: Release
+    needs: fullter-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get version
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Download Release Files
+        uses: actions/download-artifact@v3
+        with:
+          name: zip
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Create Release # https://trstringer.com/github-actions-create-release-upload-artifacts/
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
+        with:
+          draft: true
+          tag_name: Release-${VERSION}
+          release_name: Release-${VERSION}
+
+      - name: Upload Releases
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: GeekChat-macos.zip
+          asset_name: GeekChat-macos.zip
+          asset_content_type: application/zip
