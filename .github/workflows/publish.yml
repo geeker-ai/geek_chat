@@ -53,9 +53,11 @@ jobs:
       - name: Package Release Files
         run: |
           mkdir releases
-          cp "build/macos/Build/Products/Release/Geek Chat.app" .
-          zip -r "Geek Chat.app" GeekerChat.zip
+          cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
+          cd release
+          zip -r GeekChat.zip "Geek Chat.app"
           rm "Geek Chat.app"
+          cd ..
 
       - name: Publish Artefacts
         uses: actions/upload-artifact@v1
