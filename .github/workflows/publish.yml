@@ -57,17 +57,8 @@ jobs:
           zip -r GeekChat-macos.zip "Geek Chat.app"
           rm -rf "Geek Chat.app"
           cd ..
-
-      #   - name: Package Release Files
-      #     run: |
-      #       if [ ! -d "releases" ]; then
-      #         mkdir releases
-      #       fi
-      #       cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
-      #       cd releases
-      #       zip -r GeekChat-macos.zip "Geek Chat.app"
-      #       rm -rf "Geek Chat.app"
-      #       cd ..
+          flutter build apk --release
+          cp "build/app/outputs/flutter-apk/app-release.apk" releases/GeekChat.apk
 
       - name: Publish Artefacts
         # if: matrix.platform == 'macos-latest'
