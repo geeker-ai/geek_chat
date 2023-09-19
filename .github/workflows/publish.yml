@@ -89,7 +89,8 @@ jobs:
           echo ""
 
   flutter-release:
-    permissions: write-all
+    permissions:
+      contents: write
     name: Release
     needs: fullter-build
     runs-on: ubuntu-latest
