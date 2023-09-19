@@ -75,7 +75,7 @@ jobs:
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         with:
-          name: GeekChat-${VERSION}
+          name: GeekChat-${{ steps.get_version.outputs.version-without-v }}
           path: releases/
 
       - name: Build windows destop
@@ -100,7 +100,9 @@ jobs:
       - name: Download Release Files
         uses: actions/download-artifact@v3
         with:
-          name: zip
+          name: GeekChat-${{ steps.get_version.outputs.version-without-v }}
+        env:
+          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -113,8 +115,8 @@ jobs:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         with:
           draft: true
-          tag_name: Release-${VERSION}
-          release_name: Release-${VERSION}
+          tag_name: Release-${{ steps.get_version.outputs.version-without-v }}
+          release_name: Release-${{ steps.get_version.outputs.version-without-v }}
 
       - name: Upload Releases
         id: upload_release_asset
