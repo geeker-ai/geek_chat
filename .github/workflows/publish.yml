@@ -25,17 +25,6 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
-      - name: Check Out
-        uses: actions/checkout@v3
-
-      - name: Change Version
-        env:
-          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
-        run: make change-version
-
-      - name: Install Android dep
-        run: echo ""
-
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -45,18 +34,36 @@ jobs:
           cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
         #   architecture: arm64 # optional, x64 or arm64
 
+      - name: Install Android dep
+        run: echo ""
+
+      - name: Check Out
+        uses: actions/checkout@v3
+
+      - name: Change Version
+        env:
+          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
+        run: make change-version
+
       - name: Build macos ios and android
         if: matrix.platform == 'macos-latest'
         run: |
           flutter build macos --release
+
+      - name: Package Release Files
+        run: |
+          mkdir releases
+          cp "build/macos/Build/Products/Release/Geek Chat.app" .
+          zip -r "Geek Chat.app" GeekerChat.zip
+          rm "Geek Chat.app"
 
       - name: Publish Artefacts
         uses: actions/upload-artifact@v1
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         with:
-          name: release-$VERSION
-          path: "build/macos/Build/Products/Release/Geek Chat.app"
+          name: release-${VERSION}
+          path: releases/
 
       - name: Build windows destop
         if: matrix.platform == 'windows-latest'
