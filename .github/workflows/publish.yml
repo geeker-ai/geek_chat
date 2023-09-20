@@ -52,17 +52,20 @@ jobs:
       - name: Build macos ios and android
         if: matrix.platform == 'macos-latest'
         run: |
-          flutter build macos --release
           if [ ! -d "releases" ]; then
             mkdir releases
           fi
-          cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
-          cd releases
-          zip -r GeekChat-macos.zip "Geek Chat.app"
-          rm -rf "Geek Chat.app"
-          cd ..
-          flutter build apk --release
-          cp "build/app/outputs/flutter-apk/app-release.apk" releases/GeekChat.apk
+          touch releases/a.txt
+          touch releases/b.txt
+          touch releases/c.txt
+        #   flutter build macos --release
+        #   cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
+        #   cd releases
+        #   zip -r GeekChat-macos.zip "Geek Chat.app"
+        #   rm -rf "Geek Chat.app"
+        #   cd ..
+        #   flutter build apk --release
+        #   cp "build/app/outputs/flutter-apk/app-release.apk" releases/GeekChat.apk
 
       - name: Publish Artefacts
         # if: matrix.platform == 'macos-latest'
@@ -104,8 +107,9 @@ jobs:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
 
       - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: ~/downloads
+        run: |
+          find .
+          echo ${{steps.download.outputs.download-path}}
 
       - name: Create Release # https://trstringer.com/github-actions-create-release-upload-artifacts/
         id: create_release
