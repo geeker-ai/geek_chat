@@ -15,6 +15,11 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+### launch icon
+```
+flutter pub run flutter_launcher_icons
+```
+
 ### isar
 ```
 flutter pub run build_runner build
@@ -64,11 +69,13 @@ flutter_distributor release --name release
   - [ ] 自动发布版本
   - [ ] 自动更新
 
-- v0.0.2
+- v0.0.37
   - [x] logging
-  - [ ] github action: auto build macos packages.
-  - [ ] github action: auto build android packages.
-  - [ ] Message copy
+  - [x] github action: auto build macos packages.
+  - [x] github action: auto build android packages.
+  - [ ] Message opt for copy, delete etc.
+  - [ ] Updater
+  - [ ] Active account
 
 - v0.0.1
   - [x] Support desktop

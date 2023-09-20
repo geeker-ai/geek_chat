@@ -99,7 +99,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
                 physics: const ScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (BuildContext ctxt, int index) {
-                  return MessageBlock(
+                  return MessageContent(
                       message: controller.messages.elementAt(index));
                 },
               );
