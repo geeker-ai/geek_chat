@@ -32,14 +32,14 @@ jobs:
           distribution: "zulu"
           java-version: "11"
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache
-          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
-        #   architecture: arm64 # optional, x64 or arm64
+      #   - name: Install Flutter
+      #     uses: subosito/flutter-action@v2
+      #     with:
+      #       channel: "stable"
+      #       cache: true
+      #       cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache
+      #       cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
+      #   architecture: arm64 # optional, x64 or arm64
 
       - name: Check Out
         uses: actions/checkout@v3
@@ -124,11 +124,9 @@ jobs:
 
       - name: Upload Releases
         id: upload_release_asset
-        uses: actions/upload-release-asset@v1
+        uses: dwenegar/upload-release-assets@v1 #https://github.com/marketplace/actions/upload-multiple-assets-to-a-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{steps.download.outputs.download-path}}
-          asset_name: GeekChat-macos.zip
-          asset_content_type: application/zip
+          release_id: ${{ steps.create_release.outputs.id }}
+          assets_path: ${{steps.download.outputs.download-path}}
