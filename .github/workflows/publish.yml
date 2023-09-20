@@ -72,7 +72,7 @@ jobs:
             mkdir releases
           fi
           flutter build windows --release
-          cp build\windows\runner\Release\GeekChat.exe releases/GeekChat.exe
+          cp build/windows/runner/Release/GeekChat.exe releases/GeekChat.exe
 
       - name: Publish Artefacts
         uses: actions/upload-artifact@v3
