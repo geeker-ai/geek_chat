@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 
-// import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
@@ -20,7 +19,6 @@ class ChatMessageController extends GetxController {
   ChatListController chatListController = Get.find<ChatListController>();
   SettingsController settingsController = Get.find<SettingsController>();
   final SessionRepository _sessionRepository = Get.find<SessionRepository>();
-  // late OpenAIService openAIService;
 
   Logger logger = Get.find<Logger>();
 
@@ -63,7 +61,6 @@ class ChatMessageController extends GetxController {
     input.sId = sid;
     messages.insert(0, input);
     inputQuestion = '';
-    // _sessionRepository.saveMessage(input.toMessageTable());
     update();
     replyFromOpenAIWithSSE(input, sid);
   }
@@ -79,31 +76,21 @@ class ChatMessageController extends GetxController {
   Future<List<Map<String, String>>> getRequestMessages(
       MessageModel input) async {
     SessionModel currentSession = chatListController.currentSession;
-    // Tokenizer tokenizer = Get.find<Tokenizer>();
     var requestMessages = [
       {"role": "system", "content": currentSession.promptContent},
     ];
     int tokenCount = 0;
-    // tokenCount = await tokenizer.count(currentSession.promptContent,
-    //     modelName: currentSession.model);
     tokenCount =
         numTokenCounter(currentSession.model, currentSession.promptContent);
-    // tokenCount = tokenCount +
-    //     await tokenizer.count(input.content, modelName: currentSession.model);
     tokenCount =
         tokenCount + numTokenCounter(currentSession.model, input.content);
     logger.d("count message: ${messages.length}");
     int i = 0;
     for (MessageModel message in messages) {
-      // print("message id: ${message.updated}");
       /// 控制每次会话关联的历史消息数量
       if (i >= currentSession.maxContextMsgCount) {
         break;
       }
-      // tokenCount = tokenCount +
-      //     await tokenizer.count(message.content,
-      //         modelName: currentSession.model) +
-      //     200;
       tokenCount = tokenCount +
           numTokenCounter(currentSession.model, message.content) +
           200;
@@ -150,18 +137,11 @@ class ChatMessageController extends GetxController {
 
     openai.listen(
       (event) async {
-        // if (targetMessage.content == '...') {
-        //   targetMessage.content = '';
-        // }
         if (true) {
           try {
             var data = jsonDecode(event);
-            // String model = "${data['model']}";
             String content = "${data['choices'][0]['delta']['content']}";
-            // String finished = "${data['choices'][0]['finish_reason']}".trim();
-            //if (content.trim().isNotEmpty && content.trim() != 'null') {
             if (content.trim() != 'null') {
-              // print(content);
               targetMessage.content = "${targetMessage.content}$content";
               if (targetMessage.generating == true) {
                 targetMessage.streamContent = targetMessage.content;
@@ -169,13 +149,16 @@ class ChatMessageController extends GetxController {
             }
           } catch (e, s) {
             logger.e("error: $e, $s");
+            if (targetMessage.generating == true) {
+              targetMessage.content = "${targetMessage.content} $e";
+              targetMessage.streamContent = targetMessage.content;
+            }
           }
         }
       },
       onDone: () {
         logger.d("done ------------------- ");
         saveMessage(input);
-        // await Future.delayed(const Duration(milliseconds: 10));
         saveMessage(targetMessage);
         if (targetMessage.generating == true) {
           targetMessage.contentStream!.close();
@@ -187,19 +170,14 @@ class ChatMessageController extends GetxController {
   }
 
   List<MessageModel> getDefaultChatList() {
-    //c9518d4b-fdd1-4826-b783-fc1ba4f4b83b
     String sid = 'c9518d4b-fdd1-4826-b783-fc1ba4f4b83b';
     List<MessageModel> messageList = [];
-    String s2 = """
-Hi there! How can I assist you today?
-    """;
+    String s2 = "Hi there! How can I assist you today?";
     MessageModel m2 = createNewMessage(
         sid, settingsController.chatGPTRoles.assistant, s2, false);
     messageList.add(m2);
 
-    String s1 = """
-Hi
-    """;
+    String s1 = "Hi";
     MessageModel mm =
         createNewMessage(sid, settingsController.chatGPTRoles.user, s1, false);
     messageList.add(mm);

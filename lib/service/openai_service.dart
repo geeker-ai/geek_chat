@@ -15,15 +15,19 @@ class SSEClient {
     StreamController<String> streamController = StreamController();
     try {
       var request = http.Request('POST', Uri.parse(url));
+
       headers.forEach((key, value) {
         request.headers[key] = value;
       });
+
       request.body = jsonEncode(body);
 
       Future<http.StreamedResponse> response = _client.send(request);
+
       response.then((value) {
         value.stream
-            .toStringStream()
+            // .toStringStream()
+            .transform(utf8.decoder)
             .transform(const LineSplitter())
             .asyncExpand((event) => rx.Rx.timer(event, debounce))
             .listen(
@@ -37,7 +41,6 @@ class SSEClient {
             streamController.addError(e, s);
           },
           onDone: () {
-            // print("stream done");
             streamController.done;
             streamController.close();
           },
