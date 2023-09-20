@@ -112,6 +112,7 @@ jobs:
           echo ${{steps.download.outputs.download-path}}
           touch ~/downloads/files/d.txt
           find .
+          ls -R
       - name: Release
         uses: meeDamian/github-release@2.0
         with:
@@ -120,7 +121,7 @@ jobs:
           name: Release-v${{ steps.get_version.outputs.version-without-v }}
           body: Release ${{ steps.get_version.outputs.version-without-v }}
           draft: true
-          files: ${{steps.download.outputs.download-path}}
+          files: ${{steps.download.outputs.download-path}}/
         env:
           VERSION: ${{ steps.get_version.outputs.version-without-v }}
 
