@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/util/functions.dart';
+import 'package:get/get.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 // ignore: must_be_immutable
@@ -9,12 +12,73 @@ class MessageContent extends StatelessWidget {
   MessageModel message;
   MessageContent({super.key, required this.message});
 
+  Widget getMessageAvatar(BuildContext context) {
+    if (message.role == 'user') {
+      return const Icon(
+        Icons.person_outline_outlined,
+        size: 35,
+      );
+    }
+    return SvgPicture.asset(
+      'assets/chatgpt-grey.svg',
+      width: 35,
+      height: 35,
+      theme: SvgTheme(currentColor: Theme.of(context).primaryColorLight),
+    );
+    // if (message.msgType == 'chatgpt') {
+    //   return SvgPicture.asset('assets/chatgpt-grey.svg');
+    // } else {
+    //   return SvgPicture.asset('assets/google-grey.svg');
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (message.role == 'user') {
-      return userMessageBubble(context);
+    // if (message.role == 'user') {
+    //   return userMessageBubble(context);
+    // } else {
+    //   return assistentMessageBubble(context);
+    // }
+    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    DeviceType dt = getDeviceType();
+    if (dt == DeviceType.small) {
+      return MessageBlock(message: message);
     } else {
-      return assistentMessageBubble(context);
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.only(top: 10, left: 5),
+            // margin: EdgeInsets.only(right: 10),
+            width: 50,
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                getMessageAvatar(context),
+                // Expanded(child: SizedBox())
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(left: 5, top: 10, bottom: 10),
+              margin: const EdgeInsets.only(right: 8),
+              decoration: BoxDecoration(
+                color: getMessageBackgroundColor(context, role: message.role),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(radius),
+                  topLeft: Radius.circular(radius),
+                  bottomLeft: Radius.circular(radius),
+                  bottomRight: Radius.circular(radius),
+                ),
+              ),
+              // constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
+              child: markDownWidgetWithStream(message, isDark),
+            ),
+          )
+        ],
+      );
     }
   }
 
@@ -52,8 +116,12 @@ class MessageContent extends StatelessWidget {
     );
   }
 
-  Color getMessageBackgroundColor(BuildContext context) {
+  Color getMessageBackgroundColor(BuildContext context,
+      {String role = "user"}) {
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    if (role == "user") {
+      return Theme.of(context).colorScheme.background;
+    }
     if (isDark) {
       return Colors.grey[900]!;
     } else {
@@ -61,7 +129,7 @@ class MessageContent extends StatelessWidget {
     }
   }
 
-  double radius = 10;
+  double radius = 3;
 
   Widget assistentMessageBubble(BuildContext context) {
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
