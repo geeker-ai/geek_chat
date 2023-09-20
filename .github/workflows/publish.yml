@@ -105,7 +105,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: GeekChat-${{ steps.get_version.outputs.version-without-v }}
-          path: ~/downloads/files
+          path: downloads/
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
 
