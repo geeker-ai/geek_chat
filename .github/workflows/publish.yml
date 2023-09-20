@@ -100,9 +100,6 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
-      - name: Create download dir
-        run: mkdir ~/downloads
-
       - name: Download Release Files
         id: download
         uses: actions/download-artifact@v3
