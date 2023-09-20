@@ -100,12 +100,15 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
+      - name: Create download dir
+        run: mkdir ~/downloads
+
       - name: Download Release Files
         id: download
         uses: actions/download-artifact@v3
         with:
           name: GeekChat-${{ steps.get_version.outputs.version-without-v }}
-          path: downloads/
+          path: ~/downloads
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
 
@@ -119,6 +122,7 @@ jobs:
           name: Release-v${{ steps.get_version.outputs.version-without-v }}
           body: Release ${{ steps.get_version.outputs.version-without-v }}
           draft: true
+          gzip: false
           files: ${{steps.download.outputs.download-path}}/
         env:
           VERSION: ${{ steps.get_version.outputs.version-without-v }}
