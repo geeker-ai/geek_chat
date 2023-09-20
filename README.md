@@ -45,6 +45,9 @@ flutter_distributor release --name release
 - https://codewithandrea.com/articles/flutter-responsive-layouts-split-view-drawer-navigation/
 - https://flutterawesome.com/
 
+[Flutter cli](https://flutter.cn/docs/reference/flutter-cli)
+
+
 ### Todo
 
 - TODO list

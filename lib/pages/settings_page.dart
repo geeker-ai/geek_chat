@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
+// ignore: must_be_immutable
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  SettingsPage({super.key});
+
+  Logger logger = Get.find<Logger>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,9 @@ class SettingsPage extends StatelessWidget {
                         controller.settings.theme = themeMode.name;
                         // controller.changeSettings();
                         controller.update();
-                        print(SettingsController.to.settings.theme);
+                        // print(SettingsController.to.settings.theme);
+                        logger.d(
+                            "SettingsController.to.settings.theme: ${SettingsController.to.settings.theme}");
                       }),
                 const Divider(),
                 ListTile(

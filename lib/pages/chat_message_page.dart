@@ -4,16 +4,17 @@ import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
 class ChatMessagePage extends StatelessWidget {
   late ChatMessageController chatMessageController;
+  Logger logger = Get.find<Logger>();
   ChatMessagePage({super.key}) {
     var data = Get.parameters;
     sid = data['sid'];
-    print("ChatMessageController: $sid ");
+    logger.d("ChatMessageController: $sid ");
     chatMessageController = Get.put(ChatMessageController());
-    // session = chatMessageController.findBySessionId(sid);
     session = chatListController.getSessionBysid(sid!);
     chatMessageController.findBySessionId(sid);
   }

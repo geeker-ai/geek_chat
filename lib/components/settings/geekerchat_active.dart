@@ -7,6 +7,6 @@ class GeekerChatSettingsComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     // throw UnimplementedError();
-    return Text('geekerchat server settings.');
+    return const Text('geekerchat server settings.');
   }
 }

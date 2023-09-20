@@ -22,15 +22,6 @@ class ChatMessageController extends GetxController {
   final SessionRepository _sessionRepository = Get.find<SessionRepository>();
   // late OpenAIService openAIService;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // openAIService = Get.put(OpenAIService());
-    // openAIService = Get.putAsync(() => OpenAIService());
-    // Get.put(Tokenizer());
-    // logger.d(dotenv.get('CHANNEL'));
-  }
-
   Logger logger = Get.find<Logger>();
 
   MessageModel createNewMessage(
