@@ -110,6 +110,7 @@ jobs:
         run: |
           find .
           echo ${{steps.download.outputs.download-path}}
+          touch ~/downloads/files/d.txt
 
       - name: Create Release # https://trstringer.com/github-actions-create-release-upload-artifacts/
         id: create_release
