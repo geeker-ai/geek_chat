@@ -25,20 +25,20 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
-      #   - name: Install Android dep
-      #     if: matrix.platform == 'macos-latest'
-      #     uses: actions/setup-java@v2
-      #     with:
-      #       distribution: "zulu"
-      #       java-version: "11"
+      - name: Install Android dep
+        if: matrix.platform == 'macos-latest'
+        uses: actions/setup-java@v2
+        with:
+          distribution: "zulu"
+          java-version: "11"
 
-      #   - name: Install Flutter
-      #     uses: subosito/flutter-action@v2
-      #     with:
-      #       channel: "stable"
-      #       cache: true
-      #       cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache
-      #       cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache
+          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
       #   architecture: arm64 # optional, x64 or arm64
 
       - name: Check Out
@@ -55,20 +55,15 @@ jobs:
           if [ ! -d "releases" ]; then
             mkdir releases
           fi
-          touch releases/a.txt
-          echo "aaaa" > releases/a.txt
-          touch releases/b.txt
-          touch releases/c.txt
-          echo "aaaa" > releases/b.txt
-          echo "aaaa" > releases/c.txt
-        #   flutter build macos --release
-        #   cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
-        #   cd releases
-        #   zip -r GeekChat-macos.zip "Geek Chat.app"
-        #   rm -rf "Geek Chat.app"
-        #   cd ..
-        #   flutter build apk --release
-        #   cp "build/app/outputs/flutter-apk/app-release.apk" releases/GeekChat.apk
+          flutter build macos --release
+          cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
+          cd releases
+          zip -r GeekChat-macos.zip "Geek Chat.app"
+          rm -rf "Geek Chat.app"
+          cd ..
+          flutter build apk --release
+          cp "build/app/outputs/flutter-apk/app-release.apk" releases/GeekChat.apk
+
       - name: Build windows
         if: matrix.platform == 'windows-latest'
         shell: bash
@@ -76,26 +71,16 @@ jobs:
           if [ ! -d "releases" ]; then
             mkdir releases
           fi
-          echo "windows" > releases/windows.txt
+          flutter build windows --release
+          cp "build/windows/runner/Release/*.exe" releases/
 
       - name: Publish Artefacts
-        # if: matrix.platform == 'macos-latest'
         uses: actions/upload-artifact@v3
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         with:
           name: GeekChat-${{ steps.get_version.outputs.version-without-v }}
           path: releases/
-
-      - name: Build windows destop
-        if: matrix.platform == 'windows-latest'
-        run: |
-          echo ""
-
-      - name: Build Linux destop
-        if: matrix.platform == 'ubuntu-latest'
-        run: |
-          echo ""
 
   flutter-release:
     permissions:
@@ -119,19 +104,6 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -R
-
-      #   - name: Release
-      #     uses: meeDamian/github-release@2.0
-      #     with:
-      #       token: ${{ secrets.GITHUB_TOKEN }}
-      #       tag: Release-v${{ steps.get_version.outputs.version-without-v }}
-      #       name: Release-v${{ steps.get_version.outputs.version-without-v }}
-      #       body: Release ${{ steps.get_version.outputs.version-without-v }}
-      #       draft: true
-      #       gzip: false
-      #       files: ${{steps.download.outputs.download-path}}/
-      #     env:
-      #       VERSION: ${{ steps.get_version.outputs.version-without-v }}
 
       - name: Create Release # https://trstringer.com/github-actions-create-release-upload-artifacts/
         id: create_release
