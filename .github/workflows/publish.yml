@@ -12,8 +12,8 @@ jobs:
         include:
           #   - target: aarch64-apple-darwin
           # platform: macos-latest
-          - target: x86_64-apple-darwin
-            platform: macos-latest
+          #   - target: x86_64-apple-darwin
+          # platform: macos-latest
           #   - target: x86_64-unknown-linux-gnu
           # platform: ubuntu-20.04
           - target: x86_64-pc-windows-msvc
@@ -72,7 +72,7 @@ jobs:
             mkdir releases
           fi
           flutter build windows --release
-          cp "build/windows/runner/Release/*.exe" releases/
+          copy build\windows\runner\Release\GeekChat.exe releases/GeekChat.exe
 
       - name: Publish Artefacts
         uses: actions/upload-artifact@v3
