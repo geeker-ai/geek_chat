@@ -71,6 +71,7 @@ jobs:
         #   cp "build/app/outputs/flutter-apk/app-release.apk" releases/GeekChat.apk
       - name: Build windows
         if: matrix.platform == 'windows-latest'
+        shell: bash
         run: |
           if [ ! -d "releases" ]; then
             mkdir releases
