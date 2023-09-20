@@ -25,12 +25,12 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
-      - name: Install Android dep
-        if: matrix.platform == 'macos-latest'
-        uses: actions/setup-java@v2
-        with:
-          distribution: "zulu"
-          java-version: "11"
+      #   - name: Install Android dep
+      #     if: matrix.platform == 'macos-latest'
+      #     uses: actions/setup-java@v2
+      #     with:
+      #       distribution: "zulu"
+      #       java-version: "11"
 
       #   - name: Install Flutter
       #     uses: subosito/flutter-action@v2
@@ -111,23 +111,35 @@ jobs:
           find .
           echo ${{steps.download.outputs.download-path}}
           touch ~/downloads/files/d.txt
-
-      - name: Create Release # https://trstringer.com/github-actions-create-release-upload-artifacts/
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
+          find .
+      - name: Release
+        uses: meeDamian/github-release@2.0
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: Release-v${{ steps.get_version.outputs.version-without-v }}
+          name: Release-v${{ steps.get_version.outputs.version-without-v }}
+          body: Release ${{ steps.get_version.outputs.version-without-v }}
           draft: true
-          tag_name: Release-v${{ steps.get_version.outputs.version-without-v }}
-          release_name: Release-v${{ steps.get_version.outputs.version-without-v }}
-
-      - name: Upload Releases
-        id: upload_release_asset
-        uses: dwenegar/upload-release-assets@v1 #https://github.com/marketplace/actions/upload-multiple-assets-to-a-release
+          files: ${{steps.download.outputs.download-path}}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ steps.create_release.outputs.id }}
-          assets_path: ${{steps.download.outputs.download-path}}
+          VERSION: ${{ steps.get_version.outputs.version-without-v }}
+
+    #   - name: Create Release # https://trstringer.com/github-actions-create-release-upload-artifacts/
+    #     id: create_release
+    #     uses: actions/create-release@v1
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #       VERSION: "${{ steps.get_version.outputs.version-without-v }}"
+    #     with:
+    #       draft: true
+    #       tag_name: Release-v${{ steps.get_version.outputs.version-without-v }}
+    #       release_name: Release-v${{ steps.get_version.outputs.version-without-v }}
+
+    #   - name: Upload Releases
+    #     id: upload_release_assets
+    #     uses: dwenegar/upload-release-assets@v1 #https://github.com/marketplace/actions/upload-multiple-assets-to-a-release
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       release_id: ${{ steps.create_release.outputs.id }}
+    #       assets_path: ${{steps.download.outputs.download-path}}
