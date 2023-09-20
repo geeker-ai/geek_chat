@@ -116,6 +116,7 @@ jobs:
         uses: marvinpinto/action-automatic-releases@latest
         env:
           VERSION: ${{ steps.get_version.outputs.version-without-v }}
+          FOLDER: ${{steps.download.outputs.download-path}}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
