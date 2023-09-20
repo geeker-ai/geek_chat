@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 // import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
