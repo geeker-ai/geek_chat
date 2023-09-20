@@ -4,7 +4,6 @@ import 'package:geek_chat/components/markdown/latex.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/util/functions.dart';
-import 'package:get/get.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 // ignore: must_be_immutable
@@ -23,7 +22,11 @@ class MessageContent extends StatelessWidget {
       'assets/chatgpt-grey.svg',
       width: 35,
       height: 35,
-      theme: SvgTheme(currentColor: Theme.of(context).primaryColorLight),
+      // color: Theme.of(context).colorScheme.onBackground,
+      colorFilter: ColorFilter.mode(
+        Theme.of(context).colorScheme.onBackground,
+        BlendMode.srcIn,
+      ),
     );
     // if (message.msgType == 'chatgpt') {
     //   return SvgPicture.asset('assets/chatgpt-grey.svg');
@@ -48,9 +51,9 @@ class MessageContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.only(top: 10, left: 5),
+            padding: const EdgeInsets.only(top: 10, left: 5),
             // margin: EdgeInsets.only(right: 10),
-            width: 50,
+            width: 60,
             child: Column(
               // crossAxisAlignment: CrossAxisAlignment.start,
               // mainAxisAlignment: MainAxisAlignment.start,
