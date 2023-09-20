@@ -12,12 +12,12 @@ jobs:
         include:
           #   - target: aarch64-apple-darwin
           # platform: macos-latest
-          #   - target: x86_64-apple-darwin
-          # platform: macos-latest
+          - target: x86_64-apple-darwin
+            platform: macos-latest
           #   - target: x86_64-unknown-linux-gnu
           # platform: ubuntu-20.04
-          - target: x86_64-pc-windows-msvc
-            platform: windows-latest
+        #   - target: x86_64-pc-windows-msvc
+        # platform: windows-latest
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -71,6 +71,7 @@ jobs:
           if [ ! -d "releases" ]; then
             mkdir releases
           fi
+          flutter config --enable-windows-desktop
           flutter build windows --release
           cp build/windows/runner/Release/GeekChat.exe releases/GeekChat.exe
 

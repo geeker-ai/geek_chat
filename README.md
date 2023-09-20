@@ -20,6 +20,26 @@ samples, guidance on mobile development, and a full API reference.
 flutter pub run build_runner build
 ```
 
+### build
+
+build with [Flutter Distributor](https://distributor.leanflutter.org/docs/makers/dmg)
+
+```
+dart pub global activate flutter_distributor
+
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+```
+
+```
+yarn global add appdmg
+# or
+npm install -g appdmg
+```
+
+```
+flutter_distributor release --name release
+```
+
 ### Docs
 - https://isar.dev/zh/recipes/string_ids.html
 - https://codewithandrea.com/articles/flutter-responsive-layouts-split-view-drawer-navigation/

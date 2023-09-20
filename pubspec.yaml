@@ -54,10 +54,11 @@ dependencies:
 
   flutter_highlighter: ^0.1.1
   # google_fonts: ^4.0.4
-  google_fonts: ^5.1.0
+  # google_fonts: ^5.1.0
 
   # flutter_client_sse: ^2.0.0
   http: ^1.1.0
+  # http: ^0.13.0
 
   rxdart: ^0.27.7
 
@@ -101,6 +102,9 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   isar_generator: ^3.1.0+1
   build_runner: ^2.4.6
+
+  # flutter_distributor: ^0.3.4
+  # googleapis: ^8.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
