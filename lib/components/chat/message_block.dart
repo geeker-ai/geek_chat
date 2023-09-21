@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
@@ -35,6 +36,8 @@ class MessageContent extends StatelessWidget {
     // }
   }
 
+  double radius = 3;
+
   @override
   Widget build(BuildContext context) {
     // if (message.role == 'user') {
@@ -42,76 +45,106 @@ class MessageContent extends StatelessWidget {
     // } else {
     //   return assistentMessageBubble(context);
     // }
-    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    // bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
     DeviceType dt = getDeviceType();
     if (dt == DeviceType.small) {
       return MessageBlock(message: message);
     } else {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 10, left: 5),
-            // margin: EdgeInsets.only(right: 10),
-            width: 60,
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                getMessageAvatar(context),
-                // Expanded(child: SizedBox())
-              ],
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.only(left: 5, top: 10, bottom: 10),
-              margin: const EdgeInsets.only(right: 8),
-              decoration: BoxDecoration(
-                color: getMessageBackgroundColor(context, role: message.role),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(radius),
-                  topLeft: Radius.circular(radius),
-                  bottomLeft: Radius.circular(radius),
-                  bottomRight: Radius.circular(radius),
-                ),
-              ),
-              // constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
-              child: markDownWidgetWithStream(message, isDark),
-            ),
-          )
-        ],
-      );
+      return buildWideScreenMessageBlock(context);
     }
   }
 
-  Widget userMessageBubble(BuildContext context) {
+  double avatarWidth = 70;
+
+  Widget buildWideScreenMessageBlock(BuildContext context) {
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+    return Container(
+      padding: const EdgeInsets.only(right: 5, bottom: 5),
+      margin: const EdgeInsets.only(bottom: 10, right: 15, left: 10),
+      decoration: BoxDecoration(
+        color: getMessageBackgroundColor(context, role: message.role),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(radius),
+          topLeft: Radius.circular(radius),
+          bottomLeft: Radius.circular(radius),
+          bottomRight: Radius.circular(radius),
+        ),
+      ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            width: 15,
-          ),
-          Expanded(
-            child: Container(
-              padding:
-                  const EdgeInsets.only(right: 5, left: 5, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                color: getMessageBackgroundColor(context),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(radius),
-                  topLeft: Radius.circular(radius),
-                  bottomLeft: Radius.circular(radius),
-                  // bottomRight: Radius.circular(radius),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(top: 10),
+                width: avatarWidth,
+                child: Column(
+                  children: [
+                    getMessageAvatar(context),
+                    // Expanded(child: SizedBox())
+                  ],
                 ),
               ),
-              // constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
-              child: markDownWidgetWithStream(message, isDark),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.only(top: 10, bottom: 3),
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(right: 8),
+                  child: markDownWidgetWithStream(message, isDark),
+                ),
+              )
+            ],
+          ),
+          displayMessageOpt(context),
+        ],
+      ),
+    );
+  }
+
+  Widget displayMessageOpt(BuildContext context) {
+    late Color messsageTipsColor;
+    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    if (isDark) {
+      messsageTipsColor = Colors.grey[500]!;
+    } else {
+      messsageTipsColor = Colors.black54;
+    }
+    if (message.role == 'user') {
+      return Container();
+    }
+    return Container(
+      padding: EdgeInsets.only(left: avatarWidth + 5, bottom: 10),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              // Text("TODO: message opt"),
+              Text(
+                "model: ${message.model}",
+                style: TextStyle(color: messsageTipsColor),
+              ),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 3),
+            height: 30,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: getMessageBackgroundColor(context, role: 'assistant')),
+            child: Container(
+              width: 50,
+              decoration: BoxDecoration(
+                // color: getMessageBackgroundColor(context),
+                boxShadow: [
+                  BoxShadow(
+                      color:
+                          getMessageBackgroundColor(context, role: 'assistant'),
+                      blurRadius: 1)
+                ],
+                border: Border.all(width: 0),
+              ),
+              child: Text("Buttons"),
             ),
           )
         ],
@@ -130,44 +163,6 @@ class MessageContent extends StatelessWidget {
     } else {
       return Colors.black12;
     }
-  }
-
-  double radius = 3;
-
-  Widget assistentMessageBubble(BuildContext context) {
-    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              // width: double.infinity,
-              padding:
-                  const EdgeInsets.only(right: 5, left: 5, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                color: getMessageBackgroundColor(context),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(radius),
-                  topLeft: Radius.circular(radius),
-                  // bottomLeft: Radius.circular(radius),
-                  bottomRight: Radius.circular(radius),
-                ),
-              ),
-              // constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
-              child: markDownWidgetWithStream(message, isDark),
-            ),
-          ),
-          // const Expanded(child: Text('')),
-          const SizedBox(
-            width: 15,
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -271,7 +266,7 @@ Widget markDownWidgetWithStream(MessageModel message, bool isDark) {
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           String text = snapshot.data ?? '';
           if (message.generating == true) {
-            text = "$text ...";
+            text = "$text ✍️";
           }
           return markDownWidget(text, isDark);
         });
