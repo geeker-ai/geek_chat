@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
+import 'package:geek_chat/controller/message_block_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
-import 'package:geek_chat/repository/sessions_repository.dart';
+// import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 // ignore: must_be_immutable
 class MessageContent extends StatelessWidget {
   MessageModel message;
-  MessageContent({super.key, required this.message});
+  MessageContent({super.key, required this.message}) {
+    //
+  }
+
+  MessageBlockController controller = MessageBlockController();
 
   Widget getMessageAvatar(BuildContext context) {
     if (message.role == 'user') {
@@ -102,8 +107,12 @@ class MessageContent extends StatelessWidget {
     );
   }
 
+  double iconButtonSize = 20.0;
+
   Widget displayMessageOpt(BuildContext context) {
     late Color messsageTipsColor;
+    bool offStage = false;
+
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
     if (isDark) {
       messsageTipsColor = Colors.grey[500]!;
@@ -111,42 +120,77 @@ class MessageContent extends StatelessWidget {
       messsageTipsColor = Colors.black54;
     }
     if (message.role == 'user') {
-      return Container();
+      // return Container();
+      offStage = true;
     }
     return Container(
-      padding: EdgeInsets.only(left: avatarWidth + 5, bottom: 10),
+      padding: EdgeInsets.only(left: avatarWidth + 5, bottom: 0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              // Text("TODO: message opt"),
-              Text(
-                "model: ${message.model}",
-                style: TextStyle(color: messsageTipsColor),
-              ),
-            ],
+          Offstage(
+            offstage: offStage,
+            child: Row(
+              children: [
+                // Text("TODO: message opt"),
+                Text(
+                  "model: ${message.model}",
+                  style: TextStyle(color: messsageTipsColor),
+                ),
+              ],
+            ),
           ),
           Container(
-            padding: const EdgeInsets.only(top: 3),
-            height: 30,
-            width: double.infinity,
+            padding:
+                const EdgeInsets.only(top: 5, bottom: 0, left: 0, right: 0),
+            margin: EdgeInsets.zero,
+            height: 50,
+            // width: double.infinity,
             decoration: BoxDecoration(
-                color: getMessageBackgroundColor(context, role: 'assistant')),
-            child: Container(
-              width: 50,
-              decoration: BoxDecoration(
-                // color: getMessageBackgroundColor(context),
-                boxShadow: [
-                  BoxShadow(
-                      color:
-                          getMessageBackgroundColor(context, role: 'assistant'),
-                      blurRadius: 1)
-                ],
-                border: Border.all(width: 0),
+                color: getMessageBackgroundColor(context, role: message.role)),
+            child: Opacity(
+              opacity: 1,
+              child: UnconstrainedBox(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: const EdgeInsets.only(top: 0, bottom: 0),
+                  margin: EdgeInsets.zero,
+                  decoration: BoxDecoration(
+                    color:
+                        getMessageBackgroundColor(context, role: message.role),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).colorScheme.background,
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: const Offset(1.0, 2.0),
+                      )
+                    ],
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                  ),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.copy_all_outlined),
+                        iconSize: iconButtonSize,
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.format_quote_outlined),
+                        iconSize: iconButtonSize,
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.delete_forever),
+                        iconSize: iconButtonSize,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              child: Text("Buttons"),
             ),
-          )
+          ),
         ],
       ),
     );
