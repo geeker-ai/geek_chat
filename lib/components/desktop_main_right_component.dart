@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
+import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
@@ -100,9 +101,16 @@ class DeskTopMainRightComponent extends StatelessWidget {
                 shrinkWrap: true,
                 itemBuilder: (BuildContext ctxt, int index) {
                   return MessageContent(
-                    message: controller.messages.elementAt(index),
-                    session: chatListController.currentSession,
-                  );
+                      message: controller.messages.elementAt(index),
+                      session: chatListController.currentSession,
+                      onQuote: (MessageModel message) {
+                        controller.inputQuestion =
+                            "\"${message.content}\" \n ---------------------- \n";
+                        controller.update();
+                      },
+                      onDelete: (MessageModel message) {
+                        //
+                      });
                 },
               );
             }),
@@ -119,7 +127,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
                       child: TextField(
                         controller: textEditingController,
                         minLines: 1,
-                        maxLines: 3,
+                        maxLines: 5,
                         textInputAction: TextInputAction.go,
                         decoration: const InputDecoration(
                           filled: false,

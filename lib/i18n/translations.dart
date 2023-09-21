@@ -38,6 +38,8 @@ class GeekChatTranslations extends Translations {
           "Sorry!": "Sorry!",
           "This feature will coming soon!": "This feature will coming soon!",
           "Copied!": "Copied!",
+          "Copy": "Copy",
+          "Quote": "Quote",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -73,6 +75,8 @@ class GeekChatTranslations extends Translations {
           "Sorry!": "抱歉!",
           "This feature will coming soon!": "该功能正在开发中!",
           "Copied!": "已复制",
+          "Copy": "复制",
+          "Quote": "引用",
         }
       };
 }

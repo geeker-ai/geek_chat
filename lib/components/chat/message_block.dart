@@ -18,9 +18,18 @@ import 'package:markdown_widget/markdown_widget.dart';
 class MessageContent extends StatelessWidget {
   MessageModel message;
   SessionModel session;
-  MessageContent({super.key, required this.message, required this.session}) {
+  MessageContent({
+    super.key,
+    required this.message,
+    required this.session,
+    required this.onQuote,
+    required this.onDelete,
+  }) {
     //
   }
+
+  Function onQuote;
+  Function onDelete;
 
   MessageBlockController controller = Get.put(MessageBlockController());
   Logger logger = Get.find();
@@ -210,16 +219,23 @@ class MessageContent extends StatelessWidget {
                             },
                             icon: const Icon(Icons.copy_all_outlined),
                             iconSize: iconButtonSize,
+                            tooltip: "Copy".tr,
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              onQuote(message);
+                            },
                             icon: const Icon(Icons.format_quote_outlined),
                             iconSize: iconButtonSize,
+                            tooltip: "Quote".tr,
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              onDelete(message);
+                            },
                             icon: const Icon(Icons.delete_forever),
                             iconSize: iconButtonSize,
+                            tooltip: "Delete".tr,
                           ),
                         ],
                       ),
