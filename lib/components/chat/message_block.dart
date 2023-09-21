@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
@@ -6,6 +8,8 @@ import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
 // import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/util/functions.dart';
+import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 // ignore: must_be_immutable
@@ -15,7 +19,8 @@ class MessageContent extends StatelessWidget {
     //
   }
 
-  MessageBlockController controller = MessageBlockController();
+  MessageBlockController controller = Get.put(MessageBlockController());
+  Logger logger = Get.find();
 
   Widget getMessageAvatar(BuildContext context) {
     if (message.role == 'user') {
@@ -63,48 +68,62 @@ class MessageContent extends StatelessWidget {
 
   Widget buildWideScreenMessageBlock(BuildContext context) {
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    return Container(
-      padding: const EdgeInsets.only(right: 5, bottom: 5),
-      margin: const EdgeInsets.only(bottom: 10, right: 15, left: 10),
-      decoration: BoxDecoration(
-        color: getMessageBackgroundColor(context, role: message.role),
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(radius),
-          topLeft: Radius.circular(radius),
-          bottomLeft: Radius.circular(radius),
-          bottomRight: Radius.circular(radius),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return GetBuilder<MessageBlockController>(builder: (controller) {
+      return MouseRegion(
+        onEnter: (event) {
+          logger.d("on Enter: ${message.msgId}");
+          controller.setDisplay(message.msgId, true);
+          controller.update();
+        },
+        onExit: (event) {
+          logger.d("on Exit");
+          controller.setDisplay(message.msgId, false);
+          controller.update();
+        },
+        child: Container(
+          padding: const EdgeInsets.only(right: 5, bottom: 5),
+          margin: const EdgeInsets.only(bottom: 10, right: 15, left: 10),
+          decoration: BoxDecoration(
+            color: getMessageBackgroundColor(context, role: message.role),
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(radius),
+              topLeft: Radius.circular(radius),
+              bottomLeft: Radius.circular(radius),
+              bottomRight: Radius.circular(radius),
+            ),
+          ),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.only(top: 10),
-                width: avatarWidth,
-                child: Column(
-                  children: [
-                    getMessageAvatar(context),
-                    // Expanded(child: SizedBox())
-                  ],
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(top: 10),
+                    width: avatarWidth,
+                    child: Column(
+                      children: [
+                        getMessageAvatar(context),
+                        // Expanded(child: SizedBox())
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 10, bottom: 3),
+                      alignment: Alignment.centerLeft,
+                      margin: const EdgeInsets.only(right: 8),
+                      child: markDownWidgetWithStream(message, isDark),
+                    ),
+                  )
+                ],
               ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.only(top: 10, bottom: 3),
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(right: 8),
-                  child: markDownWidgetWithStream(message, isDark),
-                ),
-              )
+              displayMessageOpt(context),
             ],
           ),
-          displayMessageOpt(context),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 
   double iconButtonSize = 20.0;
@@ -132,10 +151,9 @@ class MessageContent extends StatelessWidget {
             offstage: offStage,
             child: Row(
               children: [
-                // Text("TODO: message opt"),
                 Text(
                   "model: ${message.model}",
-                  style: TextStyle(color: messsageTipsColor),
+                  style: TextStyle(color: messsageTipsColor, fontSize: 12),
                 ),
               ],
             ),
@@ -148,47 +166,53 @@ class MessageContent extends StatelessWidget {
             // width: double.infinity,
             decoration: BoxDecoration(
                 color: getMessageBackgroundColor(context, role: message.role)),
-            child: Opacity(
-              opacity: 1,
-              child: UnconstrainedBox(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  padding: const EdgeInsets.only(top: 0, bottom: 0),
-                  margin: EdgeInsets.zero,
-                  decoration: BoxDecoration(
-                    color:
-                        getMessageBackgroundColor(context, role: message.role),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Theme.of(context).colorScheme.background,
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset: const Offset(1.0, 2.0),
-                      )
-                    ],
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+            child: GetBuilder<MessageBlockController>(
+              init: MessageBlockController(),
+              builder: (controller) {
+                return Opacity(
+                  opacity: controller.isDisplay(message.msgId) ? 1 : 0,
+                  child: UnconstrainedBox(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 0, bottom: 0),
+                      margin: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                        color: getMessageBackgroundColor(context,
+                            role: message.role),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).colorScheme.background,
+                            spreadRadius: 0,
+                            blurRadius: 0,
+                            offset: const Offset(1.0, 2.0),
+                          )
+                        ],
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(3)),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.copy_all_outlined),
+                            iconSize: iconButtonSize,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.format_quote_outlined),
+                            iconSize: iconButtonSize,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.delete_forever),
+                            iconSize: iconButtonSize,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.copy_all_outlined),
-                        iconSize: iconButtonSize,
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.format_quote_outlined),
-                        iconSize: iconButtonSize,
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.delete_forever),
-                        iconSize: iconButtonSize,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                );
+              },
             ),
           ),
         ],
