@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:ui';
 
 import 'package:get/get.dart';
 
@@ -17,4 +18,6 @@ class MessageBlockController extends GetxController {
   setDisplay(String msgId, bool d) {
     displays[msgId] = d;
   }
+
+  late Offset mousePosition;
 }

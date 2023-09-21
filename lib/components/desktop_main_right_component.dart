@@ -100,7 +100,9 @@ class DeskTopMainRightComponent extends StatelessWidget {
                 shrinkWrap: true,
                 itemBuilder: (BuildContext ctxt, int index) {
                   return MessageContent(
-                      message: controller.messages.elementAt(index));
+                    message: controller.messages.elementAt(index),
+                    session: chatListController.currentSession,
+                  );
                 },
               );
             }),

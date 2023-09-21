@@ -1,11 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
 import 'package:geek_chat/controller/message_block_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/models/model.dart';
+import 'package:geek_chat/models/session.dart';
 // import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
@@ -15,7 +17,8 @@ import 'package:markdown_widget/markdown_widget.dart';
 // ignore: must_be_immutable
 class MessageContent extends StatelessWidget {
   MessageModel message;
-  MessageContent({super.key, required this.message}) {
+  SessionModel session;
+  MessageContent({super.key, required this.message, required this.session}) {
     //
   }
 
@@ -29,21 +32,19 @@ class MessageContent extends StatelessWidget {
         size: 35,
       );
     }
+    String svgPic = 'assets/chatgpt-grey.svg';
+    if (session.type == AiType.bard.name) {
+      svgPic = 'assets/google-grey.svg';
+    }
     return SvgPicture.asset(
-      'assets/chatgpt-grey.svg',
+      svgPic,
       width: 35,
       height: 35,
-      // color: Theme.of(context).colorScheme.onBackground,
       colorFilter: ColorFilter.mode(
         Theme.of(context).colorScheme.onBackground,
         BlendMode.srcIn,
       ),
     );
-    // if (message.msgType == 'chatgpt') {
-    //   return SvgPicture.asset('assets/chatgpt-grey.svg');
-    // } else {
-    //   return SvgPicture.asset('assets/google-grey.svg');
-    // }
   }
 
   double radius = 3;
@@ -74,6 +75,8 @@ class MessageContent extends StatelessWidget {
           logger.d("on Enter: ${message.msgId}");
           controller.setDisplay(message.msgId, true);
           controller.update();
+          // event.position
+          controller.mousePosition = event.position;
         },
         onExit: (event) {
           logger.d("on Exit");
@@ -104,7 +107,6 @@ class MessageContent extends StatelessWidget {
                     child: Column(
                       children: [
                         getMessageAvatar(context),
-                        // Expanded(child: SizedBox())
                       ],
                     ),
                   ),
@@ -139,7 +141,6 @@ class MessageContent extends StatelessWidget {
       messsageTipsColor = Colors.black54;
     }
     if (message.role == 'user') {
-      // return Container();
       offStage = true;
     }
     return Container(
@@ -167,7 +168,6 @@ class MessageContent extends StatelessWidget {
             decoration: BoxDecoration(
                 color: getMessageBackgroundColor(context, role: message.role)),
             child: GetBuilder<MessageBlockController>(
-              init: MessageBlockController(),
               builder: (controller) {
                 return Opacity(
                   opacity: controller.isDisplay(message.msgId) ? 1 : 0,
@@ -193,7 +193,21 @@ class MessageContent extends StatelessWidget {
                       child: Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Clipboard.setData(
+                                  ClipboardData(text: message.content));
+                              // Get.snackbar("Copied!", "");
+                              // RenderBox renderBox =
+                              //     context.findRenderObject() as RenderBox;
+                              // Offset ps = renderBox.localToGlobal(Offset.zero);
+                              // logger.d(ps);
+                              showToast(
+                                "Copied!".tr,
+                                context: context,
+                                position: const StyledToastPosition(
+                                    align: Alignment.center, offset: 0.0),
+                              );
+                            },
                             icon: const Icon(Icons.copy_all_outlined),
                             iconSize: iconButtonSize,
                           ),
