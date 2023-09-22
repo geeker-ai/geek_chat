@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
@@ -12,11 +14,71 @@ import 'package:logger/logger.dart';
 class DeskTopMainRightComponent extends StatelessWidget {
   DeskTopMainRightComponent({super.key, required this.sid}) {
     chatMessageController = Get.put(ChatMessageController());
-    chatMessageScrollController.scrollController = scrollController;
-    // scrollController.addListener(() {
-    //   chatMessageScrollController.scrollListener();
-    // });
-    // session = chatListController.getSessionBysid(sid!);
+
+    /// init right scroll button
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      scrollController.addListener(() {
+        scrollButtonListener();
+      });
+      scrollButtonListener();
+    });
+  }
+
+  void scrollButtonListener() {
+    final extentAfter = scrollController.position.extentAfter;
+    bool showGotoTopBtnLocal = chatMessageScrollController.showGotoTopBtn;
+    bool showGotoBottomBtnLocal = chatMessageScrollController.showGotoBottomBtn;
+    if (extentAfter < 10) {
+      showGotoTopBtnLocal = false;
+    } else {
+      showGotoTopBtnLocal = true;
+    }
+
+    if (scrollController.position.maxScrollExtent - extentAfter <= 10) {
+      showGotoBottomBtnLocal = false;
+    } else {
+      showGotoBottomBtnLocal = true;
+    }
+    if (showGotoBottomBtnLocal !=
+        chatMessageScrollController.showGotoBottomBtn) {
+      chatMessageScrollController.showGotoBottomBtn = showGotoBottomBtnLocal;
+      chatMessageScrollController.update();
+    }
+    if (showGotoTopBtnLocal != chatMessageScrollController.showGotoTopBtn) {
+      chatMessageScrollController.showGotoTopBtn = showGotoTopBtnLocal;
+      chatMessageScrollController.update();
+    }
+  }
+
+  void scrollToTop() async {
+    do {
+      double delta =
+          scrollController.position.maxScrollExtent - scrollController.offset;
+      double to = 0;
+      // double ratio = delta / 1000 - 2;
+      if (delta > 500) {
+        to = scrollController.offset + delta / 2.5;
+      } else {
+        to = scrollController.position.maxScrollExtent;
+      }
+
+      await scrollController.animateTo(
+        to,
+        duration: const Duration(microseconds: 200),
+        curve: Curves.linear,
+      );
+    } while (
+        scrollController.position.maxScrollExtent - scrollController.offset >
+            50);
+  }
+
+  void scrollToBottom() {
+    logger.d("scroll to bottom ${scrollController.position.minScrollExtent}");
+    scrollController.animateTo(
+      scrollController.position.minScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.linear,
+    );
   }
 
   Logger logger = Get.find<Logger>();
@@ -42,7 +104,6 @@ class DeskTopMainRightComponent extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [
-          // ConstrainedBox(constraints: BoxConstraints(minWidth: 400)),
           Container(
             padding: const EdgeInsets.only(left: 12, right: 20, top: 0),
             alignment: Alignment.centerLeft,
@@ -130,7 +191,10 @@ class DeskTopMainRightComponent extends StatelessWidget {
                           });
                     },
                   ),
-                  const MessageListScrollBtnComponent()
+                  MessageListScrollBtnComponent(
+                    scrollToTop: scrollToTop,
+                    scrollToBottom: scrollToBottom,
+                  )
                 ],
               );
             }),
@@ -177,8 +241,13 @@ class DeskTopMainRightComponent extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class MessageListScrollBtnComponent extends StatelessWidget {
-  const MessageListScrollBtnComponent({super.key});
+  MessageListScrollBtnComponent(
+      {super.key, required this.scrollToTop, required this.scrollToBottom});
+
+  Function scrollToTop;
+  Function scrollToBottom;
 
   @override
   Widget build(BuildContext context) {
@@ -192,14 +261,22 @@ class MessageListScrollBtnComponent extends StatelessWidget {
             Opacity(
               opacity: controller.showGotoTopBtn ? 1 : 0,
               child: IconButton(
-                onPressed: controller.showGotoTopBtn ? () {} : null,
+                onPressed: controller.showGotoTopBtn
+                    ? () {
+                        scrollToTop();
+                      }
+                    : null,
                 icon: const Icon(Icons.arrow_circle_up_outlined),
               ),
             ),
             Opacity(
               opacity: controller.showGotoBottomBtn ? 1 : 0,
               child: IconButton(
-                onPressed: controller.showGotoBottomBtn ? () {} : null,
+                onPressed: controller.showGotoBottomBtn
+                    ? () {
+                        scrollToBottom();
+                      }
+                    : null,
                 icon: const Icon(Icons.arrow_circle_down_outlined),
               ),
             ),

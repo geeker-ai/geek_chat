@@ -11,16 +11,16 @@ enum DeviceType { small, wide }
 
 DeviceType getDeviceType() {
   // return DeviceType.small;
-  double ratio = PlatformDispatcher.instance.displays.first.devicePixelRatio;
-  Size size = PlatformDispatcher.instance.displays.first.size;
+  // double ratio = PlatformDispatcher.instance.displays.first.devicePixelRatio;
+  // Size size = PlatformDispatcher.instance.displays.first.size;
   // print("ration $ratio , size: $size");
-  double width = size.width / ratio;
-  double height = size.height / ratio;
-  Logger logger = Get.find<Logger>();
+  // double width = size.width / ratio;
+  // double height = size.height / ratio;
+  // Logger logger = Get.find<Logger>();
   // print("width: $width , height: $height");
-  logger.d("screen size -> width: $width , height: $height");
-  logger.d(
-      "screen size -> width: ${size.width}, height: ${size.height}, ratio: $ratio");
+  // logger.d("screen size -> width: $width , height: $height");
+  // logger.d(
+  //     "screen size -> width: ${size.width}, height: ${size.height}, ratio: $ratio");
   if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
     return DeviceType.wide;
   }
