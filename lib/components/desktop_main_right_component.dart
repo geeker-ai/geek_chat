@@ -2,21 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
+import 'package:geek_chat/controller/chat_message_scroll_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
 class DeskTopMainRightComponent extends StatelessWidget {
   DeskTopMainRightComponent({super.key, required this.sid}) {
     chatMessageController = Get.put(ChatMessageController());
+    chatMessageScrollController.scrollController = scrollController;
+    // scrollController.addListener(() {
+    //   chatMessageScrollController.scrollListener();
+    // });
     // session = chatListController.getSessionBysid(sid!);
   }
+
+  Logger logger = Get.find<Logger>();
 
   late ChatMessageController chatMessageController;
   ChatListController chatListController = Get.find<ChatListController>();
 
   TextEditingController textEditingController = TextEditingController();
+
+  ScrollController scrollController = ScrollController();
+  ChatMessageScrollController chatMessageScrollController =
+      Get.put(ChatMessageScrollController());
 
   String sid;
 
@@ -92,26 +104,34 @@ class DeskTopMainRightComponent extends StatelessWidget {
           ),
           Expanded(
             child: GetBuilder<ChatMessageController>(builder: (controller) {
-              return ListView.builder(
-                reverse: true,
-                itemCount: controller.messages.length,
-                controller: ScrollController(),
-                scrollDirection: Axis.vertical,
-                physics: const ScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (BuildContext ctxt, int index) {
-                  return MessageContent(
-                      message: controller.messages.elementAt(index),
-                      session: chatListController.currentSession,
-                      onQuote: (MessageModel message) {
-                        controller.inputQuestion =
-                            "\"${message.content}\" \n ---------------------- \n";
-                        controller.update();
-                      },
-                      onDelete: (MessageModel message) {
-                        //
-                      });
-                },
+              return Stack(
+                fit: StackFit.expand,
+                alignment: Alignment.topLeft,
+                children: [
+                  ListView.builder(
+                    key: chatMessageScrollController.listViewKey,
+                    reverse: true,
+                    itemCount: controller.messages.length,
+                    controller: scrollController,
+                    scrollDirection: Axis.vertical,
+                    physics: const ScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return MessageContent(
+                          message: controller.messages.elementAt(index),
+                          session: chatListController.currentSession,
+                          onQuote: (MessageModel message) {
+                            controller.inputQuestion =
+                                "\"${message.content}\" \n ---------------------- \n";
+                            controller.update();
+                          },
+                          onDelete: (MessageModel message) {
+                            //
+                          });
+                    },
+                  ),
+                  const MessageListScrollBtnComponent()
+                ],
               );
             }),
           ),
@@ -154,5 +174,38 @@ class DeskTopMainRightComponent extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class MessageListScrollBtnComponent extends StatelessWidget {
+  const MessageListScrollBtnComponent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<ChatMessageScrollController>(builder: (controller) {
+      // controller.initScrollButton();
+      return Positioned(
+        bottom: 20,
+        right: 5,
+        child: Column(
+          children: [
+            Opacity(
+              opacity: controller.showGotoTopBtn ? 1 : 0,
+              child: IconButton(
+                onPressed: controller.showGotoTopBtn ? () {} : null,
+                icon: const Icon(Icons.arrow_circle_up_outlined),
+              ),
+            ),
+            Opacity(
+              opacity: controller.showGotoBottomBtn ? 1 : 0,
+              child: IconButton(
+                onPressed: controller.showGotoBottomBtn ? () {} : null,
+                icon: const Icon(Icons.arrow_circle_down_outlined),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

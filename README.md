@@ -63,7 +63,6 @@ flutter_distributor release --name release
   - [ ] Save as pdf
   - [ ] 消息模块 copy, del
   - [ ] 消息模块 code block 美化
-  - [ ] 重构 httpRequestWithSSE代码，使用Dio
   - [ ] 重构 ChatListController，解决 currentSession 空安全
   - [ ] 支付接入 stripe，实现应用内支付
   - [ ] 自动发布版本
@@ -73,9 +72,10 @@ flutter_distributor release --name release
   - [x] logging
   - [x] github action: auto build macos packages.
   - [x] github action: auto build android packages.
-  - [ ] Message opt for copy, delete etc.
+  - [ ] Desktop: Message opt for copy, quote and delete etc.
   - [ ] Updater
   - [ ] Active account
+  - [ ] tiktoken updated once a day
 
 - v0.0.1
   - [x] Support desktop

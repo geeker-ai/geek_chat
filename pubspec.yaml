@@ -94,6 +94,12 @@ dependencies:
   # fluttertoast: ^8.2.2
   flutter_styled_toast: ^2.2.1
 
+  # https://pub.dev/packages/custom_pop_up_menu
+  custom_pop_up_menu: ^1.2.4
+
+  # https://pub.dev/packages/floating_overlay
+  floating_overlay: ^1.2.1
+
 
 dev_dependencies:
   flutter_test:

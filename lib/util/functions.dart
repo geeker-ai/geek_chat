@@ -10,6 +10,7 @@ import 'package:logger/logger.dart';
 enum DeviceType { small, wide }
 
 DeviceType getDeviceType() {
+  // return DeviceType.small;
   double ratio = PlatformDispatcher.instance.displays.first.devicePixelRatio;
   Size size = PlatformDispatcher.instance.displays.first.size;
   // print("ration $ratio , size: $size");
