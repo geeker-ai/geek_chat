@@ -174,8 +174,9 @@ class MessageContent extends StatelessWidget {
             margin: EdgeInsets.zero,
             height: 50,
             // width: double.infinity,
-            decoration: BoxDecoration(
-                color: getMessageBackgroundColor(context, role: message.role)),
+            // decoration: BoxDecoration(
+            // color: getMessageBackgroundColor(context, role: message.role),
+            // ),
             child: GetBuilder<MessageBlockController>(
               builder: (controller) {
                 return Opacity(
@@ -188,12 +189,16 @@ class MessageContent extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: getMessageBackgroundColor(context,
                             role: message.role),
+                        // color: Theme.of(context).colorScheme.background,
                         boxShadow: [
                           BoxShadow(
                             color: Theme.of(context).colorScheme.background,
+                            // color: Colors.black54,
                             spreadRadius: 0,
                             blurRadius: 0,
-                            offset: const Offset(1.0, 2.0),
+                            offset: isDark
+                                ? const Offset(1.0, 2.0)
+                                : const Offset(-1.0, -2.0),
                           )
                         ],
                         borderRadius:
@@ -205,17 +210,8 @@ class MessageContent extends StatelessWidget {
                             onPressed: () {
                               Clipboard.setData(
                                   ClipboardData(text: message.content));
-                              // Get.snackbar("Copied!", "");
-                              // RenderBox renderBox =
-                              //     context.findRenderObject() as RenderBox;
-                              // Offset ps = renderBox.localToGlobal(Offset.zero);
-                              // logger.d(ps);
-                              showToast(
-                                "Copied!".tr,
-                                context: context,
-                                position: const StyledToastPosition(
-                                    align: Alignment.center, offset: 0.0),
-                              );
+                              showCustomToast(
+                                  title: "Copied!".tr, context: context);
                             },
                             icon: const Icon(Icons.copy_all_outlined),
                             iconSize: iconButtonSize,
@@ -231,7 +227,19 @@ class MessageContent extends StatelessWidget {
                           ),
                           IconButton(
                             onPressed: () {
-                              onDelete(message);
+                              Get.defaultDialog(
+                                title: "Delete Message".tr,
+                                onCancel: () {
+                                  Get.back();
+                                },
+                                onConfirm: () {
+                                  onDelete(message);
+                                },
+                                textCancel: "Cancel".tr,
+                                textConfirm: "Confirm".tr,
+                                middleText: "Confirm delete message?".tr,
+                                radius: 5,
+                              );
                             },
                             icon: const Icon(Icons.delete_forever),
                             iconSize: iconButtonSize,

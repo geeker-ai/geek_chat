@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -33,4 +35,13 @@ int numTokenCounter(String model, String content) {
   final encoding = encodingForModel(model);
   final numTokens = encoding.encode(content).length;
   return numTokens;
+}
+
+showCustomToast({required String title, required BuildContext context}) {
+  showToast(title,
+      context: context,
+      position:
+          const StyledToastPosition(align: Alignment.topRight, offset: 20.0),
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
+      textStyle: TextStyle(color: Theme.of(context).colorScheme.background));
 }

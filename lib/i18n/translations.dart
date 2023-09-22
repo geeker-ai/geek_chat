@@ -40,6 +40,9 @@ class GeekChatTranslations extends Translations {
           "Copied!": "Copied!",
           "Copy": "Copy",
           "Quote": "Quote",
+          "Confirm": "Confirm",
+          "Confirm delete message?": "Confirm delete message?",
+          "Delete Message": "Delete Message"
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -77,6 +80,9 @@ class GeekChatTranslations extends Translations {
           "Copied!": "已复制",
           "Copy": "复制",
           "Quote": "引用",
+          "Confirm": "确定",
+          "Confirm delete message?": "确认要删除这条消息么?",
+          "Delete Message": "删除消息"
         }
       };
 }
