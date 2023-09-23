@@ -12,7 +12,8 @@ import 'package:logger/logger.dart';
 // ignore: must_be_immutable
 class DeskTopMainRightComponent extends StatelessWidget {
   DeskTopMainRightComponent({super.key, required this.sid}) {
-    chatMessageController = Get.put(ChatMessageController());
+    // chatMessageController = Get.put(ChatMessageController());
+    chatMessageController = Get.find<ChatMessageController>();
 
     /// init right scroll button
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -195,7 +196,6 @@ class DeskTopMainRightComponent extends StatelessWidget {
                             //
                             controller.removeMessage(message);
                             controller.update();
-                            Get.back();
                           });
                     },
                   ),

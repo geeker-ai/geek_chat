@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class ChatListComponent extends StatelessWidget {
-  const ChatListComponent({super.key});
+  ChatListComponent({super.key});
+
+  ChatMessageController chatMessageController =
+      Get.find<ChatMessageController>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +46,7 @@ class ChatListComponent extends StatelessWidget {
                 SlidableAction(
                   onPressed: (value) {
                     // controller.remove(sm.sid);
+                    chatMessageController.cleanSessionMessages(sm.sid);
                     controller.remove(sm);
                     controller.reloadSessions();
                     controller.update();

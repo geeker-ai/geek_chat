@@ -9,7 +9,7 @@ class MobileHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(const SettingsComponent());
-    Get.put(const ChatListComponent());
+    Get.put(ChatListComponent());
 
     return Scaffold(
       appBar: AppBar(

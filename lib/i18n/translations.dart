@@ -42,7 +42,11 @@ class GeekChatTranslations extends Translations {
           "Quote": "Quote",
           "Confirm": "Confirm",
           "Confirm delete message?": "Confirm delete message?",
-          "Delete Message": "Delete Message"
+          "Delete Message": "Delete Message",
+          "Clean Session": "Clean Session",
+          "Confirm clean session?": "Confirm clean session?",
+          "Delete Session": "Delete Session",
+          "Confirm delete session?": "Confirm delete session?"
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -82,7 +86,11 @@ class GeekChatTranslations extends Translations {
           "Quote": "引用",
           "Confirm": "确定",
           "Confirm delete message?": "确认要删除这条消息么?",
-          "Delete Message": "删除消息"
+          "Delete Message": "删除消息",
+          "Clean Session": "清除会话",
+          "Confirm clean session?": "确认要清除对话中的所有消息么?",
+          "Delete Session": "删除对话",
+          "Confirm delete session?": "确认要删除对话么?"
         }
       };
 }

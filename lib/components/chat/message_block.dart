@@ -235,6 +235,7 @@ class MessageContent extends StatelessWidget {
                                 },
                                 onConfirm: () {
                                   onDelete(message);
+                                  Get.back();
                                 },
                                 textCancel: "Cancel".tr,
                                 textConfirm: "Confirm".tr,

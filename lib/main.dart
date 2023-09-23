@@ -9,6 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 // import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/i18n/translations.dart';
@@ -71,6 +72,7 @@ initServices() async {
 
   Get.put(MainController());
   Get.put(ChatListController());
+  Get.put(ChatMessageController());
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   settingsController.packageInfo = packageInfo;
 

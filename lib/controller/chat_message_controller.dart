@@ -70,10 +70,10 @@ class ChatMessageController extends GetxController {
   }
 
   void cleanSessionMessages(String sid) {
-    // _sessionRepository
+    if (messages.isEmpty) {
+      findBySessionId(sid);
+    }
     for (MessageModel message in messages) {
-      // logger.d("message: ${message.msgId}");
-      // removeMessage(message);
       _sessionRepository.removeMessage(message.msgId);
     }
     messages.clear();
