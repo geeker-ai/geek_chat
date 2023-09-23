@@ -1,5 +1,6 @@
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
+import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/pages/chat_edit.dart';
 import 'package:geek_chat/pages/chat_message_page.dart';
 import 'package:geek_chat/pages/desktop_home_page.dart';
@@ -13,7 +14,8 @@ final routers = [
   GetPage(
       name: '/',
       page: () {
-        DeviceType dt = getDeviceType();
+        // DeviceType dt = getDeviceType();
+        DeviceType dt = SettingsController.to.deviceType;
         if (dt == DeviceType.small) {
           return const MobileHomePage();
         }

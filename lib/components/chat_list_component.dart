@@ -40,7 +40,8 @@ class ChatListComponent extends StatelessWidget {
                   ActionPane(motion: const ScrollMotion(), children: [
                 SlidableAction(
                   onPressed: (value) {
-                    controller.remove(sm.sid);
+                    // controller.remove(sm.sid);
+                    controller.remove(sm);
                     controller.reloadSessions();
                     controller.update();
                   },

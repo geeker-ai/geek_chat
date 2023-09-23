@@ -72,8 +72,10 @@ class SessionRepository {
   // }
 
   SessionRepository(this.dir) {
-    isar = Isar.openSync([SessionTableSchema, MessageTableSchema],
-        directory: dir.path);
+    isar = Isar.openSync(
+      [SessionTableSchema, MessageTableSchema],
+      directory: dir.path,
+    );
   }
 
   // initSession() async {
@@ -101,11 +103,25 @@ class SessionRepository {
     return chatList;
   }
 
+  // ignore: provide_deprecation_message
+  @deprecated
   void remove(String sid) {
+    removeSession(sid);
+  }
+
+  void removeSession(String sid) {
     SessionTable? st = findBySessionId(sid);
     if (st != null) {
       st.status = 0;
       save(st);
+    }
+  }
+
+  void removeMessage(String msgId) {
+    MessageTable? msg = findMessageBymid(msgId);
+    if (msg != null) {
+      msg.status = 0;
+      saveMessage(msg);
     }
   }
 

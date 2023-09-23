@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/chat_message_scroll_controller.dart';
+import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
@@ -55,28 +54,26 @@ class DeskTopMainRightComponent extends StatelessWidget {
       double delta =
           scrollController.position.maxScrollExtent - scrollController.offset;
       double to = 0;
-      // double ratio = delta / 1000 - 2;
-      if (delta > 500) {
-        to = scrollController.offset + delta / 2.5;
+      if (delta > 50) {
+        to = scrollController.offset + delta / 7;
       } else {
         to = scrollController.position.maxScrollExtent;
       }
 
       await scrollController.animateTo(
         to,
-        duration: const Duration(microseconds: 200),
+        duration: const Duration(microseconds: 170),
         curve: Curves.linear,
       );
     } while (
         scrollController.position.maxScrollExtent - scrollController.offset >
-            50);
+            20);
   }
 
   void scrollToBottom() {
-    logger.d("scroll to bottom ${scrollController.position.minScrollExtent}");
     scrollController.animateTo(
       scrollController.position.minScrollExtent,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.linear,
     );
   }
@@ -91,6 +88,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
   ScrollController scrollController = ScrollController();
   ChatMessageScrollController chatMessageScrollController =
       Get.put(ChatMessageScrollController());
+
+  SettingsController settingsController = Get.find<SettingsController>();
 
   String sid;
 
@@ -128,37 +127,42 @@ class DeskTopMainRightComponent extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    Get.snackbar(
-                      'Sorry!'.tr,
-                      'This feature will coming soon!'.tr,
-                      duration: const Duration(seconds: 2),
-                      snackPosition: SnackPosition.TOP,
+                    Get.defaultDialog(
+                      title: "Clean Session".tr,
+                      onCancel: () {
+                        Get.back();
+                      },
+                      onConfirm: () {
+                        // onDelete(message);
+                        chatMessageController.cleanSessionMessages(
+                            chatListController.currentSession.sid);
+                        chatMessageController.update();
+                        Get.back();
+                      },
+                      textCancel: "Cancel".tr,
+                      textConfirm: "Confirm".tr,
+                      middleText: "Confirm clean session?".tr,
+                      radius: 5,
                     );
                   },
                   icon: const Icon(Icons.cleaning_services),
                 ),
-                IconButton(
-                  onPressed: () {
-                    Get.snackbar(
-                      'Sorry!'.tr,
-                      'This feature will coming soon!'.tr,
-                      duration: const Duration(seconds: 2),
-                      snackPosition: SnackPosition.TOP,
-                    );
-                  },
-                  icon: const Icon(Icons.sync),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Get.snackbar(
-                      'Sorry!'.tr,
-                      'This feature will coming soon!'.tr,
-                      duration: const Duration(seconds: 2),
-                      snackPosition: SnackPosition.TOP,
-                    );
-                  },
-                  icon: const Icon(Icons.save),
-                )
+                // IconButton(
+                //   onPressed: () {
+                //   },
+                //   icon: const Icon(Icons.sync),
+                // ),
+                // IconButton(
+                //   onPressed: () {
+                //     Get.snackbar(
+                //       'Sorry!'.tr,
+                //       'This feature will coming soon!'.tr,
+                //       duration: const Duration(seconds: 2),
+                //       snackPosition: SnackPosition.TOP,
+                //     );
+                //   },
+                //   icon: const Icon(Icons.save),
+                // )
                 // IconButton(onPressed: () {}, icon: Icon(Icons.edit))
               ],
             ),
@@ -180,6 +184,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
                     itemBuilder: (BuildContext ctxt, int index) {
                       return MessageContent(
                           message: controller.messages.elementAt(index),
+                          deviceType: settingsController.deviceType,
                           session: chatListController.currentSession,
                           onQuote: (MessageModel message) {
                             controller.inputQuestion =
@@ -188,6 +193,9 @@ class DeskTopMainRightComponent extends StatelessWidget {
                           },
                           onDelete: (MessageModel message) {
                             //
+                            controller.removeMessage(message);
+                            controller.update();
+                            Get.back();
                           });
                     },
                   ),
@@ -223,6 +231,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
                         onSubmitted: (String value) {
                           // onSubmit();
                           controller.submit(sid);
+                          scrollToBottom();
                           // controller.update();
                         },
                         onTap: () {

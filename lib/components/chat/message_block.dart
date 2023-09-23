@@ -17,9 +17,11 @@ import 'package:markdown_widget/markdown_widget.dart';
 class MessageContent extends StatelessWidget {
   MessageModel message;
   SessionModel session;
+  DeviceType deviceType;
   MessageContent({
     super.key,
     required this.message,
+    required this.deviceType,
     required this.session,
     required this.onQuote,
     required this.onDelete,
@@ -65,8 +67,8 @@ class MessageContent extends StatelessWidget {
     //   return assistentMessageBubble(context);
     // }
     // bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    DeviceType dt = getDeviceType();
-    if (dt == DeviceType.small) {
+    // DeviceType dt = getDeviceType();
+    if (deviceType == DeviceType.small) {
       return MessageBlock(message: message);
     } else {
       return buildWideScreenMessageBlock(context);
@@ -80,14 +82,14 @@ class MessageContent extends StatelessWidget {
     return GetBuilder<MessageBlockController>(builder: (controller) {
       return MouseRegion(
         onEnter: (event) {
-          logger.d("on Enter: ${message.msgId}");
+          // logger.d("on Enter: ${message.msgId}");
           controller.setDisplay(message.msgId, true);
           controller.update();
           // event.position
           controller.mousePosition = event.position;
         },
         onExit: (event) {
-          logger.d("on Exit");
+          // logger.d("on Exit");
           controller.setDisplay(message.msgId, false);
           controller.update();
         },

@@ -71,6 +71,18 @@ class ChatMessageController extends GetxController {
 
   void cleanSessionMessages(String sid) {
     // _sessionRepository
+    for (MessageModel message in messages) {
+      // logger.d("message: ${message.msgId}");
+      // removeMessage(message);
+      _sessionRepository.removeMessage(message.msgId);
+    }
+    messages.clear();
+  }
+
+  void removeMessage(MessageModel message) {
+    // _sessionRepository.remove(sid)
+    messages.remove(message);
+    _sessionRepository.removeMessage(message.msgId);
   }
 
   Future<List<Map<String, String>>> getRequestMessages(
@@ -155,6 +167,11 @@ class ChatMessageController extends GetxController {
             }
           }
         }
+      },
+      onError: (e, s) {
+        targetMessage.content = e;
+        targetMessage.streamContent = targetMessage.content;
+        logger.d("Error: $e");
       },
       onDone: () {
         logger.d("done ------------------- ");

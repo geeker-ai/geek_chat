@@ -15,6 +15,7 @@ import 'package:geek_chat/i18n/translations.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
+import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
@@ -62,9 +63,11 @@ initServices() async {
 
   Get.put(LocalStoreRepository());
   Directory dir = await getApplicationDocumentsDirectory();
+  logger.d("Application Documents Directory: $dir ");
   Get.put(SessionRepository(dir));
   SettingsController settingsController = Get.put(SettingsController());
   SettingsController.to.dataDir = dir;
+  settingsController.deviceType = getDeviceType();
 
   Get.put(MainController());
   Get.put(ChatListController());

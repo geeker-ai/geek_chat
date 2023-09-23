@@ -92,7 +92,8 @@ class ChatListController extends GetxController {
     getSessionBysid(currentSession.sid);
   }
 
-  void remove(String sid) {
-    _sessionRepository.remove(sid);
+  void remove(SessionModel session) {
+    sessions.remove(session);
+    _sessionRepository.remove(session.sid);
   }
 }
