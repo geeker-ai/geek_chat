@@ -79,11 +79,10 @@ jobs:
 
       - name: Build windows
         if: matrix.platform == 'windows-latest'
-        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         run: |
-          export PATH="$PATH":"$HOME/.pub-cache/bin"
-          export CHANNEL='site'
+          set path=%LOCALAPPDATA%\pub\cache\bin:%path%
+          set CHANNEL='site'
           make change-channel
           flutter_distributor release --name windows

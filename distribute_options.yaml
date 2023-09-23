@@ -31,10 +31,14 @@ releases:
             repo-owner: geeker-ai
             repo-name: geek_chat
 
-  # - name: windows
-  #   jobs:
-  #     - name: release-msix
-  #       package:
-  #         platform: windows
-  #         target: msix
-  #       publish_to: github
+  - name: windows
+    jobs:
+      - name: release-msix
+        package:
+          platform: windows
+          target: msix
+        publish:
+          target: github
+          args:
+            repo-owner: geeker-ai
+            repo-name: geek_chat
