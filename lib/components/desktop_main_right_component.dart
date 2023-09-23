@@ -216,33 +216,51 @@ class DeskTopMainRightComponent extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: textEditingController,
-                        minLines: 1,
-                        maxLines: 5,
-                        textInputAction: TextInputAction.go,
-                        decoration: InputDecoration(
-                          filled: false,
-                          suffixIcon: IconButton(
-                              onPressed: controller.inputQuestion.isNotEmpty
-                                  ? () {
-                                      controller.submit(sid);
-                                      scrollToBottom();
-                                    }
-                                  : null,
-                              icon: const Icon(Icons.send)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.primary),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
                         ),
-                        onChanged: (value) {
-                          controller.inputQuestion = value;
-                          controller.update();
-                        },
-                        onSubmitted: (String value) {
-                          controller.submit(sid);
-                          scrollToBottom();
-                        },
-                        onTap: () {
-                          //
-                        },
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: textEditingController,
+                              minLines: 1,
+                              maxLines: 5,
+                              textInputAction: TextInputAction.go,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                filled: false,
+                                suffixIcon: IconButton(
+                                    onPressed:
+                                        controller.inputQuestion.isNotEmpty
+                                            ? () {
+                                                controller.submit(sid);
+                                                scrollToBottom();
+                                              }
+                                            : null,
+                                    icon: const Icon(Icons.send)),
+                              ),
+                              onChanged: (value) {
+                                controller.inputQuestion = value;
+                                controller.update();
+                              },
+                              onSubmitted: (String value) {
+                                controller.submit(sid);
+                                scrollToBottom();
+                              },
+                              onTap: () {
+                                //
+                              },
+                            ),
+                            // TODO: add quote messages
+                            /// https://pub.dev/packages/flutter_tagging_plus
+                          ],
+                        ),
                       ),
                     ),
                   ],

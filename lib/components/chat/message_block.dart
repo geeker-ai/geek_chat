@@ -94,8 +94,8 @@ class MessageContent extends StatelessWidget {
           controller.update();
         },
         child: Container(
-          padding: const EdgeInsets.only(right: 5, bottom: 5),
-          margin: const EdgeInsets.only(bottom: 10, right: 15, left: 10),
+          padding: const EdgeInsets.only(right: 15, bottom: 5),
+          margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
           decoration: BoxDecoration(
             color: getMessageBackgroundColor(context, role: message.role),
             borderRadius: BorderRadius.only(
