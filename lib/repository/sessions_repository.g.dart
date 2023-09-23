@@ -3124,28 +3124,33 @@ const MessageTableSchema = CollectionSchema(
       name: r'model',
       type: IsarType.string,
     ),
-    r'role': PropertySchema(
+    r'quotes': PropertySchema(
       id: 3,
+      name: r'quotes',
+      type: IsarType.stringList,
+    ),
+    r'role': PropertySchema(
+      id: 4,
       name: r'role',
       type: IsarType.string,
     ),
     r'sid': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'sid',
       type: IsarType.string,
     ),
     r'status': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'status',
       type: IsarType.long,
     ),
     r'synced': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'synced',
       type: IsarType.bool,
     ),
     r'updated': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'updated',
       type: IsarType.long,
     )
@@ -3234,6 +3239,18 @@ int _messageTableEstimateSize(
     }
   }
   {
+    final list = object.quotes;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += value.length * 3;
+        }
+      }
+    }
+  }
+  {
     final value = object.role;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -3257,11 +3274,12 @@ void _messageTableSerialize(
   writer.writeString(offsets[0], object.content);
   writer.writeString(offsets[1], object.mid);
   writer.writeString(offsets[2], object.model);
-  writer.writeString(offsets[3], object.role);
-  writer.writeString(offsets[4], object.sid);
-  writer.writeLong(offsets[5], object.status);
-  writer.writeBool(offsets[6], object.synced);
-  writer.writeLong(offsets[7], object.updated);
+  writer.writeStringList(offsets[3], object.quotes);
+  writer.writeString(offsets[4], object.role);
+  writer.writeString(offsets[5], object.sid);
+  writer.writeLong(offsets[6], object.status);
+  writer.writeBool(offsets[7], object.synced);
+  writer.writeLong(offsets[8], object.updated);
 }
 
 MessageTable _messageTableDeserialize(
@@ -3275,11 +3293,12 @@ MessageTable _messageTableDeserialize(
   object.id = id;
   object.mid = reader.readStringOrNull(offsets[1]);
   object.model = reader.readStringOrNull(offsets[2]);
-  object.role = reader.readStringOrNull(offsets[3]);
-  object.sid = reader.readStringOrNull(offsets[4]);
-  object.status = reader.readLong(offsets[5]);
-  object.synced = reader.readBool(offsets[6]);
-  object.updated = reader.readLongOrNull(offsets[7]);
+  object.quotes = reader.readStringList(offsets[3]);
+  object.role = reader.readStringOrNull(offsets[4]);
+  object.sid = reader.readStringOrNull(offsets[5]);
+  object.status = reader.readLong(offsets[6]);
+  object.synced = reader.readBool(offsets[7]);
+  object.updated = reader.readLongOrNull(offsets[8]);
   return object;
 }
 
@@ -3297,14 +3316,16 @@ P _messageTableDeserializeProp<P>(
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 7:
+      return (reader.readBool(offset)) as P;
+    case 8:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -4294,6 +4315,249 @@ extension MessageTableQueryFilter
     });
   }
 
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'quotes',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'quotes',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'quotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'quotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'quotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'quotes',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'quotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'quotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'quotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'quotes',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'quotes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'quotes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'quotes',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'quotes',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'quotes',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'quotes',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'quotes',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      quotesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'quotes',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition> roleIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -4973,6 +5237,12 @@ extension MessageTableQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByQuotes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'quotes');
+    });
+  }
+
   QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByRole(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -5029,6 +5299,12 @@ extension MessageTableQueryProperty
   QueryBuilder<MessageTable, String?, QQueryOperations> modelProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'model');
+    });
+  }
+
+  QueryBuilder<MessageTable, List<String>?, QQueryOperations> quotesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'quotes');
     });
   }
 

@@ -6,6 +6,7 @@ import 'package:geek_chat/controller/chat_message_scroll_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
@@ -83,8 +84,6 @@ class DeskTopMainRightComponent extends StatelessWidget {
 
   late ChatMessageController chatMessageController;
   ChatListController chatListController = Get.find<ChatListController>();
-
-  TextEditingController textEditingController = TextEditingController();
 
   ScrollController scrollController = ScrollController();
   ChatMessageScrollController chatMessageScrollController =
@@ -188,9 +187,17 @@ class DeskTopMainRightComponent extends StatelessWidget {
                           deviceType: settingsController.deviceType,
                           session: chatListController.currentSession,
                           onQuote: (MessageModel message) {
-                            controller.inputQuestion =
-                                "\"${message.content}\" \n ---------------------- \n";
-                            controller.update();
+                            // controller.inputQuestion =
+                            //     "\"${message.content}\" \n ---------------------- \n";
+                            if (controller
+                                .isMessagesTooLong(controller.quoteMessages)) {
+                              showCustomToast(
+                                  title: "Too many quote messages".tr,
+                                  context: context);
+                            } else {
+                              controller.addQuoteMessage(message);
+                              controller.update();
+                            }
                           },
                           onDelete: (MessageModel message) {
                             //
@@ -210,13 +217,14 @@ class DeskTopMainRightComponent extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: GetBuilder<ChatMessageController>(builder: (controller) {
-              textEditingController.text = controller.inputQuestion;
+              // textEditingController.text = controller.inputQuestion;
               return Container(
                 padding: const EdgeInsets.only(top: 1),
                 child: Row(
                   children: [
                     Expanded(
                       child: Container(
+                        padding: const EdgeInsets.only(left: 2, right: 2),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: Theme.of(context).colorScheme.primary),
@@ -224,41 +232,14 @@ class DeskTopMainRightComponent extends StatelessWidget {
                               const BorderRadius.all(Radius.circular(3)),
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            TextField(
-                              controller: textEditingController,
-                              minLines: 1,
-                              maxLines: 5,
-                              textInputAction: TextInputAction.go,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                filled: false,
-                                suffixIcon: IconButton(
-                                    onPressed:
-                                        controller.inputQuestion.isNotEmpty
-                                            ? () {
-                                                controller.submit(sid);
-                                                scrollToBottom();
-                                              }
-                                            : null,
-                                    icon: const Icon(Icons.send)),
-                              ),
-                              onChanged: (value) {
-                                controller.inputQuestion = value;
-                                controller.update();
-                              },
-                              onSubmitted: (String value) {
-                                controller.submit(sid);
-                                scrollToBottom();
-                              },
-                              onTap: () {
-                                //
-                              },
+                            QuestionInputComponent(
+                              sid: sid,
+                              scrollToBottom: scrollToBottom,
                             ),
-                            // TODO: add quote messages
-                            /// https://pub.dev/packages/flutter_tagging_plus
+                            QuoteMessagesComponent(),
                           ],
                         ),
                       ),
@@ -268,6 +249,106 @@ class DeskTopMainRightComponent extends StatelessWidget {
               );
             }),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class QuestionInputComponent extends StatelessWidget {
+  QuestionInputComponent({
+    super.key,
+    required this.sid,
+    required this.scrollToBottom,
+  });
+
+  String sid;
+  Function scrollToBottom;
+
+  TextEditingController textEditingController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<ChatMessageController>(
+        id: 'inputQuestion',
+        builder: (controller) {
+          textEditingController.text = controller.inputQuestion;
+          return TextField(
+            controller: textEditingController,
+            minLines: 1,
+            maxLines: 5,
+            textInputAction: TextInputAction.go,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              filled: false,
+              suffixIcon: IconButton(
+                  onPressed: () {
+                    controller.submit(sid);
+                    scrollToBottom();
+                  },
+                  icon: const Icon(Icons.send)),
+            ),
+            onChanged: (value) {
+              if (controller.isMessagesTooLong(controller.quoteMessages)) {
+                showCustomToast(
+                    title: "Too many quote messages".tr, context: context);
+              }
+              controller.inputQuestion = value;
+              // controller.update(['inputQuestion']);
+            },
+            onSubmitted: (String value) {
+              controller.submit(sid);
+              scrollToBottom();
+            },
+            onTap: () {
+              //
+            },
+          );
+        });
+  }
+}
+
+// ignore: must_be_immutable
+class QuoteMessagesComponent extends StatelessWidget {
+  QuoteMessagesComponent({super.key});
+
+  ChatListController chatListController = Get.find();
+  ChatMessageController chatMessageController = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    if (chatMessageController.quoteMessages.isEmpty) {
+      return const SizedBox();
+    }
+    return Padding(
+      padding: const EdgeInsets.all(3),
+      child: Wrap(
+        spacing: 3,
+        runSpacing: 3,
+        direction: Axis.horizontal,
+        textDirection: TextDirection.ltr,
+        children: [
+          for (MessageModel message in chatMessageController.quoteMessages)
+            InputChip(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              label: SizedBox(
+                width: 150,
+                child: Text(
+                  message.content,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              deleteIcon: const Icon(Icons.cancel_outlined),
+              deleteButtonTooltipMessage: "Delete".tr,
+              padding: const EdgeInsets.all(0),
+              onDeleted: () {
+                chatMessageController.removeQuoteMessage(message);
+                chatMessageController.update();
+              },
+            ),
         ],
       ),
     );

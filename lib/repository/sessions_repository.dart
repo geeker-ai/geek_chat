@@ -51,6 +51,7 @@ class MessageTable {
   // bool? generating;
   // String msgType = 'new'; // new, refresh
   bool synced = false; //
+  List<String>? quotes;
 
   @Index()
   int status = 1; // 1 = show, 0 = delete

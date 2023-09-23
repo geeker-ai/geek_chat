@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
+import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/message_block_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
@@ -169,6 +170,9 @@ class MessageContent extends StatelessWidget {
               ],
             ),
           ),
+          QuoteMessageComponent(
+            message: message,
+          ),
           Container(
             padding:
                 const EdgeInsets.only(top: 5, bottom: 0, left: 0, right: 0),
@@ -271,6 +275,49 @@ class MessageContent extends StatelessWidget {
     } else {
       return Colors.black12;
     }
+  }
+}
+
+// ignore: must_be_immutable
+class QuoteMessageComponent extends StatelessWidget {
+  QuoteMessageComponent({super.key, required this.message});
+
+  MessageModel message;
+
+  ChatMessageController chatMessageController = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    if (message.quotes == null) {
+      return const SizedBox();
+    }
+    return Padding(
+      padding: const EdgeInsets.all(3),
+      child: Wrap(
+        spacing: 3,
+        runSpacing: 3,
+        direction: Axis.horizontal,
+        textDirection: TextDirection.ltr,
+        children: [
+          for (MessageModel message
+              in chatMessageController.findQuoteMessages(message))
+            Chip(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              label: SizedBox(
+                width: 150,
+                child: Text(
+                  message.content,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              // deleteIcon: null,
+              // deleteButtonTooltipMessage: "Delete".tr,
+              padding: const EdgeInsets.all(0),
+              // onDeleted: () {},
+            ),
+        ],
+      ),
+    );
   }
 }
 
