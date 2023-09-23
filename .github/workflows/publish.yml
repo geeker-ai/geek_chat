@@ -82,7 +82,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         run: |
-          set path=%LOCALAPPDATA%\pub\cache\bin:%path%
+          set path=%LOCALAPPDATA%\Pub\Cache\bin;%path%
           set CHANNEL='site'
           make change-channel
           flutter_distributor release --name windows
