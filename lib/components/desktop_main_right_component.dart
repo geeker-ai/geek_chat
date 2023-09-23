@@ -221,18 +221,24 @@ class DeskTopMainRightComponent extends StatelessWidget {
                         minLines: 1,
                         maxLines: 5,
                         textInputAction: TextInputAction.go,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           filled: false,
-                          suffixIcon: Icon(Icons.send),
+                          suffixIcon: IconButton(
+                              onPressed: controller.inputQuestion.isNotEmpty
+                                  ? () {
+                                      controller.submit(sid);
+                                      scrollToBottom();
+                                    }
+                                  : null,
+                              icon: const Icon(Icons.send)),
                         ),
                         onChanged: (value) {
                           controller.inputQuestion = value;
+                          controller.update();
                         },
                         onSubmitted: (String value) {
-                          // onSubmit();
                           controller.submit(sid);
                           scrollToBottom();
-                          // controller.update();
                         },
                         onTap: () {
                           //

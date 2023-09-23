@@ -67,12 +67,15 @@ flutter_distributor release --name release
   - [ ] 支付接入 stripe，实现应用内支付
   - [ ] 自动发布版本
   - [ ] 自动更新
+  - [ ] 优化Quote功能，类似微信，可以Quote多条消息
+
 
 - v0.0.37
   - [x] logging
   - [x] github action: auto build macos packages.
   - [x] github action: auto build android packages.
-  - [ ] Desktop: Message opt for copy, quote and delete etc.
+  - [x] Desktop: Message opt for copy, quote and delete etc.
+  - [x] 桌面版：发送消息的icon（在有输入内容时可点，没有内容时无效）
   - [ ] Updater
   - [ ] Active account
   - [ ] tiktoken updated once a day
