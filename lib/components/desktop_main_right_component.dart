@@ -13,7 +13,6 @@ import 'package:logger/logger.dart';
 // ignore: must_be_immutable
 class DeskTopMainRightComponent extends StatelessWidget {
   DeskTopMainRightComponent({super.key, required this.sid}) {
-    // chatMessageController = Get.put(ChatMessageController());
     chatMessageController = Get.find<ChatMessageController>();
 
     /// init right scroll button
@@ -22,6 +21,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
         scrollButtonListener();
       });
       scrollButtonListener();
+      questionInputFocus.requestFocus();
     });
   }
 
@@ -92,6 +92,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
   SettingsController settingsController = Get.find<SettingsController>();
 
   String sid;
+
+  FocusNode questionInputFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -188,8 +190,6 @@ class DeskTopMainRightComponent extends StatelessWidget {
                           deviceType: settingsController.deviceType,
                           session: chatListController.currentSession,
                           onQuote: (MessageModel message) {
-                            // controller.inputQuestion =
-                            //     "\"${message.content}\" \n ---------------------- \n";
                             if (controller
                                 .isMessagesTooLong(controller.quoteMessages)) {
                               showCustomToast(
@@ -199,6 +199,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
                               controller.addQuoteMessage(message);
                               controller.update();
                             }
+                            questionInputFocus.requestFocus();
                           },
                           onDelete: (MessageModel message) {
                             //
@@ -221,7 +222,6 @@ class DeskTopMainRightComponent extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: GetBuilder<ChatMessageController>(builder: (controller) {
-              // textEditingController.text = controller.inputQuestion;
               return Container(
                 padding: const EdgeInsets.only(top: 1),
                 child: Row(
@@ -242,6 +242,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
                             QuestionInputComponent(
                               sid: sid,
                               scrollToBottom: scrollToBottom,
+                              questionInputFocus: questionInputFocus,
                             ),
                             QuoteMessagesComponent(),
                           ],
@@ -265,10 +266,12 @@ class QuestionInputComponent extends StatelessWidget {
     super.key,
     required this.sid,
     required this.scrollToBottom,
+    required this.questionInputFocus,
   });
 
   String sid;
   Function scrollToBottom;
+  FocusNode questionInputFocus;
 
   TextEditingController textEditingController = TextEditingController();
 
@@ -280,6 +283,7 @@ class QuestionInputComponent extends StatelessWidget {
           textEditingController.text = controller.inputQuestion;
           return TextField(
             controller: textEditingController,
+            focusNode: questionInputFocus,
             minLines: 1,
             maxLines: 5,
             textInputAction: TextInputAction.go,
