@@ -98,7 +98,10 @@ dependencies:
   custom_pop_up_menu: ^1.2.4
 
   # https://pub.dev/packages/floating_overlay
-  floating_overlay: ^1.2.1
+  # floating_overlay: ^1.2.1
+
+  # https://pub.dev/packages/anchor_scroll_controller
+  # anchor_scroll_controller: ^0.4.4
 
 
 dev_dependencies:

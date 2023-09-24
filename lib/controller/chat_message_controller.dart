@@ -196,6 +196,7 @@ class ChatMessageController extends GetxController {
       "stream": true,
       "messages": await getRequestMessages(input)
     };
+
     logger.d(chatMessage);
     _quoteMessages.clear();
     update();
@@ -242,6 +243,8 @@ class ChatMessageController extends GetxController {
         targetMessage.content = e;
         targetMessage.streamContent = targetMessage.content;
         logger.d("Error: $e");
+        targetMessage.generating = false;
+        update();
       },
       onDone: () {
         logger.d("done ------------------- ");

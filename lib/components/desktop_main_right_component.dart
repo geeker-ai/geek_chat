@@ -174,7 +174,6 @@ class DeskTopMainRightComponent extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 children: [
                   ListView.builder(
-                    key: chatMessageScrollController.listViewKey,
                     reverse: true,
                     itemCount: controller.messages.length,
                     controller: scrollController,
@@ -183,6 +182,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
                     shrinkWrap: true,
                     itemBuilder: (BuildContext ctxt, int index) {
                       return MessageContent(
+                          key: GlobalObjectKey(
+                              controller.messages.elementAt(index).msgId),
                           message: controller.messages.elementAt(index),
                           deviceType: settingsController.deviceType,
                           session: chatListController.currentSession,
@@ -203,6 +204,9 @@ class DeskTopMainRightComponent extends StatelessWidget {
                             //
                             controller.removeMessage(message);
                             controller.update();
+                          },
+                          moveTo: (MessageModel msg) {
+                            logger.d("move to: ${msg.msgId}");
                           });
                     },
                   ),

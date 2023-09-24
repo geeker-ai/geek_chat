@@ -26,12 +26,14 @@ class MessageContent extends StatelessWidget {
     required this.session,
     required this.onQuote,
     required this.onDelete,
+    required this.moveTo,
   }) {
     //
   }
 
   Function onQuote;
   Function onDelete;
+  Function moveTo;
 
   MessageBlockController controller = Get.put(MessageBlockController());
   Logger logger = Get.find();
@@ -172,6 +174,7 @@ class MessageContent extends StatelessWidget {
           ),
           QuoteMessageComponent(
             message: message,
+            moveTo: moveTo,
           ),
           Container(
             padding:
@@ -280,9 +283,14 @@ class MessageContent extends StatelessWidget {
 
 // ignore: must_be_immutable
 class QuoteMessageComponent extends StatelessWidget {
-  QuoteMessageComponent({super.key, required this.message});
+  QuoteMessageComponent({
+    super.key,
+    required this.message,
+    required this.moveTo,
+  });
 
   MessageModel message;
+  Function moveTo;
 
   ChatMessageController chatMessageController = Get.find();
 
@@ -301,7 +309,8 @@ class QuoteMessageComponent extends StatelessWidget {
         children: [
           for (MessageModel message
               in chatMessageController.findQuoteMessages(message))
-            Chip(
+            ActionChip(
+              tooltip: message.content,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               label: SizedBox(
                 width: 150,
@@ -310,10 +319,10 @@ class QuoteMessageComponent extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              // deleteIcon: null,
-              // deleteButtonTooltipMessage: "Delete".tr,
               padding: const EdgeInsets.all(0),
-              // onDeleted: () {},
+              onPressed: () {
+                // moveTo(message);
+              },
             ),
         ],
       ),
