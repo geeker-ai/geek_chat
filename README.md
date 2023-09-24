@@ -61,7 +61,7 @@ flutter_distributor release --name release
   - [ ] Clear session messages
   - [ ] Auto sync
   - [ ] Save as pdf
-  - [ ] 消息模块 copy, del
+  - [ ] Mobile: 消息模块 copy, del
   - [ ] 消息模块 code block 美化
   - [ ] 重构 ChatListController，解决 currentSession 空安全
   - [ ] 支付接入 stripe，实现应用内支付
@@ -76,9 +76,9 @@ flutter_distributor release --name release
   - [x] github action: auto build android packages.
   - [x] Desktop: Message opt for copy, quote and delete etc.
   - [x] 桌面版：发送消息的icon（在有输入内容时可点，没有内容时无效）
+  - [x] Question Input auto focus.
   - [ ] Updater
   - [ ] Active account
-  - [ ] tiktoken updated once a day
 
 - v0.0.1
   - [x] Support desktop
