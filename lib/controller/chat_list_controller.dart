@@ -1,5 +1,6 @@
 // import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
@@ -7,6 +8,11 @@ import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:get/get.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:uuid/uuid.dart';
+
+class ChatListScrollToolController extends GetxController {
+  final GlobalKey anchroKey = GlobalKey();
+  late double dx, dy;
+}
 
 class ChatListController extends GetxController {
   List<SessionModel> sessions = [];
@@ -86,7 +92,8 @@ class ChatListController extends GetxController {
     getSessionBysid(currentSession.sid);
   }
 
-  void remove(String sid) {
-    _sessionRepository.remove(sid);
+  void remove(SessionModel session) {
+    sessions.remove(session);
+    _sessionRepository.removeSession(session.sid);
   }
 }

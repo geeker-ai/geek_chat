@@ -13,19 +13,22 @@ class MessageModel {
   int? msgType; // 1=new, 2=refresh
   bool? synced;
   int? status; // 1 = show, 2=delete
+  List<String>? quotes;
   StreamController<String>? contentStream;
 
-  MessageModel(
-      {required this.msgId,
-      required this.role,
-      required this.content,
-      this.sId,
-      this.model,
-      this.updated,
-      this.generating,
-      this.msgType,
-      this.synced,
-      this.status}) {
+  MessageModel({
+    required this.msgId,
+    required this.role,
+    required this.content,
+    this.sId,
+    this.model,
+    this.updated,
+    this.generating,
+    this.msgType,
+    this.synced,
+    this.status,
+    this.quotes,
+  }) {
     if (generating == true) {
       // print("contentStream = StreamController<String>();");
       contentStream = StreamController<String>();
@@ -46,6 +49,9 @@ class MessageModel {
     mm.generating = false;
     mm.synced = mt.synced;
     mm.status = mt.status;
+    if (mt.quotes != null) {
+      mm.quotes = mt.quotes;
+    }
     return mm;
   }
 
@@ -66,6 +72,9 @@ class MessageModel {
     mt.updated = updated;
     mt.synced = synced ?? false;
     mt.status = status ?? 1;
+    if (quotes != null) {
+      mt.quotes = quotes;
+    }
     return mt;
   }
 }

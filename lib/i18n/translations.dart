@@ -37,6 +37,16 @@ class GeekChatTranslations extends Translations {
           "GeekerChat": "GeekerChat (EasyAccess)",
           "Sorry!": "Sorry!",
           "This feature will coming soon!": "This feature will coming soon!",
+          "Copied!": "Copied!",
+          "Copy": "Copy",
+          "Quote": "Quote",
+          "Confirm": "Confirm",
+          "Confirm delete message?": "Confirm delete message?",
+          "Delete Message": "Delete Message",
+          "Clean Session": "Clean Session",
+          "Confirm clean session?": "Confirm clean session?",
+          "Delete Session": "Delete Session",
+          "Confirm delete session?": "Confirm delete session?"
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -71,6 +81,16 @@ class GeekChatTranslations extends Translations {
           "GeekerChat": "GeekerChat (轻松访问)",
           "Sorry!": "抱歉!",
           "This feature will coming soon!": "该功能正在开发中!",
+          "Copied!": "已复制",
+          "Copy": "复制",
+          "Quote": "引用",
+          "Confirm": "确定",
+          "Confirm delete message?": "确认要删除这条消息么?",
+          "Delete Message": "删除消息",
+          "Clean Session": "清除会话",
+          "Confirm clean session?": "确认要清除对话中的所有消息么?",
+          "Delete Session": "删除对话",
+          "Confirm delete session?": "确认要删除对话么?"
         }
       };
 }

@@ -1,18 +1,334 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
-// import 'package:flutter_highlighter/flutter_highlighter.dart';
-// import 'package:flutter_highlighter/themes/atom-one-dark.dart';
-// import 'package:flutter_highlighter/themes/atom-one-light.dart';
-// import 'package:flutter_highlighter/themes/github.dart';
-// import 'package:flutter_highlighter/themes/github.dart';
-// import 'package:flutter_markdown/flutter_markdown.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// ignore: depend_on_referenced_packages
-// import 'package:markdown/markdown.dart' as md;
+import 'package:geek_chat/controller/chat_message_controller.dart';
+import 'package:geek_chat/controller/message_block_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/models/model.dart';
+import 'package:geek_chat/models/session.dart';
+// import 'package:geek_chat/repository/sessions_repository.dart';
+import 'package:geek_chat/util/functions.dart';
+import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-// import 'package:markdown_widget/widget/markdown.dart';
+
+// ignore: must_be_immutable
+class MessageContent extends StatelessWidget {
+  MessageModel message;
+  SessionModel session;
+  DeviceType deviceType;
+  MessageContent({
+    super.key,
+    required this.message,
+    required this.deviceType,
+    required this.session,
+    required this.onQuote,
+    required this.onDelete,
+    required this.moveTo,
+  }) {
+    //
+  }
+
+  Function onQuote;
+  Function onDelete;
+  Function moveTo;
+
+  MessageBlockController controller = Get.put(MessageBlockController());
+  Logger logger = Get.find();
+
+  Widget getMessageAvatar(BuildContext context) {
+    if (message.role == 'user') {
+      return const Icon(
+        Icons.person_outline_outlined,
+        size: 35,
+      );
+    }
+    String svgPic = 'assets/chatgpt-grey.svg';
+    if (session.type == AiType.bard.name) {
+      svgPic = 'assets/google-grey.svg';
+    }
+    return SvgPicture.asset(
+      svgPic,
+      width: 35,
+      height: 35,
+      colorFilter: ColorFilter.mode(
+        Theme.of(context).colorScheme.onBackground,
+        BlendMode.srcIn,
+      ),
+    );
+  }
+
+  double radius = 3;
+
+  @override
+  Widget build(BuildContext context) {
+    // if (message.role == 'user') {
+    //   return userMessageBubble(context);
+    // } else {
+    //   return assistentMessageBubble(context);
+    // }
+    // bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    // DeviceType dt = getDeviceType();
+    if (deviceType == DeviceType.small) {
+      return MessageBlock(message: message);
+    } else {
+      return buildWideScreenMessageBlock(context);
+    }
+  }
+
+  double avatarWidth = 70;
+
+  Widget buildWideScreenMessageBlock(BuildContext context) {
+    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    return GetBuilder<MessageBlockController>(builder: (controller) {
+      return MouseRegion(
+        onEnter: (event) {
+          // logger.d("on Enter: ${message.msgId}");
+          controller.setDisplay(message.msgId, true);
+          controller.update();
+          // event.position
+          controller.mousePosition = event.position;
+        },
+        onExit: (event) {
+          // logger.d("on Exit");
+          controller.setDisplay(message.msgId, false);
+          controller.update();
+        },
+        child: Container(
+          padding: const EdgeInsets.only(right: 15, bottom: 5),
+          margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+          decoration: BoxDecoration(
+            color: getMessageBackgroundColor(context, role: message.role),
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(radius),
+              topLeft: Radius.circular(radius),
+              bottomLeft: Radius.circular(radius),
+              bottomRight: Radius.circular(radius),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(top: 10),
+                    width: avatarWidth,
+                    child: Column(
+                      children: [
+                        getMessageAvatar(context),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 10, bottom: 3),
+                      alignment: Alignment.centerLeft,
+                      margin: const EdgeInsets.only(right: 8),
+                      child: markDownWidgetWithStream(message, isDark),
+                    ),
+                  )
+                ],
+              ),
+              displayMessageOpt(context),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  double iconButtonSize = 20.0;
+
+  Widget displayMessageOpt(BuildContext context) {
+    late Color messsageTipsColor;
+    bool offStage = false;
+
+    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    if (isDark) {
+      messsageTipsColor = Colors.grey[500]!;
+    } else {
+      messsageTipsColor = Colors.black54;
+    }
+    if (message.role == 'user') {
+      offStage = true;
+    }
+    return Container(
+      padding: EdgeInsets.only(left: avatarWidth + 5, bottom: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Offstage(
+            offstage: offStage,
+            child: Row(
+              children: [
+                Text(
+                  "model: ${message.model}",
+                  style: TextStyle(color: messsageTipsColor, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          QuoteMessageComponent(
+            message: message,
+            moveTo: moveTo,
+          ),
+          Container(
+            padding:
+                const EdgeInsets.only(top: 5, bottom: 0, left: 0, right: 0),
+            margin: EdgeInsets.zero,
+            height: 50,
+            // width: double.infinity,
+            // decoration: BoxDecoration(
+            // color: getMessageBackgroundColor(context, role: message.role),
+            // ),
+            child: GetBuilder<MessageBlockController>(
+              builder: (controller) {
+                return Opacity(
+                  opacity: controller.isDisplay(message.msgId) ? 1 : 0,
+                  child: UnconstrainedBox(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 0, bottom: 0),
+                      margin: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                        color: getMessageBackgroundColor(context,
+                            role: message.role),
+                        // color: Theme.of(context).colorScheme.background,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).colorScheme.background,
+                            // color: Colors.black54,
+                            spreadRadius: 0,
+                            blurRadius: 0,
+                            offset: isDark
+                                ? const Offset(1.0, 2.0)
+                                : const Offset(-1.0, -2.0),
+                          )
+                        ],
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(3)),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Clipboard.setData(
+                                  ClipboardData(text: message.content));
+                              showCustomToast(
+                                  title: "Copied!".tr, context: context);
+                            },
+                            icon: const Icon(Icons.copy_all_outlined),
+                            iconSize: iconButtonSize,
+                            tooltip: "Copy".tr,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              onQuote(message);
+                            },
+                            icon: const Icon(Icons.format_quote_outlined),
+                            iconSize: iconButtonSize,
+                            tooltip: "Quote".tr,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Get.defaultDialog(
+                                title: "Delete Message".tr,
+                                onCancel: () {
+                                  Get.back();
+                                },
+                                onConfirm: () {
+                                  onDelete(message);
+                                  Get.back();
+                                },
+                                textCancel: "Cancel".tr,
+                                textConfirm: "Confirm".tr,
+                                middleText: "Confirm delete message?".tr,
+                                radius: 5,
+                              );
+                            },
+                            icon: const Icon(Icons.delete_forever),
+                            iconSize: iconButtonSize,
+                            tooltip: "Delete".tr,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color getMessageBackgroundColor(BuildContext context,
+      {String role = "user"}) {
+    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    if (role == "user") {
+      return Theme.of(context).colorScheme.background;
+    }
+    if (isDark) {
+      return Colors.grey[900]!;
+    } else {
+      return Colors.black12;
+    }
+  }
+}
+
+// ignore: must_be_immutable
+class QuoteMessageComponent extends StatelessWidget {
+  QuoteMessageComponent({
+    super.key,
+    required this.message,
+    required this.moveTo,
+  });
+
+  MessageModel message;
+  Function moveTo;
+
+  ChatMessageController chatMessageController = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    if (message.quotes == null) {
+      return const SizedBox();
+    }
+    return Padding(
+      padding: const EdgeInsets.all(3),
+      child: Wrap(
+        spacing: 3,
+        runSpacing: 3,
+        direction: Axis.horizontal,
+        textDirection: TextDirection.ltr,
+        children: [
+          for (MessageModel message
+              in chatMessageController.findQuoteMessages(message))
+            ActionChip(
+              tooltip: message.content,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              label: SizedBox(
+                width: 150,
+                child: Text(
+                  message.content,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              padding: const EdgeInsets.all(0),
+              onPressed: () {
+                // moveTo(message);
+              },
+            ),
+        ],
+      ),
+    );
+  }
+}
 
 // ignore: must_be_immutable
 class MessageBlock extends StatelessWidget {
@@ -114,7 +430,7 @@ Widget markDownWidgetWithStream(MessageModel message, bool isDark) {
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           String text = snapshot.data ?? '';
           if (message.generating == true) {
-            text = "$text ...";
+            text = "$text ✍️";
           }
           return markDownWidget(text, isDark);
         });
@@ -122,39 +438,11 @@ Widget markDownWidgetWithStream(MessageModel message, bool isDark) {
 }
 
 Widget markDownWidget(String message, bool isDark) {
-  // Widget markdown = Markdown(
-  //   data: message,
-  //   selectable: true,
-  //   shrinkWrap: true,
-  //   controller: ScrollController(),
-  //   builders: {
-  //     'code': CodeElementBuilder(),
-  //   },
-  //   // syntaxHighlighter: SyntaxHighlighter(),
-  //   // styleSheet: MarkdownStyleSheet(
-  //   //   code: const TextStyle(backgroundColor: Colors.transparent),
-  //   // ),
-  //   // syntaxHighlighter: ,
-  //   // styleSheet: MarkdownStyleSheet(code: config),
-  //   // extensionSet: md.ExtensionSet(
-  //   //   md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-  //   //   <md.InlineSyntax>[
-  //   //     md.EmojiSyntax(),
-  //   //     ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-  //   //   ],
-  //   // ),
-  // );
-  // return SelectionArea(child: markdown);
-  // markdown = Text(message);
   Widget markdownWidget = MarkdownWidget(
     data: message,
     shrinkWrap: true,
-    // tocController: TocController(),
     config: isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig,
-    // physics: const ScrollPhysics(),
-    // config: MarkdownConfig(configs: [
-    //   PreConfig(theme: isDark ? atomOneDarkTheme : atomOneLightTheme)
-    // ]),
+    physics: const ScrollPhysics(),
     markdownGeneratorConfig: MarkdownGeneratorConfig(
       generators: [latexGenerator],
       inlineSyntaxList: [LatexSyntax()],
@@ -162,42 +450,3 @@ Widget markDownWidget(String message, bool isDark) {
   );
   return markdownWidget;
 }
-
-// class CodeElementBuilder extends MarkdownElementBuilder {
-//   @override
-//   Widget? visitElementAfterWithContext(BuildContext context, md.Element element,
-//       TextStyle? preferredStyle, TextStyle? parentStyle) {
-//     // return super.visitElementAfterWithContext(context, element, preferredStyle, parentStyle);
-//     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-//     var language = '';
-//     if (element.attributes['class'] != null) {
-//       String lg = element.attributes['class'] as String;
-//       language = lg.substring(9);
-//     }
-//     // return SizedBox(child:,)
-//     return HighlightView(
-//       // The original code to be highlighted
-//       element.textContent,
-
-//       // Specify language
-//       // It is recommended to give it a value for performance
-//       language: language,
-
-//       // Specify highlight theme
-//       // All available themes are listed in `themes` folder
-//       // theme: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
-//       //             .platformBrightness ==
-//       //         Brightness.light
-//       //     ? atomOneLightTheme
-//       //     : atomOneDarkTheme,
-//       theme: isDark ? atomOneDarkTheme : atomOneLightTheme,
-//       // theme: githubTheme,
-
-//       // Specify padding
-//       // padding: const EdgeInsets.all(8),
-
-//       // Specify text style
-//       textStyle: GoogleFonts.robotoMono(),
-//     );
-//   }
-// }

@@ -15,6 +15,11 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+### launch icon
+```
+flutter pub run flutter_launcher_icons
+```
+
 ### isar
 ```
 flutter pub run build_runner build
@@ -58,17 +63,22 @@ flutter_distributor release --name release
   - [ ] Save as pdf
   - [ ] 消息模块 copy, del
   - [ ] 消息模块 code block 美化
-  - [ ] 重构 httpRequestWithSSE代码，使用Dio
   - [ ] 重构 ChatListController，解决 currentSession 空安全
   - [ ] 支付接入 stripe，实现应用内支付
   - [ ] 自动发布版本
   - [ ] 自动更新
+  - [ ] 优化Quote功能，类似微信，可以Quote多条消息
 
-- v0.0.2
+
+- v0.0.37
   - [x] logging
-  - [ ] github action: auto build macos packages.
-  - [ ] github action: auto build android packages.
-  - [ ] Message copy
+  - [x] github action: auto build macos packages.
+  - [x] github action: auto build android packages.
+  - [x] Desktop: Message opt for copy, quote and delete etc.
+  - [x] 桌面版：发送消息的icon（在有输入内容时可点，没有内容时无效）
+  - [ ] Updater
+  - [ ] Active account
+  - [ ] tiktoken updated once a day
 
 - v0.0.1
   - [x] Support desktop

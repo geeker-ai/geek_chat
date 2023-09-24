@@ -3,7 +3,9 @@ import 'package:geek_chat/components/chat/chat_list_menu_item.dart';
 import 'package:geek_chat/components/chat/menu_button.dart';
 import 'package:geek_chat/components/desktop_main_right_component.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
 class DesktopHomePage extends StatelessWidget {
@@ -12,12 +14,9 @@ class DesktopHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ChatListController chatListController = Get.find();
-    // if (chatListController.currentSession?) {
-    //   //
-    // }
-
-    // if (chatListController.currentSession)
     SettingsController settingsController = Get.find<SettingsController>();
+    ChatMessageController chatMessageController =
+        Get.find<ChatMessageController>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 4, left: 8, bottom: 10),
@@ -51,15 +50,20 @@ class DesktopHomePage extends StatelessWidget {
                         itemCount: controller.sessions.length,
                         controller: ScrollController(),
                         itemBuilder: (BuildContext ctxt, int index) {
-                          // return Text(
-                          //     controller.sessions.elementAt(index).name);
                           return ChatListMenuItemComponent(
                               session: controller.sessions.elementAt(index),
                               onTap: (String sid) {
                                 controller.switchSession(sid);
                                 controller.update();
                               },
-                              currentSession: controller.currentSession);
+                              currentSession: controller.currentSession,
+                              onDelete: (SessionModel session) {
+                                chatMessageController
+                                    .cleanSessionMessages(session.sid);
+                                controller.remove(session);
+                                controller.reloadSessions();
+                                controller.update();
+                              });
                         });
                   }),
                 ),

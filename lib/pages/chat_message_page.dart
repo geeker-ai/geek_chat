@@ -14,7 +14,7 @@ class ChatMessagePage extends StatelessWidget {
     var data = Get.parameters;
     sid = data['sid'];
     logger.d("ChatMessageController: $sid ");
-    chatMessageController = Get.put(ChatMessageController());
+    chatMessageController = Get.find<ChatMessageController>();
     session = chatListController.getSessionBysid(sid!);
     chatMessageController.findBySessionId(sid);
   }
@@ -26,7 +26,6 @@ class ChatMessagePage extends StatelessWidget {
 
   ChatListController chatListController = Get.find<ChatListController>();
   TextEditingController textEditingController = TextEditingController();
-  // final ChatMessageController chatMessageController = ChatMessageController();
 
   void scrollToBottom() {
     scrollController.animateTo(scrollController.position.maxScrollExtent,

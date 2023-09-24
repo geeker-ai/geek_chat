@@ -1,6 +1,7 @@
 // import 'dart:io';
 
 import 'dart:convert';
+import 'dart:math';
 
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
@@ -22,6 +23,22 @@ class ChatMessageController extends GetxController {
 
   Logger logger = Get.find<Logger>();
 
+  final List<MessageModel> _quoteMessages = [];
+
+  List<MessageModel> get quoteMessages {
+    return _quoteMessages;
+  }
+
+  void addQuoteMessage(MessageModel message) {
+    if (!_quoteMessages.contains(message)) {
+      _quoteMessages.add(message);
+    }
+  }
+
+  void removeQuoteMessage(MessageModel message) {
+    _quoteMessages.remove(message);
+  }
+
   MessageModel createNewMessage(
       String sid, String role, String content, bool generating) {
     MessageModel mm = MessageModel(
@@ -42,6 +59,7 @@ class ChatMessageController extends GetxController {
 
   List<MessageModel> findBySessionId(String? sid) {
     messages.clear();
+    _quoteMessages.clear();
     List<MessageTable> messageTables =
         _sessionRepository.findMessagesBySessionId(sid, 1);
     for (MessageTable mt in messageTables) {
@@ -56,11 +74,19 @@ class ChatMessageController extends GetxController {
   String inputQuestion = '';
 
   void submit(String sid) {
+    if (inputQuestion.isEmpty) {
+      return;
+    }
     MessageModel input = createNewMessage(const Uuid().v4(),
         settingsController.chatGPTRoles.user, inputQuestion, false);
     input.sId = sid;
+    if (quoteMessages.isNotEmpty) {
+      input.quotes = getQuotes();
+    }
+    logger.d("input: $input");
     messages.insert(0, input);
     inputQuestion = '';
+    // _quoteMessages.clear;
     update();
     replyFromOpenAIWithSSE(input, sid);
   }
@@ -70,7 +96,44 @@ class ChatMessageController extends GetxController {
   }
 
   void cleanSessionMessages(String sid) {
-    // _sessionRepository
+    if (messages.isEmpty) {
+      findBySessionId(sid);
+    }
+    for (MessageModel message in messages) {
+      _sessionRepository.removeMessage(message.msgId);
+    }
+    messages.clear();
+  }
+
+  void removeMessage(MessageModel message) {
+    // _sessionRepository.remove(sid)
+    messages.remove(message);
+    _sessionRepository.removeMessage(message.msgId);
+  }
+
+  bool isMessagesTooLong(List<MessageModel> checkMessages) {
+    if (checkMessages.isEmpty) {
+      return false;
+    }
+    int tokenCount = 0;
+    SessionModel currentSession = chatListController.currentSession;
+    tokenCount =
+        numTokenCounter(currentSession.model, currentSession.promptContent);
+    if (inputQuestion.isNotEmpty) {
+      tokenCount =
+          tokenCount + numTokenCounter(currentSession.model, inputQuestion);
+    }
+
+    for (MessageModel message in checkMessages) {
+      tokenCount = tokenCount +
+          numTokenCounter(currentSession.model, message.content) +
+          300;
+    }
+    if (tokenCount >= currentSession.maxContextSize) {
+      return true;
+    }
+
+    return false;
   }
 
   Future<List<Map<String, String>>> getRequestMessages(
@@ -86,7 +149,13 @@ class ChatMessageController extends GetxController {
         tokenCount + numTokenCounter(currentSession.model, input.content);
     logger.d("count message: ${messages.length}");
     int i = 0;
-    for (MessageModel message in messages) {
+    List<MessageModel> localMessages;
+    if (quoteMessages.isEmpty) {
+      localMessages = messages;
+    } else {
+      localMessages = quoteMessages;
+    }
+    for (MessageModel message in localMessages) {
       /// 控制每次会话关联的历史消息数量
       if (i >= currentSession.maxContextMsgCount) {
         break;
@@ -107,6 +176,16 @@ class ChatMessageController extends GetxController {
     return requestMessages;
   }
 
+  List<String> getQuotes() {
+    List<String> quoteIds = [];
+    for (MessageModel mm in quoteMessages) {
+      if (!quoteIds.contains(mm.msgId)) {
+        quoteIds.add(mm.msgId);
+      }
+    }
+    return quoteIds;
+  }
+
   void replyFromOpenAIWithSSE(MessageModel input, String sid) async {
     SessionModel currentSession = chatListController.currentSession;
     MessageModel targetMessage = createNewMessage(
@@ -117,6 +196,10 @@ class ChatMessageController extends GetxController {
       "stream": true,
       "messages": await getRequestMessages(input)
     };
+
+    logger.d(chatMessage);
+    _quoteMessages.clear();
+    update();
     messages.insert(0, targetMessage);
     update();
     var headers = {
@@ -156,6 +239,13 @@ class ChatMessageController extends GetxController {
           }
         }
       },
+      onError: (e, s) {
+        targetMessage.content = e;
+        targetMessage.streamContent = targetMessage.content;
+        logger.d("Error: $e");
+        targetMessage.generating = false;
+        update();
+      },
       onDone: () {
         logger.d("done ------------------- ");
         saveMessage(input);
@@ -182,5 +272,30 @@ class ChatMessageController extends GetxController {
         createNewMessage(sid, settingsController.chatGPTRoles.user, s1, false);
     messageList.add(mm);
     return messageList;
+  }
+
+  MessageModel? findMessageBymid(String mid) {
+    MessageTable? mt = _sessionRepository.findMessageBymid(mid);
+    MessageModel? mm;
+
+    if (mt != null) {
+      mm = MessageModel.fromMessageTable(mt);
+    }
+    return mm;
+  }
+
+  List<MessageModel> findQuoteMessages(MessageModel message) {
+    List<MessageModel> quotes = [];
+    if (message.quotes == null) {
+      return quotes;
+    }
+
+    for (String mid in message.quotes!) {
+      MessageModel? mm = findMessageBymid(mid);
+      if (mm != null) {
+        quotes.add(mm);
+      }
+    }
+    return quotes;
   }
 }
