@@ -4,7 +4,7 @@ output: dist/
 releases:
   - name: macos
     jobs:
-      - name: release-dev-android
+      - name: android-release
         package:
           platform: android
           target: apk
@@ -33,7 +33,7 @@ releases:
 
   - name: windows
     jobs:
-      - name: release-msix
+      - name: windows-release
         package:
           platform: windows
           target: msix
