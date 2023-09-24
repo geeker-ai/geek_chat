@@ -25,9 +25,9 @@ flutter pub run flutter_launcher_icons
 flutter pub run build_runner build
 ```
 
-### build
+### build and updater
 
-build with [Flutter Distributor](https://distributor.leanflutter.org/docs/makers/dmg)
+build with [Flutter Distributor](https://distributor.leanflutter.org/docs/getting-started)
 
 ```
 dart pub global activate flutter_distributor
@@ -42,7 +42,7 @@ npm install -g appdmg
 ```
 
 ```
-flutter_distributor release --name release
+flutter_distributor release --name release --skip-clean
 ```
 
 ### Docs
