@@ -1,5 +1,7 @@
 display_name: Geek Chat
-msix_version: 1.0.0.0
+msix_version: 1.0.2.0
 publisher_display_name: Geek Chat
 identity_name: com.macgeeker.geekchat
 capabilities: internetClient, location
+install_certificate: 'false'
+logo_path: assets/icon.png
