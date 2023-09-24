@@ -77,6 +77,7 @@ flutter_distributor release --name release
   - [x] Desktop: Message opt for copy, quote and delete etc.
   - [x] 桌面版：发送消息的icon（在有输入内容时可点，没有内容时无效）
   - [x] Question Input auto focus.
+  - [x] auto jump to settings page when need setting.
   - [ ] Updater
   - [ ] Active account
 

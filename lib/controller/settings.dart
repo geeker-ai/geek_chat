@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:geek_chat/models/theme.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class ChatGPTRoles {
@@ -93,10 +95,22 @@ class SettingsController extends GetxController {
     GCThemeMode(name: 'Light', themeMode: ThemeMode.light),
   ];
 
+  Logger logger = Get.find();
+
   @override
   void onInit() {
     resetSettings();
     super.onInit();
+  }
+
+  bool get needSettings {
+    logger.d("${settings.toJson()}");
+
+    if (settings.apiKey.trim().isEmpty || settings.apiHost.trim().isEmpty) {
+      logger.d("need settings: true");
+      return true;
+    }
+    return false;
   }
 
   List<AiModel> get models {

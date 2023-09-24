@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/controller/settings.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class MobileHomePage extends StatelessWidget {
-  const MobileHomePage({super.key});
+  SettingsController settingsController = Get.find<SettingsController>();
+
+  MobileHomePage({super.key}) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (true || settingsController.needSettings) {
+        Get.toNamed("/settings");
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

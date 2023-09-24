@@ -8,16 +8,23 @@ import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class DesktopHomePage extends StatelessWidget {
-  const DesktopHomePage({super.key});
+  DesktopHomePage({super.key}) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (settingsController.needSettings) {
+        Get.toNamed("/dsettings");
+      }
+    });
+  }
+
+  ChatListController chatListController = Get.find();
+  SettingsController settingsController = Get.find<SettingsController>();
+  ChatMessageController chatMessageController =
+      Get.find<ChatMessageController>();
 
   @override
   Widget build(BuildContext context) {
-    ChatListController chatListController = Get.find();
-    SettingsController settingsController = Get.find<SettingsController>();
-    ChatMessageController chatMessageController =
-        Get.find<ChatMessageController>();
-
     return Padding(
       padding: const EdgeInsets.only(top: 4, left: 8, bottom: 10),
       child: Row(

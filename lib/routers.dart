@@ -17,9 +17,9 @@ final routers = [
         // DeviceType dt = getDeviceType();
         DeviceType dt = SettingsController.to.deviceType;
         if (dt == DeviceType.small) {
-          return const MobileHomePage();
+          return MobileHomePage();
         }
-        return const DesktopHomePage();
+        return DesktopHomePage();
       }),
   GetPage(name: '/settings', page: () => ServerSettingsPage()),
   GetPage(
