@@ -87,6 +87,6 @@ jobs:
           CHANNEL: "site"
         shell: pwsh
         run: |
-          set path=%LOCALAPPDATA%\Pub\Cache\bin;%path%
+          echo "$env:LOCALAPPDATA\pub\cache\bin" >> $GITHUB_PATH
           make change-channel
           flutter_distributor release --name windows
