@@ -68,18 +68,25 @@ jobs:
         if: matrix.platform == 'macos-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+          CHANNEL: "site"
         run: |
-          export PATH="$PATH":"$HOME/.pub-cache/bin"
-          export CHANNEL='site'
+          echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
           make change-channel
           flutter_distributor release --name macos
+
+      - uses: actions/setup-java@v3
+        if: matrix.platform == 'windows-latest'
+        with:
+          distribution: "zulu" # See 'Supported distributions' for available options
+          java-version: "17"
 
       - name: Build windows
         if: matrix.platform == 'windows-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+          CHANNEL: "site"
+        shell: pwsh
         run: |
           set path=%LOCALAPPDATA%\Pub\Cache\bin;%path%
-          set CHANNEL='site'
           make change-channel
           flutter_distributor release --name windows
