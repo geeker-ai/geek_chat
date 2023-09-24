@@ -63,7 +63,7 @@ jobs:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         run: make change-version
 
-      - name: Build macos ios and android
+      - name: Build macos ios and android (site)
         if: matrix.platform == 'macos-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
@@ -71,13 +71,7 @@ jobs:
         run: |
           echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
           make change-channel
-          flutter_distributor release --name macos
-
-      # - uses: actions/setup-java@v3
-      #   if: matrix.platform == 'windows-latest'
-      #   with:
-      #     distribution: "zulu" # See 'Supported distributions' for available options
-      #     java-version: "17"
+          flutter_distributor release --name macos --skip-clean
 
       - name: Build windows
         if: matrix.platform == 'windows-latest'
@@ -88,4 +82,4 @@ jobs:
         run: |
           echo "$env:LOCALAPPDATA\pub\cache\bin" >> $GITHUB_PATH
           make change-channel
-          flutter_distributor release --name windows
+          flutter_distributor release --name windows --skip-clean

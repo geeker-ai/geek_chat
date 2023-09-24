@@ -69,17 +69,19 @@ flutter_distributor release --name release --skip-clean
   - [ ] 自动更新
   - [ ] 优化Quote功能，类似微信，可以Quote多条消息
 
-
-- v0.0.37
-  - [x] logging
-  - [x] github action: auto build macos packages.
-  - [x] github action: auto build android packages.
-  - [x] Desktop: Message opt for copy, quote and delete etc.
-  - [x] 桌面版：发送消息的icon（在有输入内容时可点，没有内容时无效）
-  - [x] Question Input auto focus.
-  - [x] auto jump to settings page when need setting.
+- v0.0.44
   - [ ] Updater
   - [ ] Active account
+
+
+- v0.0.43
+  - [x] logging
+  - [x] github action: auto build macos package.
+  - [x] github action: auto build android package.
+  - [x] github action: auto build windows package.
+  - [x] Desktop: Message opt for copy, quote and delete etc.
+  - [x] Question Input auto focus.
+  - [x] auto jump to settings page when need setting.
 
 - v0.0.1
   - [x] Support desktop
