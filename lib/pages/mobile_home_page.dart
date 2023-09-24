@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat_list_component.dart';
 import 'package:geek_chat/components/main_settings_component.dart';
 import 'package:geek_chat/controller/main_controller.dart';
+import 'package:geek_chat/controller/settings.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class MobileHomePage extends StatelessWidget {
-  const MobileHomePage({super.key});
+  SettingsController settingsController = Get.find<SettingsController>();
+  MainController mainController = Get.find();
+  MobileHomePage({super.key}) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (settingsController.needSettings) {
+        mainController.navIndex = 2;
+        mainController.update();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Get.put(const SettingsComponent());
