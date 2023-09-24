@@ -42,10 +42,7 @@ jobs:
       #   architecture: arm64 # optional, x64 or arm64
 
       - name: Install flutter_distributor
-        if: matrix.platform == 'macos-latest'
-        run: |
-          dart pub global activate flutter_distributor
-          export PATH="$PATH":"$HOME/.pub-cache/bin"
+        run: dart pub global activate flutter_distributor
 
       - name: setup node
         if: matrix.platform == 'macos-latest'
