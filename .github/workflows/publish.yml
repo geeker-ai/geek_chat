@@ -16,8 +16,8 @@ jobs:
             platform: macos-latest
           #   - target: x86_64-unknown-linux-gnu
           # platform: ubuntu-20.04
-        #   - target: x86_64-pc-windows-msvc
-        # platform: windows-latest
+          - target: x86_64-pc-windows-msvc
+            platform: windows-latest
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -41,6 +41,24 @@ jobs:
           cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
       #   architecture: arm64 # optional, x64 or arm64
 
+      - name: Install flutter_distributor
+        if: matrix.platform == 'macos-latest'
+        run: |
+          dart pub global activate flutter_distributor
+          export PATH="$PATH":"$HOME/.pub-cache/bin"
+
+      - name: setup node
+        if: matrix.platform == 'macos-latest'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: install appdmg
+        if: matrix.platform == 'macos-latest'
+        run: |
+          yarn config set network-timeout 300000
+          yarn global add appdmg
+
       - name: Check Out
         uses: actions/checkout@v3
 
@@ -51,77 +69,20 @@ jobs:
 
       - name: Build macos ios and android
         if: matrix.platform == 'macos-latest'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         run: |
-          if [ ! -d "releases" ]; then
-            mkdir releases
-          fi
-          flutter build macos --release
-          cp -a "build/macos/Build/Products/Release/Geek Chat.app" releases/
-          cd releases
-          zip -r GeekChat-macos.zip "Geek Chat.app"
-          rm -rf "Geek Chat.app"
-          cd ..
-          flutter build apk --release
-          cp "build/app/outputs/flutter-apk/app-release.apk" releases/GeekChat.apk
+          export PATH="$PATH":"$HOME/.pub-cache/bin"
+          export CHANNEL='site'
+          make change-channel
+          flutter_distributor release --name macos
 
       - name: Build windows
         if: matrix.platform == 'windows-latest'
-        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         run: |
-          if [ ! -d "releases" ]; then
-            mkdir releases
-          fi
-          flutter config --enable-windows-desktop
-          flutter build windows --release
-          cp build/windows/runner/Release/GeekChat.exe releases/GeekChat.exe
-
-      - name: Publish Artefacts
-        uses: actions/upload-artifact@v3
-        env:
-          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
-        with:
-          name: GeekChat-${{ steps.get_version.outputs.version-without-v }}
-          path: releases/
-
-  flutter-release:
-    permissions:
-      contents: write
-    name: Release
-    needs: fullter-build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get version
-        id: get_version
-        uses: battila7/get-version-action@v2
-
-      - name: Download Release Files
-        id: download
-        uses: actions/download-artifact@v3
-        with:
-          name: GeekChat-${{ steps.get_version.outputs.version-without-v }}
-          path: downloads/
-        env:
-          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
-
-      - name: Display structure of downloaded files
-        run: ls -R
-
-      - name: Create Release # https://trstringer.com/github-actions-create-release-upload-artifacts/
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
-        with:
-          draft: true
-          tag_name: Release-v${{ steps.get_version.outputs.version-without-v }}
-          release_name: Release-v${{ steps.get_version.outputs.version-without-v }}
-
-      - name: Upload Releases
-        id: upload_release_assets
-        uses: dwenegar/upload-release-assets@v1 #https://github.com/marketplace/actions/upload-multiple-assets-to-a-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ steps.create_release.outputs.id }}
-          assets_path: ${{steps.download.outputs.download-path}}
+          set path=%LOCALAPPDATA%\Pub\Cache\bin;%path%
+          set CHANNEL='site'
+          make change-channel
+          flutter_distributor release --name windows
