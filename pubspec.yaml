@@ -84,7 +84,7 @@ dependencies:
   logger: ^2.0.2
 
   # https://pub.dev/packages/upgrader
-  upgrader: ^8.1.0
+  # upgrader: ^8.1.0
 
   # https://pub.dev/packages/flutter_dotenv
   flutter_dotenv: ^5.1.0
@@ -96,6 +96,7 @@ dependencies:
 
   # https://pub.dev/packages/custom_pop_up_menu
   custom_pop_up_menu: ^1.2.4
+  # flutter_sparkle: ^0.0.2
 
   # https://pub.dev/packages/floating_overlay
   # floating_overlay: ^1.2.1
@@ -103,6 +104,8 @@ dependencies:
   # https://pub.dev/packages/anchor_scroll_controller
   # anchor_scroll_controller: ^0.4.4
 
+  # https://pub.dev/packages/auto_updater
+  auto_updater: ^0.1.7
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,34 @@ output: dist/
 releases:
   - name: macos
     jobs:
+      - name: macos-release-dmg
+        package:
+          platform: macos
+          target: dmg
+          build_args:
+            dart-define:
+              APP_ENV: release
+        publish:
+          target: github
+          args:
+            repo-owner: geeker-ai
+            repo-name: geek_chat
+
+      - name: macos-release-zip
+        package:
+          platform: macos
+          target: zip
+          build_args:
+            dart-define:
+              APP_ENV: release
+        publish:
+          target: github
+          args:
+            repo-owner: geeker-ai
+            repo-name: geek_chat
+
+  - name: android
+    jobs:
       - name: android-release
         package:
           platform: android
@@ -18,25 +46,22 @@ releases:
             repo-owner: geeker-ai
             repo-name: geek_chat
 
-      - name: macos-release
+  - name: windows
+    jobs:
+      - name: windows-release-msix
         package:
-          platform: macos
-          target: dmg
-          build_args:
-            dart-define:
-              APP_ENV: release
+          platform: windows
+          target: msix
         publish:
           target: github
           args:
             repo-owner: geeker-ai
             repo-name: geek_chat
 
-  - name: windows
-    jobs:
       - name: windows-release
         package:
           platform: windows
-          target: msix
+          target: exe
         publish:
           target: github
           args:

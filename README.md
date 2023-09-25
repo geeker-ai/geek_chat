@@ -49,6 +49,7 @@ flutter_distributor release --name release --skip-clean
 - https://isar.dev/zh/recipes/string_ids.html
 - https://codewithandrea.com/articles/flutter-responsive-layouts-split-view-drawer-navigation/
 - https://flutterawesome.com/
+- [Other Plugins](https://github.com/jahnli/awesome-flutter-plugins)
 
 [Flutter cli](https://flutter.cn/docs/reference/flutter-cli)
 

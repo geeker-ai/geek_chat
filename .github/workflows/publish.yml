@@ -72,6 +72,7 @@ jobs:
           echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
           make change-channel
           flutter_distributor release --name macos --skip-clean
+          flutter_distributor release --name android --skip-clean
 
       - name: Build windows
         if: matrix.platform == 'windows-latest'
