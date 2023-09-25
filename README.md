@@ -45,6 +45,29 @@ npm install -g appdmg
 flutter_distributor release --name release --skip-clean
 ```
 
+### Deploy
+```
+pip install pygithub
+```
+
+rclone
+```
+vim .config/rclone/rclone.conf
+```
+```
+[r2]
+type = s3
+provider = Cloudflare
+access_key_id = xxxx
+secret_access_key = xxx
+endpoint = https://xxxx.r2.cloudflarestorage.com
+acl = private
+```
+
+```
+python script/deploy.py
+```
+
 ### Docs
 - https://isar.dev/zh/recipes/string_ids.html
 - https://codewithandrea.com/articles/flutter-responsive-layouts-split-view-drawer-navigation/

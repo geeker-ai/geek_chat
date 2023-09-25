@@ -58,7 +58,7 @@ releases:
             repo-owner: geeker-ai
             repo-name: geek_chat
 
-      - name: windows-release
+      - name: windows-release-exe
         package:
           platform: windows
           target: exe
