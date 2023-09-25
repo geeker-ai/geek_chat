@@ -1,8 +1,3 @@
-// import 'dart:convert';
-// import 'dart:convert';
-
-import 'package:uuid/uuid.dart';
-
 class SettingsModel {
   String provider;
   String apiKey;

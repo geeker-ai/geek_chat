@@ -76,6 +76,11 @@ initServices() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   settingsController.packageInfo = packageInfo;
 
+  // dotenv.load(fileName: ".env");
+
+  // logger.d(dotenv.get("CHANNEL"));
+  logger.d("Channel name: ${settingsController.channelName}");
+
   TiktokenDataProcessCenter().initata();
 }
 

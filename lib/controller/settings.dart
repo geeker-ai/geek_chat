@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
@@ -105,6 +106,15 @@ class SettingsController extends GetxController {
       settings.uuid = const Uuid().v4();
       save();
     }
+  }
+
+  String get channelName {
+    String channel = 'dev';
+    String envChannel = dotenv.get('CHANNEL');
+    if (envChannel.isNotEmpty) {
+      channel = envChannel;
+    }
+    return channel;
   }
 
   bool get needSettings {
