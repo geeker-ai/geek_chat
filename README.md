@@ -68,11 +68,13 @@ flutter_distributor release --name release --skip-clean
   - [ ] 自动发布版本
   - [ ] 自动更新
   - [ ] 优化Quote功能，类似微信，可以Quote多条消息
+  - [ ] APM
+  - [ ] 使用统计接入s
 
 - v0.0.44
   - [ ] Updater
   - [ ] Active account
-  - [ ] Client UUID
+  - [x] Client UUID
   - [x] Fix: Message Sequence
 
 
