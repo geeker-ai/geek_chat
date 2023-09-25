@@ -72,6 +72,8 @@ flutter_distributor release --name release --skip-clean
 - v0.0.44
   - [ ] Updater
   - [ ] Active account
+  - [ ] Client UUID
+  - [x] Fix: Message Sequence
 
 
 - v0.0.43

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatGPTRoles {
   final String system = 'system';
@@ -101,6 +101,10 @@ class SettingsController extends GetxController {
   void onInit() {
     resetSettings();
     super.onInit();
+    if (settings.uuid.isEmpty) {
+      settings.uuid = const Uuid().v4();
+      save();
+    }
   }
 
   bool get needSettings {
