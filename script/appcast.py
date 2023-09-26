@@ -92,7 +92,7 @@ if __name__ == '__main__':
     assets = last_release.get_assets()
     last_release.upload_asset(appcast_file, cast_file_name)
 
-    print("repo name: {}, tag_name: {} ".format(repo.name, tag_name))
+    # print("repo name: {}, tag_name: {} ".format(repo.name, tag_name))
 
-    for asset in assets:
-        print("aesst -> name: {}, id: {}, url: {}".format(asset.name, asset.id, asset.url))
+    # for asset in assets:
+    #     print("aesst -> name: {}, id: {}, url: {}".format(asset.name, asset.id, asset.url))

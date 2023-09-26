@@ -64,9 +64,14 @@ jobs:
           yarn config set network-timeout 300000
           yarn global add appdmg
 
-      - uses: edgarrc/action-7z@v1
-        with:
-          args: 7z a -t7z -mx=9 build.7z ./build/
+      - name: Set up Homebrew
+        if: matrix.platform == 'macos-latest'
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: install 7zip
+        if: matrix.platform == 'macos-latest'
+        run: brew install p7zip
 
       - name: Check Out
         uses: actions/checkout@v3
@@ -87,6 +92,7 @@ jobs:
           echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
           make change-channel
           flutter_distributor release --name macos --skip-clean
+          python script/appcast.py
           flutter_distributor release --name android --skip-clean
 
       - name: Build windows
@@ -101,3 +107,4 @@ jobs:
           echo "$env:LOCALAPPDATA\pub\cache\bin" >> $GITHUB_PATH
           make change-channel
           flutter_distributor release --name windows --skip-clean
+          python script/appcast.py
