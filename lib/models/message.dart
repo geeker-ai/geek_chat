@@ -65,6 +65,7 @@ class MessageModel {
   closeStream() {
     if (contentStream != null) {
       contentStream!.close();
+      generating = false;
     }
   }
 

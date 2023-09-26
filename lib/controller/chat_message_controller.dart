@@ -233,7 +233,6 @@ class ChatMessageController extends GetxController {
               targetMessage.content = "${targetMessage.content} $e";
               targetMessage.streamContent = targetMessage.content;
               targetMessage.closeStream();
-              targetMessage.generating = false;
               update();
             }
           }
@@ -243,7 +242,7 @@ class ChatMessageController extends GetxController {
         targetMessage.content = e;
         targetMessage.streamContent = targetMessage.content;
         logger.d("Error: $e");
-        targetMessage.generating = false;
+        targetMessage.closeStream();
         update();
       },
       onDone: () {
@@ -252,7 +251,6 @@ class ChatMessageController extends GetxController {
         saveMessage(targetMessage);
         if (targetMessage.generating == true) {
           targetMessage.closeStream();
-          targetMessage.generating = false;
           update();
         }
       },
