@@ -1,5 +1,6 @@
 from github import Github, GitRelease, GitReleaseAsset
 from github import Auth
+from datetime import datetime, timezone
 import os
 import yaml
 import re
@@ -79,6 +80,7 @@ if __name__ == '__main__':
     appcast_file = './dist/{}'.format(cast_file_name)
 
     pub_date='Sun, 16 Feb 2022 12:00:00 +0800'
+    pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S %z")
 
     generate_appcast_xml(system_os=system, appcast_file=appcast_file, version=version, \
                          pub_date=pub_date, sign=sign, \
