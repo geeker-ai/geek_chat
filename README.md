@@ -100,7 +100,7 @@ python script/deploy.py
   - [ ] 使用统计接入s
 
 - v0.0.44
-  - [ ] Updater
+  - [ ] Updater Tips
   - [ ] Active account
   - [x] Client UUID
   - [x] Fix: Message Sequence

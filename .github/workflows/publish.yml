@@ -49,14 +49,14 @@ jobs:
         with:
           node-version: 16
 
-      - name: setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+      # - name: setup python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: "3.10"
 
-      - name: install pygithub
-        run: |
-          pip install pygithub
+      # - name: install pygithub
+      #   run: |
+      #     pip install pygithub
 
       - name: install appdmg
         if: matrix.platform == 'macos-latest'
@@ -64,14 +64,14 @@ jobs:
           yarn config set network-timeout 300000
           yarn global add appdmg
 
-      - name: Set up Homebrew
-        if: matrix.platform == 'macos-latest'
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+      # - name: Set up Homebrew
+      #   if: matrix.platform == 'macos-latest'
+      #   id: set-up-homebrew
+      #   uses: Homebrew/actions/setup-homebrew@master
 
-      - name: install 7zip
-        if: matrix.platform == 'macos-latest'
-        run: brew install p7zip
+      # - name: install 7zip
+      #   if: matrix.platform == 'macos-latest'
+      #   run: brew install p7zip
 
       - name: Check Out
         uses: actions/checkout@v3
