@@ -37,6 +37,13 @@ def get_repo_name(system = 'macos'):
     return repo_name
 
 def get_release_file_path(root_path = './dist', system = 'macos'):
+    # files = os.listdir(root_path)
+    version_dir = ''
+    file_name = ''
+    version_dir, file_name = get_release_file_name(root_path=root_path, system=system)
+    return "{}/{}/{}".format(root_path, version_dir, file_name)
+
+def get_release_file_name(root_path = './dsit', system = 'macos'):
     files = os.listdir(root_path)
     version_dir = ''
     file_name = ''
@@ -52,7 +59,7 @@ def get_release_file_path(root_path = './dist', system = 'macos'):
                 if (re.match('.*({}).*.{}'.format(system, ext), sub)):
                     print("file: {} ".format(sub))
                     file_name = sub
-    return "{}/{}/{}".format(root_path, version_dir, file_name)
+    return version_dir, file_name
 
 if __name__ == '__main__':
     github_token = os.environ.get("GEEK_CHAT_GITHUB_TOKEN")
@@ -68,9 +75,11 @@ if __name__ == '__main__':
     repo_name = get_repo_name()
     print("repo_name: {}".format(repo_name))
 
-    file_path = get_release_file_path()
+    file_path = get_release_file_path(root_path= './dist', system=system)
 
-    print("file path: {}".format(file_path))
+    file_name = file_path.split('/').pop()
+
+    print("file path: {}, file_name: {}".format(file_path, file_name))
 
     sign = do_command("dart run auto_updater:sign_update {}".format(file_path))
 
@@ -82,10 +91,12 @@ if __name__ == '__main__':
     pub_date='Sun, 16 Feb 2022 12:00:00 +0800'
     pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S %z")
 
+    download_url = "https://68d5305115150dcab0f697bebeb2506a.r2.cloudflarestorage.com/geekchat/v{}/{}".format(version, file_name)
+
     generate_appcast_xml(system_os=system, appcast_file=appcast_file, version=version, \
                          pub_date=pub_date, sign=sign, \
-                         release_notes_url = 'https://apps.macgeeker.com', \
-                         download_url= "https://apps.macgeeker.com")
+                         release_notes_url = 'https://68d5305115150dcab0f697bebeb2506a.r2.cloudflarestorage.com/geekchat/releasenotes.txt', \
+                         download_url= download_url)
 
     repo = g.get_repo(repo_name)
 
