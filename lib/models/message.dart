@@ -62,6 +62,12 @@ class MessageModel {
     }
   }
 
+  closeStream() {
+    if (contentStream != null) {
+      contentStream!.close();
+    }
+  }
+
   MessageTable toMessageTable() {
     MessageTable mt = MessageTable();
     mt.mid = msgId;
