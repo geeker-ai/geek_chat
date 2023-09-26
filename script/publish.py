@@ -48,7 +48,7 @@ if __name__ == '__main__':
         print(download_file(asset.url, "{}/{}".format(save_dir, asset.name), github_token))
 
     r2dir = "r2:geekchat/{}".format(tag_name)
-    print(do_command("rclone mkdir {}}".format(r2dir)))
+    print(do_command("rclone mkdir {}".format(r2dir)))
     print(do_command("rclone copy -P {} {}".format(save_dir, r2dir)))
 
 

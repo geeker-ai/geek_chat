@@ -82,6 +82,20 @@ initServices() async {
   logger.d("Channel name: ${settingsController.channelName}");
 
   TiktokenDataProcessCenter().initata();
+  Future<bool> needUpdate = checkUpdate(settingsController.packageInfo.version);
+  needUpdate.then((value) {
+    logger.d("checkUpdate: $value");
+    if (value == true) {
+      Get.defaultDialog(
+          title: "New Version".tr,
+          onCancel: () => Get.back(),
+          onConfirm: () {
+            logger.d("confirm click");
+          },
+          radius: 5,
+          middleText: "");
+    }
+  });
 }
 
 class GeekerChat extends StatelessWidget {
