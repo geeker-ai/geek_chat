@@ -11,24 +11,10 @@
             </sparkle:releaseNotesLink>
             <!-- <pubDate>Sun, 16 Feb 2022 12:00:00 +0800</pubDate> -->
             <pubDate>{pub_date}</pubDate>
-            <enclosure url="{macos_download_url}"
-                       {macos_dsa_sign}
+            <enclosure url="{download_url}"
+                       {sign}
                        sparkle:version="1.1.0"
-                       sparkle:os="macos"
-                       length="{macos_length}"
-                       type="application/octet-stream" />
-        </item>
-        <item>
-            <title>Version {version}</title>
-            <sparkle:releaseNotesLink>
-                {release_notes_url}
-            </sparkle:releaseNotesLink>
-            <pubDate>{pub_date}</pubDate>
-            <enclosure url="{windows_download_url}"
-                       sparkle:dsaSignature="MEUCIQCVbVzVID7H3aUzAY5znpi+ySZKznkukV8whlMFzKh66AIgREUGOmvavlcg6hwAwkb2o4IqVE/D56ipIBshIqCH8rk="
-                       sparkle:version="1.1.0+2"
-                       sparkle:os="windows"
-                       length="0"
+                       sparkle:os="{system_os}"
                        type="application/octet-stream" />
         </item>
     </channel>

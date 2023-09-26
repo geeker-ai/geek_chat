@@ -49,11 +49,24 @@ jobs:
         with:
           node-version: 16
 
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: install pygithub
+        run: |
+          pip install pygithub
+
       - name: install appdmg
         if: matrix.platform == 'macos-latest'
         run: |
           yarn config set network-timeout 300000
           yarn global add appdmg
+
+      - uses: edgarrc/action-7z@v1
+        with:
+          args: 7z a -t7z -mx=9 build.7z ./build/
 
       - name: Check Out
         uses: actions/checkout@v3
@@ -68,6 +81,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
           CHANNEL: "site"
+          SYSTEM_OS_NAME: "macos"
+          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         run: |
           echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
           make change-channel
@@ -79,6 +94,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
           CHANNEL: "site"
+          SYSTEM_OS_NAME: "windows"
+          VERSION: "${{ steps.get_version.outputs.version-without-v }}"
         shell: pwsh
         run: |
           echo "$env:LOCALAPPDATA\pub\cache\bin" >> $GITHUB_PATH

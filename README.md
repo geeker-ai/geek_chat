@@ -47,7 +47,11 @@ flutter_distributor release --name release --skip-clean
 
 ### Deploy
 ```
+brew install p7zip
+```
+```
 pip install pygithub
+pip install pyyaml
 ```
 
 rclone
