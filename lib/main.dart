@@ -13,6 +13,7 @@ import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/i18n/translations.dart';
+import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
@@ -22,6 +23,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:geek_chat/routers.dart';
 
@@ -70,13 +72,49 @@ initServices() async {
   SettingsController.to.dataDir = dir;
   settingsController.deviceType = getDeviceType();
 
-  Get.put(MainController());
+  MainController mainController = Get.put(MainController());
   Get.put(ChatListController());
   Get.put(ChatMessageController());
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   settingsController.packageInfo = packageInfo;
 
+  // dotenv.load(fileName: ".env");
+
+  // logger.d(dotenv.get("CHANNEL"));
+  logger.d("Channel name: ${settingsController.channelName}");
+
   TiktokenDataProcessCenter().initata();
+  mainController.checkUpdate(settingsController.packageInfo.version,
+      (ReleaseModel releaseModel) {
+    String tip = "Found a new version".tr;
+    Get.defaultDialog(
+        title: "Update!".tr,
+        textConfirm: "Download".tr,
+        textCancel: "Cancel".tr,
+        onCancel: () => Get.back(),
+        onConfirm: () {
+          logger.d("confirm click");
+          launchUrl(Uri.parse("https://apps.macgeeker.com/"));
+        },
+        radius: 5,
+        middleText: "$tip : ${releaseModel.version}");
+  });
+  // Future<String> releaseVersion = getReleaseVersion();
+  // releaseVersion.then((value) {
+  //   if (value.isNotEmpty) {
+  //     if (checkVersion(settingsController.packageInfo.version,
+  //         value.replaceFirst('v', ''))) {
+  //       Get.defaultDialog(
+  //           title: "New Version".tr,
+  //           onCancel: () => Get.back(),
+  //           onConfirm: () {
+  //             logger.d("confirm click");
+  //           },
+  //           radius: 5,
+  //           middleText: "New Version $value");
+  //     }
+  //   }
+  // });
 }
 
 class GeekerChat extends StatelessWidget {

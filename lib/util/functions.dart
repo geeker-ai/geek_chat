@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_tiktoken/flutter_tiktoken.dart';
+import 'package:geek_chat/service/http_service.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
@@ -45,4 +47,20 @@ showCustomToast({required String title, required BuildContext context}) {
           const StyledToastPosition(align: Alignment.topRight, offset: 20.0),
       backgroundColor: Theme.of(context).colorScheme.onBackground,
       textStyle: TextStyle(color: Theme.of(context).colorScheme.background));
+}
+
+bool checkVersion(currentVersion, releaseVersion) {
+  if (convertVersionToNumber(releaseVersion) >
+      convertVersionToNumber(currentVersion)) {
+    return true;
+  }
+  return false;
+}
+
+// bool checkUpdate(String remote)
+
+int convertVersionToNumber(String version) {
+  List versionCells = version.replaceFirst('v', '').split('.');
+  versionCells = versionCells.map((i) => int.parse(i)).toList();
+  return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
 }

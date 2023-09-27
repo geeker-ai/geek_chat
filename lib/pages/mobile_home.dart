@@ -8,7 +8,7 @@ class MobileHomePage extends StatelessWidget {
 
   MobileHomePage({super.key}) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (true || settingsController.needSettings) {
+      if (settingsController.needSettings) {
         Get.toNamed("/settings");
       }
     });

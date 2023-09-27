@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+    <channel>
+        <title>GeekChat Update</title>
+        <description>GeekChat Update</description>
+        <language>en</language>
+        <item>
+            <title>Version {version}</title>
+            <sparkle:releaseNotesLink>
+                {release_notes_url}
+            </sparkle:releaseNotesLink>
+            <!-- <pubDate>Sun, 16 Feb 2022 12:00:00 +0800</pubDate> -->
+            <pubDate>{pub_date}</pubDate>
+            <enclosure url="{download_url}"
+                       {sign}
+                       sparkle:version="1.1.0"
+                       sparkle:os="{system_os}"
+                       type="application/octet-stream" />
+        </item>
+    </channel>
+</rss>

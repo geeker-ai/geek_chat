@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
@@ -11,6 +11,7 @@ import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatGPTRoles {
   final String system = 'system';
@@ -101,6 +102,19 @@ class SettingsController extends GetxController {
   void onInit() {
     resetSettings();
     super.onInit();
+    if (settings.uuid.isEmpty) {
+      settings.uuid = const Uuid().v4();
+      save();
+    }
+  }
+
+  String get channelName {
+    String channel = 'dev';
+    String envChannel = dotenv.get('CHANNEL');
+    if (envChannel.isNotEmpty) {
+      channel = envChannel;
+    }
+    return channel;
   }
 
   bool get needSettings {

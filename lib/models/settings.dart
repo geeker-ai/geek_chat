@@ -1,6 +1,3 @@
-// import 'dart:convert';
-// import 'dart:convert';
-
 class SettingsModel {
   String provider;
   String apiKey;
@@ -14,20 +11,23 @@ class SettingsModel {
   String license;
   bool isActived;
   bool autoSyncEnabled;
+  late String uuid;
 
-  SettingsModel(
-      {this.provider = '',
-      this.apiKey = '',
-      this.apiHost = 'https://api.openai.com',
-      this.showWordCount = false,
-      this.showTokenCount = false,
-      this.showModelName = true,
-      this.theme = 'System',
-      this.language = 'en_US',
-      this.fontSize = '13',
-      this.license = '',
-      this.isActived = false,
-      this.autoSyncEnabled = false});
+  SettingsModel({
+    this.provider = '',
+    this.apiKey = '',
+    this.apiHost = 'https://api.openai.com',
+    this.showWordCount = false,
+    this.showTokenCount = false,
+    this.showModelName = true,
+    this.theme = 'System',
+    this.language = 'en_US',
+    this.fontSize = '13',
+    this.license = '',
+    this.isActived = false,
+    this.autoSyncEnabled = false,
+    this.uuid = '',
+  });
 
   set settingsJson(Map<String, dynamic> jsonObject) {
     provider = jsonObject["provider"];
@@ -42,6 +42,11 @@ class SettingsModel {
     license = jsonObject['license'];
     isActived = jsonObject['isActived'];
     autoSyncEnabled = jsonObject['autoSyncEnabled'];
+    if (jsonObject.containsKey('uuid')) {
+      uuid = jsonObject['uuid'];
+    } else {
+      uuid = '';
+    }
   }
 
   Map<String, dynamic> toJson() => {
@@ -56,6 +61,7 @@ class SettingsModel {
         "fontSize": fontSize,
         "license": license,
         "isActived": isActived,
-        "autoSyncEnabled": autoSyncEnabled
+        "autoSyncEnabled": autoSyncEnabled,
+        "uuid": uuid
       };
 }

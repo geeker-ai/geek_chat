@@ -45,10 +45,38 @@ npm install -g appdmg
 flutter_distributor release --name release --skip-clean
 ```
 
+### Deploy
+```
+brew install p7zip
+```
+```
+pip install pygithub
+pip install pyyaml
+```
+
+rclone
+```
+vim .config/rclone/rclone.conf
+```
+```
+[r2]
+type = s3
+provider = Cloudflare
+access_key_id = xxxx
+secret_access_key = xxx
+endpoint = https://xxxx.r2.cloudflarestorage.com
+acl = private
+```
+
+```
+python script/deploy.py
+```
+
 ### Docs
 - https://isar.dev/zh/recipes/string_ids.html
 - https://codewithandrea.com/articles/flutter-responsive-layouts-split-view-drawer-navigation/
 - https://flutterawesome.com/
+- [Other Plugins](https://github.com/jahnli/awesome-flutter-plugins)
 
 [Flutter cli](https://flutter.cn/docs/reference/flutter-cli)
 
@@ -68,10 +96,14 @@ flutter_distributor release --name release --skip-clean
   - [ ] 自动发布版本
   - [ ] 自动更新
   - [ ] 优化Quote功能，类似微信，可以Quote多条消息
+  - [ ] APM
+  - [ ] 使用统计接入s
 
 - v0.0.44
-  - [ ] Updater
+  - [ ] Updater Tips
   - [ ] Active account
+  - [x] Client UUID
+  - [x] Fix: Message Sequence
 
 
 - v0.0.43

@@ -1,7 +1,4 @@
-// import 'dart:io';
-
 import 'dart:convert';
-import 'dart:math';
 
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
@@ -235,6 +232,8 @@ class ChatMessageController extends GetxController {
             if (targetMessage.generating == true) {
               targetMessage.content = "${targetMessage.content} $e";
               targetMessage.streamContent = targetMessage.content;
+              targetMessage.closeStream();
+              update();
             }
           }
         }
@@ -243,7 +242,7 @@ class ChatMessageController extends GetxController {
         targetMessage.content = e;
         targetMessage.streamContent = targetMessage.content;
         logger.d("Error: $e");
-        targetMessage.generating = false;
+        targetMessage.closeStream();
         update();
       },
       onDone: () {
@@ -251,8 +250,7 @@ class ChatMessageController extends GetxController {
         saveMessage(input);
         saveMessage(targetMessage);
         if (targetMessage.generating == true) {
-          targetMessage.contentStream!.close();
-          targetMessage.generating = false;
+          targetMessage.closeStream();
           update();
         }
       },
