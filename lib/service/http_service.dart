@@ -5,11 +5,11 @@ import 'package:dio/dio.dart';
 class HttpClientService {
   static final _dio = Dio();
 
-  static Future<String> getVersion(String url) async {
+  static Future<String> getReleaseInfo(String url) async {
     Response response = await get(url);
     if (response.statusCode == 200) {
-      var json = jsonDecode(response.toString());
-      return json['version'];
+      // var json = jsonDecode(response.toString());
+      return response.toString();
     }
     return '';
   }

@@ -46,7 +46,10 @@ class GeekChatTranslations extends Translations {
           "Clean Session": "Clean Session",
           "Confirm clean session?": "Confirm clean session?",
           "Delete Session": "Delete Session",
-          "Confirm delete session?": "Confirm delete session?"
+          "Confirm delete session?": "Confirm delete session?",
+          "Found a new version": "Found a new version",
+          "Update!": "Update!",
+          "Download": "Download"
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -90,7 +93,10 @@ class GeekChatTranslations extends Translations {
           "Clean Session": "清除会话",
           "Confirm clean session?": "确认要清除对话中的所有消息么?",
           "Delete Session": "删除对话",
-          "Confirm delete session?": "确认要删除对话么?"
+          "Confirm delete session?": "确认要删除对话么?",
+          "Found a new version": "发现新版本",
+          "Update!": "更新提醒!",
+          "Download": "下载"
         }
       };
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -48,24 +49,15 @@ showCustomToast({required String title, required BuildContext context}) {
       textStyle: TextStyle(color: Theme.of(context).colorScheme.background));
 }
 
-Future<bool> checkUpdate(String currentVersion) async {
-  List<String> urls = [
-    "https://pub-6be131b6553c4ce5a6f736f91a7d011a.r2.dev/latest.json",
-    "https://gist.githubusercontent.com/zmhu/52a66708a59c6f7501c01bb43e3adcbd/raw/693d2e9b5935be027ef9f8cd5d38617259827695/latest.json"
-  ];
-  String version = '';
-  for (String url in urls) {
-    version = await HttpClientService.getVersion(url);
-    if (version.isNotEmpty) {
-      break;
-    }
-  }
-  if (convertVersionToNumber(version) >
+bool checkVersion(currentVersion, releaseVersion) {
+  if (convertVersionToNumber(releaseVersion) >
       convertVersionToNumber(currentVersion)) {
     return true;
   }
   return false;
 }
+
+// bool checkUpdate(String remote)
 
 int convertVersionToNumber(String version) {
   List versionCells = version.replaceFirst('v', '').split('.');
