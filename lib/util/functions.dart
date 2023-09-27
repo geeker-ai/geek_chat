@@ -8,6 +8,7 @@ import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 import 'package:geek_chat/service/http_service.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:moment_dart/moment_dart.dart';
 
 enum DeviceType { small, wide }
 
@@ -63,4 +64,8 @@ int convertVersionToNumber(String version) {
   List versionCells = version.replaceFirst('v', '').split('.');
   versionCells = versionCells.map((i) => int.parse(i)).toList();
   return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
+}
+
+int getCurrentDateTime() {
+  return int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString());
 }

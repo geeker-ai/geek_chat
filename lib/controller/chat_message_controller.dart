@@ -248,6 +248,7 @@ class ChatMessageController extends GetxController {
       onDone: () {
         logger.d("done ------------------- ");
         saveMessage(input);
+        targetMessage.updated = getCurrentDateTime(); // Update lastupdated
         saveMessage(targetMessage);
         if (targetMessage.generating == true) {
           targetMessage.closeStream();
