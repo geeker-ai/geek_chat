@@ -17,6 +17,7 @@ import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
+import 'package:geek_chat/service/http_service.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -65,6 +66,7 @@ initServices() async {
   logger.d("env: channel: ${dotenv.get('CHANNEL')}");
 
   Get.put(LocalStoreRepository());
+  // Get.put(HttpClientService());
   Directory dir = await getApplicationDocumentsDirectory();
   logger.d("Application Documents Directory: $dir ");
   Get.put(SessionRepository(dir));

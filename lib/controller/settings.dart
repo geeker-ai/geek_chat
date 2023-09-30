@@ -1,12 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_math_fork/ast.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
+import 'package:geek_chat/service/http_service.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -30,6 +33,7 @@ class SettingsController extends GetxController {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final LocalStoreRepository _localStoreRepository = Get.find();
+  final HttpClientService _httpClientService = Get.find();
 
   late PackageInfo packageInfo;
 
@@ -211,7 +215,13 @@ class SettingsController extends GetxController {
     return themeMode;
   }
 
+  @Deprecated("message")
   void save() {
+    settings.settingsJson = settings.toJson();
+    _localStoreRepository.saveSettings(settings);
+  }
+
+  void saveSettings() {
     settings.settingsJson = settings.toJson();
     _localStoreRepository.saveSettings(settings);
   }
@@ -263,5 +273,39 @@ class SettingsController extends GetxController {
 
   Directory get dataDir {
     return _dataDir;
+  }
+
+  bool activeLicenseLoading = false;
+
+  Future<bool> activeLicense(String license) async {
+    Map<String, dynamic> rtn = {
+      'actived': false,
+      'license': license,
+      'uuid': settings.uuid,
+      'message': '',
+      'apiKey': '',
+      'baseUrl': ''
+    };
+    String rtnString = await HttpClientService.activeLicense(
+        "https://capi.fucklina.com/activate",
+        license,
+        settings.uuid,
+        settings.language);
+    Map<String, dynamic> jsonObj = jsonDecode(rtnString);
+    if (jsonObj.containsKey('actived')) {
+      rtn['actived'] = jsonObj['actived'];
+      rtn['apiKey'] = jsonObj['apiKey'];
+      rtn['baseUrl'] = jsonObj['baseUrl'];
+      rtn['message'] = jsonObj['message'];
+      logger.d("activeLicense: $rtn");
+    }
+    if (rtn['actived']) {
+      settings.isActived = true;
+      settings.apiHost = rtn['baseUrl'];
+      settings.apiKey = rtn['apiKey'];
+      return true;
+    } else {
+      return false;
+    }
   }
 }
