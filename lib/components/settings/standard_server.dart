@@ -54,7 +54,9 @@ class StandardServerSettingsComponent extends StatelessWidget {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    controller.save();
+                    controller.settings.isActived = false;
+                    controller.needReactive = true;
+                    controller.saveSettings();
                     Get.snackbar(
                       "Saved successfully!".tr,
                       "The configuration has been updated!".tr,

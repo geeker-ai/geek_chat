@@ -5,6 +5,24 @@ import 'package:dio/dio.dart';
 class HttpClientService {
   static final _dio = Dio();
 
+  static Future<String> activeLicense(
+      String url, String license, String uuid, String lang) async {
+    dynamic json = {
+      "license": license,
+      "uuid": uuid,
+      "lang": lang,
+    };
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    Response response = await post(url, json: json, headers: headers);
+    if (response.statusCode == 200) {
+      return response.toString();
+    }
+    return '{}';
+  }
+
   static Future<String> getReleaseInfo(String url) async {
     Response response = await get(url);
     if (response.statusCode == 200) {
@@ -12,6 +30,15 @@ class HttpClientService {
       return response.toString();
     }
     return '';
+  }
+
+  static Future<Response> post(String url,
+      {required dynamic json, Map<String, String>? headers}) {
+    Options? options;
+    if (headers != null) {
+      options = Options(headers: headers);
+    }
+    return _dio.post(url, options: options, data: jsonEncode(json));
   }
 
   static Future<Response> get(String url, {Map<String, String>? headers}) {

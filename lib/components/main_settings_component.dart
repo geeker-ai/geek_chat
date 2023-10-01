@@ -76,7 +76,7 @@ class SettingsComponent extends StatelessWidget {
             leadingIcon: Icons.color_lens_outlined,
             onTapCallback: (value) {
               controller.settingsTheme = value;
-              controller.save();
+              controller.saveSettings();
             },
           ),
           const Divider(),
@@ -95,7 +95,7 @@ class SettingsComponent extends StatelessWidget {
             leadingIcon: Icons.language_outlined,
             onTapCallback: (value) {
               controller.settingsLanguage = value;
-              controller.save();
+              controller.saveSettings();
             },
           ),
         ],

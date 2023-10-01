@@ -65,6 +65,7 @@ initServices() async {
   logger.d("env: channel: ${dotenv.get('CHANNEL')}");
 
   Get.put(LocalStoreRepository());
+  // Get.put(HttpClientService());
   Directory dir = await getApplicationDocumentsDirectory();
   logger.d("Application Documents Directory: $dir ");
   Get.put(SessionRepository(dir));
@@ -94,7 +95,7 @@ initServices() async {
         onCancel: () => Get.back(),
         onConfirm: () {
           logger.d("confirm click");
-          launchUrl(Uri.parse("https://apps.macgeeker.com/"));
+          launchUrl(Uri.parse("https://www.geekerchat.com/"));
         },
         radius: 5,
         middleText: "$tip : ${releaseModel.version}");

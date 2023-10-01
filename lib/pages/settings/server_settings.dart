@@ -65,7 +65,7 @@ class ServerSettingsPage extends StatelessWidget {
 
 Widget switchServerSettingsComponent(String provider) {
   if (provider == 'geekerchat') {
-    return const GeekerChatSettingsComponent();
+    return GeekerChatSettingsComponent();
   } else if (provider == 'openai') {
     return const StandardServerSettingsComponent();
   }
