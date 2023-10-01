@@ -9,8 +9,8 @@ class GeekerChatSettingsComponent extends StatelessWidget {
 
   TextEditingController textEditingController = TextEditingController();
 
-  Icon getTextInputIcon(bool isActive) {
-    if (isActive) {
+  Icon getTextInputIcon(bool isActive, bool needReactive) {
+    if (isActive && !needReactive) {
       return const Icon(
         Icons.check,
         color: Colors.green,
@@ -46,19 +46,23 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                   filled: false,
                   suffixIcon: IconButton(
                       onPressed: () {
-                        //TODO: call active
                         controller
                             .activeLicense(controller.settings.license)
                             .then((value) {
                           if (value) {
                             showCustomToast(
                                 title: "Active Success".tr, context: context);
+                            controller.needReactive = false;
+                            controller.update();
                           }
                         });
                       },
-                      icon: getTextInputIcon(controller.settings.isActived))),
+                      icon: getTextInputIcon(controller.settings.isActived,
+                          controller.needReactive))),
               onChanged: (value) {
                 controller.settings.license = value;
+                controller.needReactive = true;
+                controller.update();
               },
             ),
           ),
@@ -67,13 +71,19 @@ class GeekerChatSettingsComponent extends StatelessWidget {
             children: [
               OutlinedButton(
                   onPressed: () {
-                    controller.saveSettings();
-                    Get.back();
+                    if (controller.settings.isActived) {
+                      controller.saveSettings();
+                      Get.back();
+                    } else {
+                      showCustomToast(
+                          title: "Please Activate First".tr, context: context);
+                    }
                   },
                   child: Text("Save".tr)),
               const SizedBox(width: 10),
               OutlinedButton(
                   onPressed: () {
+                    controller.resetSettings();
                     Get.back();
                   },
                   child: Text("Cancel".tr)),

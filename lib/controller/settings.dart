@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_math_fork/ast.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
@@ -33,7 +32,7 @@ class SettingsController extends GetxController {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final LocalStoreRepository _localStoreRepository = Get.find();
-  final HttpClientService _httpClientService = Get.find();
+  // final HttpClientService _httpClientService = Get.find();
 
   late PackageInfo packageInfo;
 
@@ -147,8 +146,7 @@ class SettingsController extends GetxController {
 
   void resetSettings() {
     settings.settingsJson = _localStoreRepository.getSettings().toJson();
-    _oriTheme = settings.theme;
-    _oriLanguage = settings.language;
+    needReactive = false;
   }
 
   String get apiHost {
@@ -275,7 +273,8 @@ class SettingsController extends GetxController {
     return _dataDir;
   }
 
-  bool activeLicenseLoading = false;
+  // bool activeLicenseLoading = false;
+  bool needReactive = false;
 
   Future<bool> activeLicense(String license) async {
     Map<String, dynamic> rtn = {

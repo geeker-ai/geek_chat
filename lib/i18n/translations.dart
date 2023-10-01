@@ -49,7 +49,8 @@ class GeekChatTranslations extends Translations {
           "Confirm delete session?": "Confirm delete session?",
           "Found a new version": "Found a new version",
           "Update!": "Update!",
-          "Download": "Download"
+          "Download": "Download",
+          "Please Activate First": "Please Activate First"
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -96,7 +97,8 @@ class GeekChatTranslations extends Translations {
           "Confirm delete session?": "确认要删除对话么?",
           "Found a new version": "发现新版本",
           "Update!": "更新提醒!",
-          "Download": "下载"
+          "Download": "下载",
+          "Please Activate First": "请先激活",
         }
       };
 }

@@ -17,7 +17,6 @@ import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
-import 'package:geek_chat/service/http_service.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -96,7 +95,7 @@ initServices() async {
         onCancel: () => Get.back(),
         onConfirm: () {
           logger.d("confirm click");
-          launchUrl(Uri.parse("https://apps.macgeeker.com/"));
+          launchUrl(Uri.parse("https://www.geekerchat.com/"));
         },
         radius: 5,
         middleText: "$tip : ${releaseModel.version}");
