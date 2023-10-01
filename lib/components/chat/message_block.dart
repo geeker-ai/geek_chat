@@ -38,21 +38,29 @@ class MessageContent extends StatelessWidget {
   MessageBlockController controller = Get.put(MessageBlockController());
   Logger logger = Get.find();
 
+  double getAvataSize() {
+    if (deviceType == DeviceType.small) {
+      return 17;
+    }
+    return 35;
+  }
+
   Widget getMessageAvatar(BuildContext context) {
     if (message.role == 'user') {
-      return const Icon(
+      return Icon(
         Icons.person_outline_outlined,
-        size: 35,
+        size: getAvataSize(),
       );
     }
+
     String svgPic = 'assets/chatgpt-grey.svg';
     if (session.type == AiType.bard.name) {
       svgPic = 'assets/google-grey.svg';
     }
     return SvgPicture.asset(
       svgPic,
-      width: 35,
-      height: 35,
+      width: getAvataSize(),
+      height: getAvataSize(),
       colorFilter: ColorFilter.mode(
         Theme.of(context).colorScheme.onBackground,
         BlendMode.srcIn,
@@ -64,21 +72,67 @@ class MessageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if (message.role == 'user') {
-    //   return userMessageBubble(context);
-    // } else {
-    //   return assistentMessageBubble(context);
-    // }
-    // bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    // DeviceType dt = getDeviceType();
     if (deviceType == DeviceType.small) {
-      return MessageBlock(message: message);
+      // return MessageBlock(message: message);
+      return buildSmallScreenMessageBlock(context);
     } else {
       return buildWideScreenMessageBlock(context);
     }
   }
 
   double avatarWidth = 70;
+  double getAvatarWidth() {
+    if (deviceType == DeviceType.small) {
+      return 30;
+    }
+    return avatarWidth;
+  }
+
+  Widget buildSmallScreenMessageBlock(BuildContext context) {
+    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    return GetBuilder<MessageBlockController>(builder: (controller) {
+      return Container(
+        padding: const EdgeInsets.only(right: 2, bottom: 5),
+        margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+        decoration: BoxDecoration(
+          color: getMessageBackgroundColor(context, role: message.role),
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(radius),
+            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
+            bottomRight: Radius.circular(radius),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 10),
+                  width: getAvatarWidth(),
+                  child: Column(
+                    children: [
+                      getMessageAvatar(context),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 3, bottom: 3),
+                    alignment: Alignment.centerLeft,
+                    margin: const EdgeInsets.only(right: 5),
+                    child: markDownWidgetWithStream(message, isDark),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
 
   Widget buildWideScreenMessageBlock(BuildContext context) {
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;

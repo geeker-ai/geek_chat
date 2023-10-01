@@ -107,7 +107,7 @@ class SettingsController extends GetxController {
     super.onInit();
     if (settings.uuid.isEmpty) {
       settings.uuid = const Uuid().v4();
-      save();
+      saveSettings();
     }
   }
 
@@ -237,7 +237,7 @@ class SettingsController extends GetxController {
   set settingsTheme(String theme) {
     settings.theme = theme;
     setThemeMode(getThemeMode());
-    save();
+    saveSettings();
     update();
   }
 
@@ -245,7 +245,7 @@ class SettingsController extends GetxController {
     settings.language = language;
     setLocale(settings.language);
     update();
-    save();
+    saveSettings();
   }
 
   setThemeMode(ThemeMode themeMode) {

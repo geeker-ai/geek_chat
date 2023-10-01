@@ -100,10 +100,11 @@ python script/deploy.py
   - [ ] 使用统计接入s
 
 - v0.0.44
-  - [ ] Updater Tips
-  - [ ] Active account
+  - [x] Updater Tips
+  - [x] Active account
   - [x] Client UUID
   - [x] Fix: Message Sequence
+  - [ ] Mobile: Message style
 
 
 - v0.0.43

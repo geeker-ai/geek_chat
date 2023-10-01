@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_tiktoken/flutter_tiktoken.dart';
-import 'package:geek_chat/service/http_service.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:moment_dart/moment_dart.dart';
@@ -13,6 +12,12 @@ import 'package:moment_dart/moment_dart.dart';
 enum DeviceType { small, wide }
 
 DeviceType getDeviceType() {
+  String deviceTypeConfig = dotenv.get("DEVICE_TYPE");
+  if (deviceTypeConfig == 'sm') {
+    return DeviceType.small;
+  } else if (deviceTypeConfig == 'wide') {
+    return DeviceType.wide;
+  }
   // return DeviceType.small;
   double ratio = PlatformDispatcher.instance.displays.first.devicePixelRatio;
   Size size = PlatformDispatcher.instance.displays.first.size;
