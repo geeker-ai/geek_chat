@@ -105,7 +105,7 @@ dependencies:
   # anchor_scroll_controller: ^0.4.4
 
   # https://pub.dev/packages/auto_updater
-  auto_updater: ^0.1.7
+  # auto_updater: ^0.1.7
   url_launcher: ^6.1.14
 
 dev_dependencies:

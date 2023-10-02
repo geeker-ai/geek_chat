@@ -174,6 +174,7 @@ class MessageContent extends StatelessWidget {
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              textDirection: TextDirection.ltr,
               children: [
                 Container(
                   padding: const EdgeInsets.only(top: 10),
@@ -185,18 +186,25 @@ class MessageContent extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: CustomPopupMenu(
-                    menuBuilder: _buildLongPressMenu,
-                    barrierColor: Colors.transparent,
-                    pressType: PressType.longPress,
-                    controller: customPopupMenuController,
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 3, bottom: 3),
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.only(right: 5),
-                      child: markDownWidgetWithStream(message, isDark),
-                    ),
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 3, bottom: 3),
+                    alignment: Alignment.centerLeft,
+                    margin: const EdgeInsets.only(right: 5),
+                    child: markDownWidgetWithStream(message, isDark),
                   ),
+                  // child: CustomPopupMenu(
+                  //   menuBuilder: _buildLongPressMenu,
+                  //   barrierColor: Colors.transparent,
+                  //   pressType: PressType.singleClick,
+                  //   controller: customPopupMenuController,
+                  //   position: PreferredPosition.top,
+                  //   child: Container(
+                  //     padding: const EdgeInsets.only(top: 3, bottom: 3),
+                  //     alignment: Alignment.centerLeft,
+                  //     margin: const EdgeInsets.only(right: 5),
+                  //     child: markDownWidgetWithStream(message, isDark),
+                  //   ),
+                  // ),
                 )
               ],
             ),
