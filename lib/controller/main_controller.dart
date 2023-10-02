@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/service/http_service.dart';
-import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 

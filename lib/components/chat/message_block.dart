@@ -13,6 +13,15 @@ import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
+
+class ItemModel {
+  String title;
+  IconData icon;
+  Function onTap;
+
+  ItemModel(this.title, this.icon, this.onTap);
+}
 
 // ignore: must_be_immutable
 class MessageContent extends StatelessWidget {
@@ -38,9 +47,66 @@ class MessageContent extends StatelessWidget {
   MessageBlockController controller = Get.put(MessageBlockController());
   Logger logger = Get.find();
 
+  CustomPopupMenuController customPopupMenuController =
+      CustomPopupMenuController();
+
+  Widget _buildLongPressMenu() {
+    List<ItemModel> menuItems = [
+      ItemModel("Copy", Icons.content_copy, (MessageModel msg) {
+        Clipboard.setData(ClipboardData(text: msg.content));
+      }),
+      ItemModel("Delete", Icons.delete, (MessageModel msg) {
+        onDelete(msg);
+      }),
+    ];
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: Container(
+        width: 90,
+        color: const Color(0xFF4C4C4C),
+        child: GridView.count(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          crossAxisCount: menuItems.length,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 10,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: menuItems
+              .map((item) => GestureDetector(
+                    onTap: () {
+                      logger.d("gesture detector ${message.msgId}");
+                      item.onTap(message);
+                      customPopupMenuController.hideMenu();
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          item.icon,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            item.title.tr,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
   double getAvataSize() {
     if (deviceType == DeviceType.small) {
-      return 17;
+      return 18;
     }
     return 35;
   }
@@ -119,11 +185,17 @@ class MessageContent extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 3, bottom: 3),
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(right: 5),
-                    child: markDownWidgetWithStream(message, isDark),
+                  child: CustomPopupMenu(
+                    menuBuilder: _buildLongPressMenu,
+                    barrierColor: Colors.transparent,
+                    pressType: PressType.longPress,
+                    controller: customPopupMenuController,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 3, bottom: 3),
+                      alignment: Alignment.centerLeft,
+                      margin: const EdgeInsets.only(right: 5),
+                      child: markDownWidgetWithStream(message, isDark),
+                    ),
                   ),
                 )
               ],
@@ -384,6 +456,7 @@ class QuoteMessageComponent extends StatelessWidget {
   }
 }
 
+@Deprecated("message")
 // ignore: must_be_immutable
 class MessageBlock extends StatelessWidget {
   MessageModel message;

@@ -3,6 +3,7 @@ import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -67,9 +68,9 @@ class ChatMessagePage extends StatelessWidget {
                         message: controller.messages.elementAt(index),
                         deviceType: settingsController.deviceType,
                         session: session,
-                        onQuote: () {},
-                        onDelete: () {},
-                        moveTo: () {});
+                        onQuote: (MessageModel message) {},
+                        onDelete: (MessageModel message) {},
+                        moveTo: (MessageModel message) {});
                   },
                 );
               }),
