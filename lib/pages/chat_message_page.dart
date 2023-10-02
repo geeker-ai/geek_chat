@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
+import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -9,6 +11,7 @@ import 'package:logger/logger.dart';
 // ignore: must_be_immutable
 class ChatMessagePage extends StatelessWidget {
   late ChatMessageController chatMessageController;
+  SettingsController settingsController = Get.find();
   Logger logger = Get.find<Logger>();
   ChatMessagePage({super.key}) {
     var data = Get.parameters;
@@ -59,8 +62,15 @@ class ChatMessagePage extends StatelessWidget {
                   physics: const ScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (BuildContext ctxt, int index) {
-                    return MessageBlock(
-                        message: controller.messages.elementAt(index));
+                    // return MessageBlock(
+                    //     message: controller.messages.elementAt(index));
+                    return MessageContent(
+                        message: controller.messages.elementAt(index),
+                        deviceType: settingsController.deviceType,
+                        session: session,
+                        onQuote: (MessageModel message) {},
+                        onDelete: (MessageModel message) {},
+                        moveTo: (MessageModel message) {});
                   },
                 );
               }),

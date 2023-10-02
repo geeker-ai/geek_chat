@@ -13,6 +13,15 @@ import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
+
+class ItemModel {
+  String title;
+  IconData icon;
+  Function onTap;
+
+  ItemModel(this.title, this.icon, this.onTap);
+}
 
 // ignore: must_be_immutable
 class MessageContent extends StatelessWidget {
@@ -38,21 +47,86 @@ class MessageContent extends StatelessWidget {
   MessageBlockController controller = Get.put(MessageBlockController());
   Logger logger = Get.find();
 
+  CustomPopupMenuController customPopupMenuController =
+      CustomPopupMenuController();
+
+  Widget _buildLongPressMenu() {
+    List<ItemModel> menuItems = [
+      ItemModel("Copy", Icons.content_copy, (MessageModel msg) {
+        Clipboard.setData(ClipboardData(text: msg.content));
+      }),
+      ItemModel("Delete", Icons.delete, (MessageModel msg) {
+        onDelete(msg);
+      }),
+    ];
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: Container(
+        width: 90,
+        color: const Color(0xFF4C4C4C),
+        child: GridView.count(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          crossAxisCount: menuItems.length,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 10,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: menuItems
+              .map((item) => GestureDetector(
+                    onTap: () {
+                      logger.d("gesture detector ${message.msgId}");
+                      item.onTap(message);
+                      customPopupMenuController.hideMenu();
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          item.icon,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            item.title.tr,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  double getAvataSize() {
+    if (deviceType == DeviceType.small) {
+      return 18;
+    }
+    return 35;
+  }
+
   Widget getMessageAvatar(BuildContext context) {
     if (message.role == 'user') {
-      return const Icon(
+      return Icon(
         Icons.person_outline_outlined,
-        size: 35,
+        size: getAvataSize(),
       );
     }
+
     String svgPic = 'assets/chatgpt-grey.svg';
     if (session.type == AiType.bard.name) {
       svgPic = 'assets/google-grey.svg';
     }
     return SvgPicture.asset(
       svgPic,
-      width: 35,
-      height: 35,
+      width: getAvataSize(),
+      height: getAvataSize(),
       colorFilter: ColorFilter.mode(
         Theme.of(context).colorScheme.onBackground,
         BlendMode.srcIn,
@@ -64,21 +138,81 @@ class MessageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if (message.role == 'user') {
-    //   return userMessageBubble(context);
-    // } else {
-    //   return assistentMessageBubble(context);
-    // }
-    // bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    // DeviceType dt = getDeviceType();
     if (deviceType == DeviceType.small) {
-      return MessageBlock(message: message);
+      // return MessageBlock(message: message);
+      return buildSmallScreenMessageBlock(context);
     } else {
       return buildWideScreenMessageBlock(context);
     }
   }
 
   double avatarWidth = 70;
+  double getAvatarWidth() {
+    if (deviceType == DeviceType.small) {
+      return 30;
+    }
+    return avatarWidth;
+  }
+
+  Widget buildSmallScreenMessageBlock(BuildContext context) {
+    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+    return GetBuilder<MessageBlockController>(builder: (controller) {
+      return Container(
+        padding: const EdgeInsets.only(right: 2, bottom: 5),
+        margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+        decoration: BoxDecoration(
+          color: getMessageBackgroundColor(context, role: message.role),
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(radius),
+            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
+            bottomRight: Radius.circular(radius),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              textDirection: TextDirection.ltr,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 10),
+                  width: getAvatarWidth(),
+                  child: Column(
+                    children: [
+                      getMessageAvatar(context),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 3, bottom: 3),
+                    alignment: Alignment.centerLeft,
+                    margin: const EdgeInsets.only(right: 5),
+                    child: markDownWidgetWithStream(message, isDark),
+                  ),
+                  // child: CustomPopupMenu(
+                  //   menuBuilder: _buildLongPressMenu,
+                  //   barrierColor: Colors.transparent,
+                  //   pressType: PressType.singleClick,
+                  //   controller: customPopupMenuController,
+                  //   position: PreferredPosition.top,
+                  //   child: Container(
+                  //     padding: const EdgeInsets.only(top: 3, bottom: 3),
+                  //     alignment: Alignment.centerLeft,
+                  //     margin: const EdgeInsets.only(right: 5),
+                  //     child: markDownWidgetWithStream(message, isDark),
+                  //   ),
+                  // ),
+                )
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
 
   Widget buildWideScreenMessageBlock(BuildContext context) {
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
@@ -330,6 +464,7 @@ class QuoteMessageComponent extends StatelessWidget {
   }
 }
 
+@Deprecated("message")
 // ignore: must_be_immutable
 class MessageBlock extends StatelessWidget {
   MessageModel message;
