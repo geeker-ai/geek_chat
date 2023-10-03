@@ -100,7 +100,8 @@ python script/deploy.py
   - [ ] 使用统计接入s
 
 - v0.0.45
-  - [ ] About Me Page
+  - [x] 简单的关于页面
+  - [x] 手机端消息模块美化
 
 - v0.0.44
   - [x] Updater Tips
