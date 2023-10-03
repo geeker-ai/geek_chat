@@ -90,15 +90,15 @@ class DesktopHomePage extends StatelessWidget {
                     ),
                     LeftMenuButtonComponent(
                       title:
-                          "${'About Me'.tr}(v${settingsController.packageInfo.version})",
+                          "${'About'.tr}(v${settingsController.packageInfo.version})",
                       onPressed: () {
-                        // Get.toNamed("/settings");
-                        Get.snackbar(
-                          'Sorry!'.tr,
-                          'This feature will coming soon!'.tr,
-                          duration: const Duration(seconds: 2),
-                          snackPosition: SnackPosition.TOP,
-                        );
+                        Get.toNamed("/about");
+                        // Get.snackbar(
+                        //   'Sorry!'.tr,
+                        //   'This feature will coming soon!'.tr,
+                        //   duration: const Duration(seconds: 2),
+                        //   snackPosition: SnackPosition.TOP,
+                        // );
                       },
                       icon: Icons.info_outline,
                     ),

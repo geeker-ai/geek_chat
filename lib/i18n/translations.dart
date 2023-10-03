@@ -50,7 +50,9 @@ class GeekChatTranslations extends Translations {
           "Found a new version": "Found a new version",
           "Update!": "Update!",
           "Download": "Download",
-          "Please Activate First": "Please Activate First"
+          "Please Activate First": "Please Activate First",
+          "About": "About",
+          "Version": "Version"
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -99,6 +101,8 @@ class GeekChatTranslations extends Translations {
           "Update!": "更新提醒!",
           "Download": "下载",
           "Please Activate First": "请先激活",
+          "About": "关于",
+          "Version": "版本"
         }
       };
 }

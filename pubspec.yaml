@@ -139,6 +139,7 @@ flutter:
     - .env
     - assets/chatgpt-grey.svg
     - assets/google-grey.svg
+    - assets/changelog.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
