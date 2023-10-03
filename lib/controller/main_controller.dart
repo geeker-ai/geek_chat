@@ -1,7 +1,17 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/service/http_service.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+
+class ChangeLogModel {
+  String version;
+  String pubDate;
+  String content;
+  ChangeLogModel(this.version, this.pubDate, this.content);
+}
 
 class MainController extends GetxController {
   static MainController get to => Get.find();
@@ -69,5 +79,16 @@ class MainController extends GetxController {
     }
     logger.d("remote get version: $version");
     return version;
+  }
+
+  List<ChangeLogModel> versions = [];
+  loadChangeLog() async {
+    versions.clear();
+    var data = await rootBundle.loadString("assets/changelog.json");
+    var vs = jsonDecode(data);
+    for (var version in vs) {
+      versions.add(ChangeLogModel(
+          version['version'], version['pub_date'], version['content']));
+    }
   }
 }

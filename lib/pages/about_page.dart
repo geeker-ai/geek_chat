@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/controller/main_controller.dart';
+import 'package:geek_chat/controller/settings.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class AboutPage extends StatelessWidget {
   AboutPage({super.key});
+
+  MainController mainController = Get.find();
+  SettingsController settingsController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +23,36 @@ class AboutPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-                //
-                ),
-            ExpansionTile(
-              title: const Text("v0.0.43"),
-              controlAffinity: ListTileControlAffinity.leading,
-              expandedAlignment: Alignment.centerLeft,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(left: 35, top: 5, bottom: 10),
-                  child: const Text("1.支持OpenAI的gpt3.5, gpt4模型\n2.支持手机端桌面端同构"),
-                ),
-              ],
-            )
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: Text(
+                "Geek Chat (v${settingsController.packageInfo.version})",
+                style: const TextStyle(fontSize: 20),
+              ),
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
+                child: Text("Geeker Chat Intro".tr),
+              ),
+            ),
+            for (ChangeLogModel version in mainController.versions)
+              ExpansionTile(
+                title: Text(version.version),
+                controlAffinity: ListTileControlAffinity.leading,
+                expandedAlignment: Alignment.centerLeft,
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.only(left: 35, top: 5, bottom: 10),
+                    child: Text(version.content),
+                  ),
+                ],
+              )
           ],
         ),
       ),
