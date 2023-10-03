@@ -106,7 +106,7 @@ class MessageContent extends StatelessWidget {
 
   double getAvataSize() {
     if (deviceType == DeviceType.small) {
-      return 18;
+      return 24;
     }
     return 35;
   }
@@ -149,7 +149,7 @@ class MessageContent extends StatelessWidget {
   double avatarWidth = 70;
   double getAvatarWidth() {
     if (deviceType == DeviceType.small) {
-      return 30;
+      return 34;
     }
     return avatarWidth;
   }
@@ -158,8 +158,8 @@ class MessageContent extends StatelessWidget {
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
     return GetBuilder<MessageBlockController>(builder: (controller) {
       return Container(
-        padding: const EdgeInsets.only(right: 2, bottom: 5),
-        margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
+        margin: const EdgeInsets.only(right: 10, left: 10, top: 3, bottom: 3),
         decoration: BoxDecoration(
           color: getMessageBackgroundColor(context, role: message.role),
           borderRadius: BorderRadius.only(
@@ -169,45 +169,35 @@ class MessageContent extends StatelessWidget {
             bottomRight: Radius.circular(radius),
           ),
         ),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          textDirection: TextDirection.ltr,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              textDirection: TextDirection.ltr,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 10),
-                  width: getAvatarWidth(),
-                  child: Column(
-                    children: [
-                      getMessageAvatar(context),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 3, bottom: 3),
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(right: 5),
-                    child: markDownWidgetWithStream(message, isDark),
-                  ),
-                  // child: CustomPopupMenu(
-                  //   menuBuilder: _buildLongPressMenu,
-                  //   barrierColor: Colors.transparent,
-                  //   pressType: PressType.singleClick,
-                  //   controller: customPopupMenuController,
-                  //   position: PreferredPosition.top,
-                  //   child: Container(
-                  //     padding: const EdgeInsets.only(top: 3, bottom: 3),
-                  //     alignment: Alignment.centerLeft,
-                  //     margin: const EdgeInsets.only(right: 5),
-                  //     child: markDownWidgetWithStream(message, isDark),
-                  //   ),
-                  // ),
-                )
-              ],
+            Container(
+              margin: const EdgeInsets.only(top: 5, bottom: 5),
+              width: getAvatarWidth(),
+              child: Column(
+                children: [
+                  getMessageAvatar(context),
+                ],
+              ),
             ),
+            Expanded(
+              child: markDownWidgetWithStream(message, isDark),
+              // child: CustomPopupMenu(
+              //   menuBuilder: _buildLongPressMenu,
+              //   barrierColor: Colors.transparent,
+              //   pressType: PressType.singleClick,
+              //   controller: customPopupMenuController,
+              //   position: PreferredPosition.top,
+              //   child: Container(
+              //     padding: const EdgeInsets.only(top: 3, bottom: 3),
+              //     alignment: Alignment.centerLeft,
+              //     margin: const EdgeInsets.only(right: 5),
+              //     child: markDownWidgetWithStream(message, isDark),
+              //   ),
+              // ),
+            )
           ],
         ),
       );
