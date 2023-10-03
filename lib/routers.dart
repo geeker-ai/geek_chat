@@ -1,6 +1,7 @@
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/pages/about_page.dart';
 import 'package:geek_chat/pages/chat_edit.dart';
 import 'package:geek_chat/pages/chat_message_page.dart';
 import 'package:geek_chat/pages/desktop_home_page.dart';
@@ -28,5 +29,6 @@ final routers = [
         return const DesktopSettingsPage();
       }),
   GetPage(name: '/editchat', page: () => ChatEditPage()),
-  GetPage(name: '/chat', page: () => ChatMessagePage())
+  GetPage(name: '/chat', page: () => ChatMessagePage()),
+  GetPage(name: '/about', page: () => AboutPage())
 ];

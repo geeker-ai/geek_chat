@@ -99,12 +99,15 @@ python script/deploy.py
   - [ ] APM
   - [ ] 使用统计接入s
 
+- v0.0.45
+  - [ ] About Me Page
+
 - v0.0.44
   - [x] Updater Tips
   - [x] Active account
   - [x] Client UUID
   - [x] Fix: Message Sequence
-  - [ ] Mobile: Message style
+  - [x] Mobile: Message style
 
 
 - v0.0.43

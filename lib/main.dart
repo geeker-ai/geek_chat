@@ -74,6 +74,7 @@ initServices() async {
   settingsController.deviceType = getDeviceType();
 
   MainController mainController = Get.put(MainController());
+  mainController.loadChangeLog();
   Get.put(ChatListController());
   Get.put(ChatMessageController());
   PackageInfo packageInfo = await PackageInfo.fromPlatform();

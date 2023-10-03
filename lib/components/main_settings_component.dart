@@ -98,6 +98,34 @@ class SettingsComponent extends StatelessWidget {
               controller.saveSettings();
             },
           ),
+
+          /// about me
+          const Divider(),
+          ListTile(
+            dense: true,
+            title: Text(
+              'About'.tr,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          ListTile(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("About".tr),
+                Text(
+                  "${'Version'.tr}, v${controller.packageInfo.version} ",
+                  style: const TextStyle(fontSize: 12),
+                )
+              ],
+            ),
+            leading: const Icon(Icons.info_outline),
+            trailing: const Icon(Icons.chevron_right_outlined),
+            onTap: () {
+              // SmartSelect.single(selectedValue: selectedValue)
+              Get.toNamed('/about');
+            },
+          ),
         ],
       );
     }));
