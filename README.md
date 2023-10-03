@@ -77,6 +77,7 @@ python script/deploy.py
 - https://codewithandrea.com/articles/flutter-responsive-layouts-split-view-drawer-navigation/
 - https://flutterawesome.com/
 - [Other Plugins](https://github.com/jahnli/awesome-flutter-plugins)
+- https://summerscar.me/2020/11/06/flutter-%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8-github-actions/
 
 [Flutter cli](https://flutter.cn/docs/reference/flutter-cli)
 
