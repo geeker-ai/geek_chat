@@ -32,12 +32,25 @@ releases:
 
   - name: android
     jobs:
-      - name: android-release
+      - name: android-apk
         package:
           platform: android
           target: apk
           build_args:
             # target-platform: android-arm,android-arm64
+            dart-define:
+              APP_ENV: release
+        publish:
+          target: github
+          args:
+            repo-owner: geeker-ai
+            repo-name: geek_chat
+
+      - name: android-aab
+        package:
+          platform: android
+          target: aab
+          build_args:
             dart-define:
               APP_ENV: release
         publish:
