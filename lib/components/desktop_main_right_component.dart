@@ -21,7 +21,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
         scrollButtonListener();
       });
       scrollButtonListener();
-      questionInputFocus.requestFocus();
+      // questionInputFocus.requestFocus();
     });
   }
 
