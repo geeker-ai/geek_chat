@@ -88,8 +88,15 @@ jobs:
           CHANNEL: "site"
           SYSTEM_OS_NAME: "macos"
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
+          ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_SIGN_KEY: ${{ secrets.ANDROID_SIGN_KEY }}
+          ANDROID_SIGN: true
+          ANDROID_KEY_PATH: key.jks
         run: |
           echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
+          echo $ANDROID_SIGN_KEY | base64 -d > android/app/key.jks
           make change-channel
           flutter_distributor release --name macos --skip-clean
           flutter_distributor release --name android --skip-clean
