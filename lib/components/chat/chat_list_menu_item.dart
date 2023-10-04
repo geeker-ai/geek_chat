@@ -21,11 +21,13 @@ class ChatListMenuItemComponent extends StatelessWidget {
     bool isSelected = currentSession?.sid == session.sid ? true : false;
     return PopupMenuItem(
       padding: const EdgeInsets.all(0),
+      height: 42,
       // value: session.sid,
       child: ListTile(
         minVerticalPadding: 0,
+        visualDensity: const VisualDensity(horizontal: -2, vertical: -3),
         contentPadding:
-            const EdgeInsets.only(right: 2, left: 18, top: 0, bottom: 0),
+            const EdgeInsets.only(right: 2, left: 16, top: 0, bottom: 0),
         title: buildMenuItem(context, isSelected, onDelete),
         selectedTileColor: const Color.fromARGB(50, 84, 77, 77),
         leading: const Icon(Icons.chat_bubble_outline),

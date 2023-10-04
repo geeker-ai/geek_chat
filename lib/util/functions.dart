@@ -33,7 +33,10 @@ DeviceType getDeviceType() {
     return DeviceType.wide;
   }
 
-  // TODO 折叠屏设备? iPad等设备
+  // Pixel fold
+  if (size.width > 1500 && size.height > 2000) {
+    return DeviceType.wide;
+  }
   if (width > 1000.0 && height > 700.0) {
     return DeviceType.wide;
   }
