@@ -102,6 +102,8 @@ python script/deploy.py
 
 - v0.0.47
   - [ ] 宽屏UI：没有创建Chat的时候，右侧显示问题
+  - [ ] publish.py 脚本增加各个包的下载链接
+  - [ ] 建设应用主页
 
 - v0.0.46
   - [x] 平板上status bar显示问题
