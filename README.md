@@ -100,6 +100,15 @@ python script/deploy.py
   - [ ] APM
   - [ ] 使用统计接入s
 
+- v0.0.47
+  - [ ] 宽屏UI：没有创建Chat的时候，右侧显示问题
+
+- v0.0.46
+  - [x] 平板上status bar显示问题
+  - [x] 在折叠屏上显示宽屏UI
+  - [x] Github Action中增加aab打包和包的签名
+  - [x] 更换logo
+
 - v0.0.45
   - [x] 简单的关于页面
   - [x] 手机端消息模块美化
