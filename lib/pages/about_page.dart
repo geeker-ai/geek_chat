@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:get/get.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 
 // ignore: must_be_immutable
 class AboutPage extends StatelessWidget {
@@ -16,44 +17,50 @@ class AboutPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("About".tr),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              child: Text(
-                "Geek Chat (v${settingsController.packageInfo.version})",
-                style: const TextStyle(fontSize: 20),
-              ),
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Container(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                alignment: Alignment.center,
                 width: double.infinity,
-                padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
-                child: Text("Geeker Chat Intro".tr),
+                child: Text(
+                  "Geek Chat (v${settingsController.packageInfo.version})",
+                  style: const TextStyle(fontSize: 20),
+                ),
               ),
-            ),
-            for (ChangeLogModel version in mainController.versions)
-              ExpansionTile(
-                title: Text(version.version),
-                controlAffinity: ListTileControlAffinity.leading,
-                expandedAlignment: Alignment.centerLeft,
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.only(left: 35, top: 5, bottom: 10),
-                    child: Text(version.content),
-                  ),
-                ],
-              )
-          ],
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
+                  child: Text("Geeker Chat Intro".tr),
+                ),
+              ),
+              for (ChangeLogModel version in mainController.versions)
+                ExpansionTile(
+                  title: Text(version.version),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  expandedAlignment: Alignment.centerLeft,
+                  children: [
+                    Container(
+                      padding:
+                          const EdgeInsets.only(left: 35, top: 5, bottom: 10),
+                      // child: Text(version.content),
+                      child: MarkdownWidget(
+                        data: version.content,
+                        shrinkWrap: true,
+                      ),
+                    ),
+                  ],
+                )
+            ],
+          ),
         ),
       ),
     );
