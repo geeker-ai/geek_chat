@@ -119,7 +119,7 @@ class DesktopHomePage extends StatelessWidget {
             Expanded(
               child: GetBuilder<ChatListController>(builder: (controller) {
                 return chatListController.currentSessionId.isEmpty
-                    ? const Text("Error!")
+                    ? const Text("Please select or create a chat!")
                     : DeskTopMainRightComponent(
                         sid: chatListController.currentSession.sid);
               }),

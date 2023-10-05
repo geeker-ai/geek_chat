@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/service/http_service.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
 
 class ChangeLogModel {

@@ -101,8 +101,8 @@ python script/deploy.py
   - [ ] 使用统计接入s
 
 - v0.0.47
-  - [ ] 宽屏UI：没有创建Chat的时候，右侧显示问题
-  - [ ] publish.py 脚本增加各个包的下载链接
+  - [x] 宽屏UI：没有创建Chat的时候，右侧显示问题
+  - [x] 自动从github上拉取历史版本以及Change log
   - [ ] 建设应用主页
 
 - v0.0.46
