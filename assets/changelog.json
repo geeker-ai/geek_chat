@@ -1,17 +1,34 @@
-[
-    {
-        "version": "v0.0.45",
-        "pub_date": "2023-10-03",
-        "content": "1.简单的关于我们页面.\n2.手机端消息模块美化."
-    },
-    {
-        "version": "v0.0.44",
-        "pub_date": "2023-09-27",
-        "content": "1.更新提示\n2.手机端消息样式和桌面端风格一致"
-    },
-    {
-        "version": "v0.0.43",
-        "pub_date": "2023-09-27",
-        "content": "1.支持OpenAI的gpt3.5, gpt4模型\n2.支持手机端桌面端同构"
-    }
-]
+{
+    "versions": [
+        {
+            "version": "v0.0.46",
+            "content": "- [x] 平板上status bar显示问题\r\n- [x] 在折叠屏上显示宽屏UI\r\n- [x] Github Action中增加aab打包和包的签名 \r\n- [x] 更换logo",
+            "publish_at": "2023-10-04 13:03:29"
+        },
+        {
+            "version": "v0.0.45",
+            "content": " - [x] 简单的关于页面\r\n - [x] 手机端消息模块美化",
+            "publish_at": "2023-10-03 09:17:20"
+        },
+        {
+            "version": "v0.0.44",
+            "content": " - [x] 更新提示\r\n - [x] Client UUID\r\n - [x] Fix: Message Sequence\r\n - [x] 桌面版消息模块美化",
+            "publish_at": "2023-09-27 03:06:18"
+        },
+        {
+            "version": "v0.0.43",
+            "content": "- [x] logging\r\n- [x] github action: auto build macos package.\r\n- [x] github action: auto build android package.\r\n- [x] github action: auto build windows package.\r\n- [x] Desktop: Message opt for copy, quote and delete etc.\r\n- [x] Question Input auto focus.\r\n- [x] auto jump to settings page when need setting.",
+            "publish_at": "2023-09-24 12:32:30"
+        },
+        {
+            "version": "v0.0.36",
+            "content": "Test Github Actions",
+            "publish_at": "2023-09-20 05:44:52"
+        },
+        {
+            "version": "v0.0.12",
+            "content": "- 基本可用的版本",
+            "publish_at": "2023-09-19 13:31:09"
+        }
+    ]
+}

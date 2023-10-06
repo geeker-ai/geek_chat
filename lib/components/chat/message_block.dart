@@ -146,7 +146,7 @@ class MessageContent extends StatelessWidget {
     }
   }
 
-  double avatarWidth = 70;
+  double avatarWidth = 60;
   double getAvatarWidth() {
     if (deviceType == DeviceType.small) {
       return 34;
@@ -239,7 +239,7 @@ class MessageContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10, left: 5),
                     width: avatarWidth,
                     child: Column(
                       children: [

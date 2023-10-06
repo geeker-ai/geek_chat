@@ -50,7 +50,6 @@ dependencies:
   path_provider: ^2.1.1
   flutter_slidable: ^3.0.0
   moment_dart: ^1.0.1
-  # flutter_markdown: ^0.6.17+3
 
   flutter_highlighter: ^0.1.1
   # google_fonts: ^4.0.4
@@ -58,17 +57,13 @@ dependencies:
 
   # flutter_client_sse: ^2.0.0
   http: ^1.1.0
-  # http: ^0.13.0
 
+  # https://pub.dev/packages/rxdart
   rxdart: ^0.27.7
-
-  # https://pub.dev/packages/flutter_gpt_tokenizer
-  # flutter_gpt_tokenizer: ^0.1.0
 
   # https://pub.dev/packages/flutter_tiktoken
   flutter_tiktoken: ^0.0.1
 
-  markdown_widget: ^2.2.0
   # https://pub.dev/packages/bubble
   # https://github.com/vi-k/bubble/blob/master/README.md
   # bubble: ^1.2.1
@@ -76,7 +71,6 @@ dependencies:
   # https://pub.dev/packages/in_app_purchase
   # in_app_purchase: ^3.1.10
 
-  flutter_math_fork: ^0.7.1
   # https://pub.dev/packages/package_info_plus
   package_info_plus: ^4.1.0
 
@@ -107,6 +101,12 @@ dependencies:
   # https://pub.dev/packages/auto_updater
   # auto_updater: ^0.1.7
   url_launcher: ^6.1.14
+
+  # https://pub.dev/packages/flutter_tex
+  # flutter_tex: ^4.0.3+4
+  markdown_widget: ^2.2.0
+  flutter_math_fork: ^0.7.1
+
 
 dev_dependencies:
   flutter_test:

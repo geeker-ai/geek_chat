@@ -50,7 +50,11 @@ class MainController extends GetxController {
   }
 
   checkUpdate(String currentVersion, Function callback) {
-    Future<String> version = fetchReleaseInfo();
+    List<String> urls = [
+      "https://pub-6be131b6553c4ce5a6f736f91a7d011a.r2.dev/latest.json",
+      "https://gist.githubusercontent.com/zmhu/52a66708a59c6f7501c01bb43e3adcbd/raw/693d2e9b5935be027ef9f8cd5d38617259827695/latest.json"
+    ];
+    Future<String> version = fetchReleaseInfo(urls);
     version.then((value) {
       logger.d("message: $value");
       if (value.isNotEmpty) {
@@ -65,11 +69,7 @@ class MainController extends GetxController {
     });
   }
 
-  Future<String> fetchReleaseInfo() async {
-    List<String> urls = [
-      "https://pub-6be131b6553c4ce5a6f736f91a7d011a.r2.dev/latest.json",
-      "https://gist.githubusercontent.com/zmhu/52a66708a59c6f7501c01bb43e3adcbd/raw/693d2e9b5935be027ef9f8cd5d38617259827695/latest.json"
-    ];
+  Future<String> fetchReleaseInfo(List<String> urls) async {
     String version = '';
     for (String url in urls) {
       version = await HttpClientService.getReleaseInfo(url);
@@ -81,8 +81,27 @@ class MainController extends GetxController {
     return version;
   }
 
-  List<ChangeLogModel> versions = [];
   loadChangeLog() async {
+    List<String> urls = [
+      'https://pub-6be131b6553c4ce5a6f736f91a7d011a.r2.dev/changelog.json',
+      'https://gist.githubusercontent.com/zmhu/52a66708a59c6f7501c01bb43e3adcbd/raw/2dfcd417f024629e74c9b0d295be860fbc3ba188/changelog.json'
+    ];
+    Future<String> response = fetchReleaseInfo(urls);
+    response.then((value) {
+      versions.clear();
+      var data = jsonDecode(value);
+      for (var version in data['versions']) {
+        versions.add(ChangeLogModel(
+            version['version'], version['publish_at'], version['content']));
+      }
+      if (versions.isEmpty) {
+        loadChangeLogDefault();
+      }
+    });
+  }
+
+  List<ChangeLogModel> versions = [];
+  loadChangeLogDefault() async {
     versions.clear();
     var data = await rootBundle.loadString("assets/changelog.json");
     var vs = jsonDecode(data);

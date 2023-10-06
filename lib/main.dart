@@ -53,7 +53,9 @@ void main() async {
   // print("system locale: ${Get.deviceLocale}");
   await GetStorage.init('geekchat');
   await initServices();
-  runApp(const GeekerChat());
+  runApp(GeekerChat(
+    mainRouters: routers,
+  ));
 }
 
 initServices() async {
@@ -119,14 +121,17 @@ initServices() async {
   // });
 }
 
+// ignore: must_be_immutable
 class GeekerChat extends StatelessWidget {
-  const GeekerChat({super.key});
+  GeekerChat({super.key, required this.mainRouters});
+
+  List<GetPage<dynamic>> mainRouters;
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       initialRoute: '/',
-      getPages: routers,
+      getPages: mainRouters,
       unknownRoute: GetPage(
         name: '/404',
         page: () => const UnkownRoutePage(),
