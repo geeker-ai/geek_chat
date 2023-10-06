@@ -2,7 +2,7 @@
   # PGYER_API_KEY: "your api key"
 output: dist/
 releases:
-  - name: macos
+  - name: macos-site
     jobs:
       - name: macos-release-dmg
         package:
@@ -30,7 +30,7 @@ releases:
       #       repo-owner: geeker-ai
       #       repo-name: geek_chat
 
-  - name: android
+  - name: android-site
     jobs:
       - name: android-apk
         package:
@@ -46,6 +46,20 @@ releases:
             repo-owner: geeker-ai
             repo-name: geek_chat
 
+  - name: windows-site
+    jobs:
+      - name: windows-release-msix
+        package:
+          platform: windows
+          target: msix
+        publish:
+          target: github
+          args:
+            repo-owner: geeker-ai
+            repo-name: geek_chat
+
+  - name: android-appstore
+    jobs:
       - name: android-aab
         package:
           platform: android
@@ -59,17 +73,6 @@ releases:
             repo-owner: geeker-ai
             repo-name: geek_chat
 
-  - name: windows
-    jobs:
-      - name: windows-release-msix
-        package:
-          platform: windows
-          target: msix
-        publish:
-          target: github
-          args:
-            repo-owner: geeker-ai
-            repo-name: geek_chat
 
       # - name: windows-release-exe
       #   package:
