@@ -60,7 +60,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                       icon: getTextInputIcon(controller.settings.isActived,
                           controller.needReactive))),
               onChanged: (value) {
-                controller.settings.license = value;
+                controller.settings.license = value.trim();
                 controller.needReactive = true;
                 controller.update();
               },
