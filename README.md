@@ -1,12 +1,11 @@
 # Geek Chat
----
 
 A helpful AI Co-pilot in your device
 
 Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iPad, Android Phone and Android Tablet.
 
 
-![iOS](https://img.shields.io/badge/-iOS-black?style=flat-square&logo=apple&logoColor=white) ![Android](https://img.shields.io/badge/-Android-black?style=flat-square&logo=android&logoColor=white) ![macOS](https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white) ![Windows](https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white) ![GitHub all releases](https://img.shields.io/github/downloads/geeker-ai/geek_chat/total)
+![iOS](https://img.shields.io/badge/-iOS-black?style=flat-square&logo=apple&logoColor=white) ![Android](https://img.shields.io/badge/-Android-black?style=flat-square&logo=android&logoColor=white) ![macOS](https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white) ![Windows](https://img.shields.io/badge/-Windows-black?style=flat-square&logo=windows&logoColor=white) ![GitHub all releases](https://img.shields.io/github/downloads/geeker-ai/geek_chat/total)
 
 
 <table>
@@ -20,7 +19,7 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 </tr>
 </table>
 
-### Download
+## Download
 
 <table>
   <tr>
@@ -50,30 +49,49 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
   </tr>
 </table>
 
-### Features
----
+## Features
+
 - Supports iPhone, Android Phone, iPad, Android Tablet, Windows and MacOS
 - Enhanced prompting capability
 - Data is stored locally and will not be lost
 - Supports multiple cutting-edge LLM models and providers, such as OpenAI and Azure OpenAI
-- Markdown & Code Highlighting
+- Markdown & Code Highlighting & Latex
 - Prompt Library, Message Quoting
 - Streaming reply
 - Ergonomic UI design & Night Mode
 - Providing installation packages, no deployment required
 - Free and open source
 
-### Compile by yourself
+## Roadmap
+
+- [x] OpenAI Offical API compatibility.
+- [x] Talk with quoted messages.
+- [ ] Prompt Library
+- [ ] Copy button for code blocks
+- [ ] Azure OpenAI API compatibility
+- [ ] Chat with files.
+- [ ] Chat with URLs.
+
+## How to Contribute
+
+Any form of contribution is welcome, including but not limited to:
+
+- Submitting issues
+- Submitting pull requests
+- Submitting feature requests
+- Submitting bug reports
+- Submitting documentation revisions
+- Submitting translations
+- Submitting any other forms of contribution
+
+## Development
+
+Geek chat is developed using the flutter language. It can be compiled and packaged directly using the flutter command. It also supports the packaging of flutter_distributor.
+
+iOS packaging requires a profile. Before I obtain authorization from Apple developers, if you need to package iOS, please package it by yourself.
 
 ```
 git clone https://github.com/geeker-ai/geek_chat.git
 flutter pub get
 flutter build ipa
 ```
-
-### Roadmap
-- [x] OpenAI Offical API compatibility.
-- [x] Talk with quoted messages.
-- [ ] Prompt Library
-- [ ] Copy button for code blocks
-- [ ] Azure OpenAI API compatibility
