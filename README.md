@@ -7,16 +7,36 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 
 ![iOS](https://img.shields.io/badge/-iOS-black?style=flat-square&logo=apple&logoColor=white) ![Android](https://img.shields.io/badge/-Android-black?style=flat-square&logo=android&logoColor=white) ![macOS](https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white) ![Windows](https://img.shields.io/badge/-Windows-black?style=flat-square&logo=windows&logoColor=white) ![GitHub all releases](https://img.shields.io/github/downloads/geeker-ai/geek_chat/total)
 
+## Desktop ScreenShots
 
 <table>
-<tr>
-<td>
-<img src='./assets/screenshot1.png' />
-</td>
-<td>
-<img src='./assets/screenshot2.png' />
-</td>
-</tr>
+  <tr>
+    <td>
+      <img src='./assets/screenshots/screenshot1.png' />
+    </td>
+    <td>
+      <img src='./assets/screenshots/screenshot2.png' />
+    </td>
+  </tr>
+</table>
+
+## Mobile ScreenShots
+
+<table>
+  <tr style="height: 40px">
+    <td>
+      <img src='./assets/screenshots/screenshot3.jpeg' />
+    </td>
+    <td>
+      <img src='./assets/screenshots/screenshot4.jpeg' />
+    </td>
+    <td>
+      <img src='./assets/screenshots/screenshot5.jpeg' />
+    </td>
+    <td>
+      <img src='./assets/screenshots/screenshot6.jpeg' />
+    </td>
+  </tr>
 </table>
 
 ## Download
@@ -41,7 +61,7 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
       </a>
     </td>
     <td>
-      <a href='https://chatboxai.app/?c=download-linux'>
+      <a href='https://github.com/geeker-ai/geek_chat/releases'>
         <img src='./assets/windows10-color.svg' style="height:14px; width: 14px" />
         <b>Windows</b>
       </a>
@@ -95,3 +115,10 @@ git clone https://github.com/geeker-ai/geek_chat.git
 flutter pub get
 flutter build ipa
 ```
+
+<!-- ## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=geeker-ai/geek_chat&type=Date)](https://star-history.com/#geeker-ai/geek_chat&Date) -->
+
+## License
+[GNU General Public License v3.0](./LICENSE)
