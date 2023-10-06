@@ -98,7 +98,8 @@ initServices() async {
         onCancel: () => Get.back(),
         onConfirm: () {
           logger.d("confirm click");
-          launchUrl(Uri.parse("https://www.geekerchat.com/"));
+          launchUrl(
+              Uri.parse("https://github.com/geeker-ai/geek_chat/releases"));
         },
         radius: 5,
         middleText: "$tip : ${releaseModel.version}");
