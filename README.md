@@ -1,5 +1,4 @@
 # Geek Chat
----
 
 A helpful AI Co-pilot in your device
 
@@ -20,7 +19,7 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 </tr>
 </table>
 
-### Download
+## Download
 
 <table>
   <tr>
@@ -50,8 +49,8 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
   </tr>
 </table>
 
-### Features
----
+## Features
+
 - Supports iPhone, Android Phone, iPad, Android Tablet, Windows and MacOS
 - Enhanced prompting capability
 - Data is stored locally and will not be lost
@@ -63,17 +62,30 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 - Providing installation packages, no deployment required
 - Free and open source
 
-### Compile by yourself
+## Roadmap
+
+- [x] OpenAI Offical API compatibility.
+- [x] Talk with quoted messages.
+- [ ] Prompt Library
+- [ ] Copy button for code blocks
+- [ ] Azure OpenAI API compatibility
+
+## How to Contribute
+
+Any form of contribution is welcome, including but not limited to:
+
+- Submitting issues
+- Submitting pull requests
+- Submitting feature requests
+- Submitting bug reports
+- Submitting documentation revisions
+- Submitting translations
+- Submitting any other forms of contribution
+
+## Build iOS package
 
 ```
 git clone https://github.com/geeker-ai/geek_chat.git
 flutter pub get
 flutter build ipa
 ```
-
-### Roadmap
-- [x] OpenAI Offical API compatibility.
-- [x] Talk with quoted messages.
-- [ ] Prompt Library
-- [ ] Copy button for code blocks
-- [ ] Azure OpenAI API compatibility
