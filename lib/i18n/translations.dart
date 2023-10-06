@@ -55,6 +55,7 @@ class GeekChatTranslations extends Translations {
           "Version": "Version",
           "Geeker Chat Intro":
               "Geek Chat is a GPT client that supports desktop, mobile phones and tablets. You only need to simply configure the OpenAI API or the Azure OpenAI API to use it easily.",
+          "Price": "Subscription",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -106,7 +107,8 @@ class GeekChatTranslations extends Translations {
           "About": "关于",
           "Version": "版本",
           "Geeker Chat Intro":
-              "Geek Chat是一个GPT的客户端，同时支持桌面，手机和平板。只需简单配置OpenAI的API或是Azure OpenAI的API便可轻松使用."
+              "Geek Chat是一个GPT的客户端，同时支持桌面，手机和平板。只需简单配置OpenAI的API或是Azure OpenAI的API便可轻松使用.",
+          "Price": "订阅",
         }
       };
 }

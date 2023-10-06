@@ -23,6 +23,10 @@ class DesktopHomePage extends StatelessWidget {
   ChatMessageController chatMessageController =
       Get.find<ChatMessageController>();
 
+  Widget getPriceMenu() {
+    return const SizedBox();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +97,7 @@ class DesktopHomePage extends StatelessWidget {
                         },
                         icon: Icons.settings,
                       ),
+                      getPriceMenu(),
                       LeftMenuButtonComponent(
                         title:
                             "${'About'.tr}(v${settingsController.packageInfo.version})",
