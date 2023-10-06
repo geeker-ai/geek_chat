@@ -29,7 +29,7 @@ class StandardServerSettingsComponent extends StatelessWidget {
                 // border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                controller.settings.apiHost = value;
+                controller.settings.apiHost = value.trim();
               },
             ),
           ),
@@ -43,7 +43,7 @@ class StandardServerSettingsComponent extends StatelessWidget {
                 filled: false,
               ),
               onChanged: (value) {
-                controller.settings.apiKey = value;
+                controller.settings.apiKey = value.trim();
               },
             ),
           ),
