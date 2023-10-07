@@ -104,6 +104,8 @@ initServices() async {
         radius: 5,
         middleText: "$tip : ${releaseModel.version}");
   });
+
+  mainController.fetchPrompts();
   // Future<String> releaseVersion = getReleaseVersion();
   // releaseVersion.then((value) {
   //   if (value.isNotEmpty) {

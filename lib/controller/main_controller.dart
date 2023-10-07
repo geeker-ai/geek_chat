@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/models/prompts.dart';
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/service/http_service.dart';
 import 'package:get/get.dart';
@@ -67,6 +69,28 @@ class MainController extends GetxController {
         _releaseModel = ReleaseModel();
       }
     });
+  }
+
+  List<PromptModel> prompts = [];
+  fetchPrompts() async {
+    if (prompts.isNotEmpty) {
+      return prompts;
+    }
+    String url = "http://capi.fucklina.com/app/prompt";
+
+    /// TODO:  hard code
+    Map<String, String> headers = {
+      "lang": 'zh-Hans', //SettingsController.to.settings.language,
+    };
+    String responseString = await HttpClientService.getPrompts(url, headers);
+    if (responseString.isNotEmpty) {
+      var jsonObj = jsonDecode(responseString);
+      for (var item in jsonObj) {
+        prompts.add(PromptModel(
+            id: "${item['id']}", name: item['name'], prompt: item['prompt']));
+      }
+    }
+    logger.d(prompts);
   }
 
   Future<String> fetchReleaseInfo(List<String> urls) async {
