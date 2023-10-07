@@ -94,6 +94,7 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 - [ ] Copy button for code blocks
 - [ ] Azure OpenAI API compatibility
 - [ ] Chat with files.
+- [ ] DALL-E3
 - [ ] Chat with URLs.
 
 ## How to Contribute
