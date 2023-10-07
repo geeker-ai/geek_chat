@@ -8,6 +8,32 @@ class LocalStoreRepository extends GetxService {
   final GetStorage store = GetStorage("geekchat");
 
   final String _settingsKey = 'settings';
+  final String _prompsKey = 'prompts';
+  final String _promptsLastUpdateKey = 'prompts_last';
+
+  String getPromptsJsonString() {
+    String jsonStr = '';
+    if (store.hasData(_prompsKey)) {
+      jsonStr = store.read(_prompsKey);
+    }
+    return jsonStr;
+  }
+
+  savePrompts(String jsonStr) {
+    store.write(_prompsKey, jsonStr);
+  }
+
+  String getPromptsLastUpdate() {
+    String lastUpdate = '';
+    if (store.hasData(_promptsLastUpdateKey)) {
+      lastUpdate = store.read(_promptsLastUpdateKey);
+    }
+    return lastUpdate;
+  }
+
+  updatePromptsLastUpdate(String updated) {
+    store.write(_promptsLastUpdateKey, updated);
+  }
 
   SettingsModel getSettings() {
     String jsonstr = '';
