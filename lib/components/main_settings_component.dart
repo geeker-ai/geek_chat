@@ -1,6 +1,8 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/settings/bottom_sheet_switcher.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/models/language.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:get/get.dart';
 
@@ -96,6 +98,8 @@ class SettingsComponent extends StatelessWidget {
             onTapCallback: (value) {
               controller.settingsLanguage = value;
               controller.saveSettings();
+              EventBus eventBus = Get.find();
+              eventBus.fire(LanguageModel(name: value));
             },
           ),
 

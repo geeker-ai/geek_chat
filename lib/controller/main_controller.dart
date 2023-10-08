@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/prompts.dart';
 import 'package:geek_chat/models/release.dart';
+import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/service/http_service.dart';
+import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
@@ -18,6 +20,7 @@ class ChangeLogModel {
 class MainController extends GetxController {
   static MainController get to => Get.find();
   Logger logger = Get.find();
+  final LocalStoreRepository _localStoreRepository = Get.find();
 
   @override
   void onInit() {
@@ -71,26 +74,62 @@ class MainController extends GetxController {
     });
   }
 
-  List<PromptModel> prompts = [];
-  fetchPrompts() async {
-    if (prompts.isNotEmpty) {
-      return prompts;
+  bool get needRefreshPrompts {
+    bool needRefresh = false;
+    if (prompts.isEmpty) {
+      needRefresh = true;
+      return needRefresh;
     }
-    String url = "http://capi.fucklina.com/app/prompt";
+    if (promptLang == SettingsController.to.lang) {
+      needRefresh = false;
+    } else {
+      return false;
+    }
+    return needRefresh;
+  }
 
-    /// TODO:  hard code
-    Map<String, String> headers = {
-      "lang": SettingsController.to.lang,
-    };
-    String responseString = await HttpClientService.getPrompts(url, headers);
-    if (responseString.isNotEmpty) {
-      var jsonObj = jsonDecode(responseString);
+  List<PromptModel> prompts = [];
+  String promptLang = '';
+  Future<List<PromptModel>> initPrompts() async {
+    prompts.clear();
+    // if (prompts.isNotEmpty) {
+    //   return prompts;
+    // }
+    promptLang = SettingsController.to.lang;
+    int datestr = getCurrentDate();
+    String key = "$datestr-${SettingsController.to.lang}";
+    logger.d("initPrompts: $key");
+    String jsonStr = '';
+    if (key == _localStoreRepository.getPromptsLastUpdate()) {
+      jsonStr = _localStoreRepository.getPromptsJsonString();
+      logger.d("get prompts from local store");
+    } else {
+      jsonStr = await _fetchPrompts();
+      if (jsonStr.isNotEmpty) {
+        _localStoreRepository.savePrompts(jsonStr);
+        _localStoreRepository.updatePromptsLastUpdate(key);
+      }
+    }
+
+    if (jsonStr.isNotEmpty) {
+      var jsonObj = jsonDecode(jsonStr);
       for (var item in jsonObj) {
         prompts.add(PromptModel(
             id: "${item['id']}", name: item['name'], prompt: item['prompt']));
       }
     }
-    logger.d(prompts);
+    return prompts;
+    // logger.d(prompts);
+  }
+
+  Future<String> _fetchPrompts() async {
+    String url = "http://capi.fucklina.com/app/prompt";
+    Map<String, String> headers = {
+      "lang": SettingsController.to.lang,
+    };
+
+    String responseString = await HttpClientService.getPrompts(url, headers);
+    return responseString;
   }
 
   Future<String> fetchReleaseInfo(List<String> urls) async {

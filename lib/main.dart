@@ -1,6 +1,7 @@
 import 'dart:io';
 // import 'dart:math';
 
+import 'package:event_bus/event_bus.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,6 +14,7 @@ import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/i18n/translations.dart';
+import 'package:geek_chat/models/language.dart';
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
@@ -82,6 +84,9 @@ initServices() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   settingsController.packageInfo = packageInfo;
 
+  Get.put(EventBus());
+  // eventBus.fire(LanguageModel(name: 'name'));
+
   // dotenv.load(fileName: ".env");
 
   // logger.d(dotenv.get("CHANNEL"));
@@ -109,7 +114,7 @@ initServices() async {
     });
   }
 
-  mainController.fetchPrompts();
+  mainController.initPrompts();
 }
 
 // ignore: must_be_immutable

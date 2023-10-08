@@ -77,3 +77,7 @@ int convertVersionToNumber(String version) {
 int getCurrentDateTime() {
   return int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString());
 }
+
+int getCurrentDate() {
+  return int.parse(Moment.now().format("YYYYMMDD".toString()));
+}
