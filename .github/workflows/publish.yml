@@ -129,4 +129,4 @@ jobs:
         run: |
           echo "$env:LOCALAPPDATA\pub\cache\bin" >> $GITHUB_PATH
           make change-channel
-          flutter_distributor release --name windows-site --skip-clean
+          flutter_distributor package --platform windows --targets exe
