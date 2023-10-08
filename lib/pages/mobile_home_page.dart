@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat_list_component.dart';
 import 'package:geek_chat/components/main_settings_component.dart';
+import 'package:geek_chat/components/prompt/prompt_list_component.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,10 @@ class MobileHomePage extends StatelessWidget {
   SettingsController settingsController = Get.find<SettingsController>();
   MainController mainController = Get.find();
   MobileHomePage({super.key}) {
+    Get.put(PromptListComponent());
+    Get.put(const SettingsComponent());
+    Get.put(ChatListComponent());
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (settingsController.needSettings) {
         mainController.navIndex = 2;
@@ -17,11 +22,9 @@ class MobileHomePage extends StatelessWidget {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    Get.put(const SettingsComponent());
-    Get.put(ChatListComponent());
-
     return Scaffold(
       appBar: AppBar(
         title: GetBuilder<MainController>(builder: (controller) {
@@ -85,7 +88,7 @@ Widget navigationRoute(int index) {
       widget = Get.find<ChatListComponent>();
       break;
     case 1:
-      widget = Text("data $index");
+      widget = Get.find<PromptListComponent>();
       break;
     case 2:
     // widget = Text("data $index");

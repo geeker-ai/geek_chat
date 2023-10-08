@@ -7,6 +7,10 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 
 ![iOS](https://img.shields.io/badge/-iOS-black?style=flat-square&logo=apple&logoColor=white) ![Android](https://img.shields.io/badge/-Android-black?style=flat-square&logo=android&logoColor=white) ![macOS](https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white) ![Windows](https://img.shields.io/badge/-Windows-black?style=flat-square&logo=windows&logoColor=white) ![GitHub all releases](https://img.shields.io/github/downloads/geeker-ai/geek_chat/total)
 
+## Install Issues
+- Windows [troubleshoot-appinstaller-issues](https://learn.microsoft.com/zh-cn/windows/msix/app-installer/troubleshoot-appinstaller-issues)
+- macOS [Open a Mac app from an unidentified developer](https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac)
+
 ## Desktop ScreenShots
 
 <table>
@@ -90,6 +94,7 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 - [ ] Copy button for code blocks
 - [ ] Azure OpenAI API compatibility
 - [ ] Chat with files.
+- [ ] DALL-E3
 - [ ] Chat with URLs.
 
 ## How to Contribute
@@ -108,6 +113,8 @@ Any form of contribution is welcome, including but not limited to:
 
 Geek chat is developed using the flutter language. It can be compiled and packaged directly using the flutter command. It also supports the packaging of flutter_distributor.
 
+Regarding flutter development using vscode and skip installing android studio, please refer to this article [Manually installing the Flutter development environment on MacOS.](https://macgeeker.com/devnotes/macos-flutter/)
+
 iOS packaging requires a profile. Before I obtain authorization from Apple developers, if you need to package iOS, please package it by yourself.
 
 ```
@@ -116,9 +123,9 @@ flutter pub get
 flutter build ipa
 ```
 
-<!-- ## Star History
+## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=geeker-ai/geek_chat&type=Date)](https://star-history.com/#geeker-ai/geek_chat&Date) -->
+[![Star History Chart](https://api.star-history.com/svg?repos=geeker-ai/geek_chat&type=Date)](https://star-history.com/#geeker-ai/geek_chat&Date)
 
 ## License
 [GNU General Public License v3.0](./LICENSE)

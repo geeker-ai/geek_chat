@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geek_chat/models/language.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
@@ -75,9 +76,15 @@ class SettingsController extends GetxController {
         maxTokens: 0),
   ];
 
-  final List<Map<String, String>> locales = [
-    {'name': 'Simplified Chinese', 'locale': 'zh_Hans_CN'},
-    {'name': 'English', 'locale': 'en_US'}
+  final List<Map<String, String>> locales1 = [
+    {'name': 'Simplified Chinese', 'locale': 'zh_Hans_CN', 'lang': 'zh-Hans'},
+    {'name': 'English', 'locale': 'en_US', 'lang': 'en'}
+  ];
+
+  final List<LanguageModel> locales = [
+    LanguageModel(
+        name: 'Simplified Chinese', locale: 'zh_Hans_CN', lang: 'zh-Hans'),
+    LanguageModel(name: "English", locale: 'en_US', lang: 'en')
   ];
 
   final List<Map<String, String>> serverList = [
@@ -118,6 +125,27 @@ class SettingsController extends GetxController {
       channel = envChannel;
     }
     return channel;
+  }
+
+  LanguageModel getLocale(String locale) {
+    LanguageModel lm = locales[0];
+    for (LanguageModel languageModel in locales) {
+      if (languageModel.locale == locale) {
+        lm = languageModel;
+        break;
+      }
+    }
+    return lm;
+  }
+
+  String get lang {
+    String lang = 'en';
+    for (LanguageModel locale in locales) {
+      if (locale.locale == settings.language) {
+        lang = locale.lang;
+      }
+    }
+    return lang;
   }
 
   bool get needSettings {
@@ -169,13 +197,13 @@ class SettingsController extends GetxController {
   }
 
   String get locale {
-    String currentLocale = "${locales[0]['name']}";
+    String currentLocale = locales[0].name; //"${locales[0]['name']}";
     // print(currentLocale);
     // print(settings.language);
-    for (var element in locales) {
+    for (LanguageModel element in locales) {
       // print("${element['locale']}");
-      if ("${element['locale']}" == settings.language) {
-        currentLocale = "${element['name']}";
+      if (element.locale == settings.language) {
+        currentLocale = element.name;
         break;
       }
     }
