@@ -11,7 +11,7 @@ class MobileHomePage extends StatelessWidget {
   SettingsController settingsController = Get.find<SettingsController>();
   MainController mainController = Get.find();
   MobileHomePage({super.key}) {
-    Get.put(const PromptListComponent());
+    Get.put(PromptListComponent());
     Get.put(const SettingsComponent());
     Get.put(ChatListComponent());
 

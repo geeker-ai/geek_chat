@@ -80,7 +80,7 @@ class MainController extends GetxController {
 
     /// TODO:  hard code
     Map<String, String> headers = {
-      "lang": 'zh-Hans', //SettingsController.to.settings.language,
+      "lang": SettingsController.to.lang,
     };
     String responseString = await HttpClientService.getPrompts(url, headers);
     if (responseString.isNotEmpty) {

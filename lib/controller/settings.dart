@@ -76,8 +76,8 @@ class SettingsController extends GetxController {
   ];
 
   final List<Map<String, String>> locales = [
-    {'name': 'Simplified Chinese', 'locale': 'zh_Hans_CN'},
-    {'name': 'English', 'locale': 'en_US'}
+    {'name': 'Simplified Chinese', 'locale': 'zh_Hans_CN', 'lang': 'zh-Hans'},
+    {'name': 'English', 'locale': 'en_US', 'lang': 'en'}
   ];
 
   final List<Map<String, String>> serverList = [
@@ -118,6 +118,16 @@ class SettingsController extends GetxController {
       channel = envChannel;
     }
     return channel;
+  }
+
+  String get lang {
+    String lang = 'en';
+    for (var locale in locales) {
+      if (locale['locale'] == settings.language) {
+        lang = "${locale['lang']}";
+      }
+    }
+    return lang;
   }
 
   bool get needSettings {

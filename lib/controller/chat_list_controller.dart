@@ -5,6 +5,7 @@ import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
+import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:uuid/uuid.dart';
@@ -68,6 +69,28 @@ class ChatListController extends GetxController {
     return currentSession;
   }
 
+  SessionModel createSession(
+      {String name = 'Untitled',
+      String prompt = 'You are a helpful assistant.'}) {
+    AiModel model = SettingsController.to.getModelByName('gpt-3.5-turbo');
+    currentSession = SessionModel(
+        sid: const Uuid().v4(),
+        name: name,
+        promptContent: prompt,
+        type: model.aiType.name,
+        modelType: model.modelType.name,
+        model: model.modelName,
+        maxContextSize: model.maxContextSize,
+        maxContextMsgCount: 22,
+        temperature: model.temperature,
+        maxTokens: model.maxTokens,
+        updated: getCurrentDateTime(),
+        synced: false,
+        status: 1);
+    currentSessionId = currentSession.sid;
+    return currentSession;
+  }
+
   SessionModel getSessionBysid(String sid) {
     // SessionModel? currentSession;
     late SessionTable? st;
@@ -90,6 +113,12 @@ class ChatListController extends GetxController {
   void save() {
     _sessionRepository.save(currentSession.toSessionTable());
     getSessionBysid(currentSession.sid);
+  }
+
+  void saveSession(SessionModel sessionModel) {
+    _sessionRepository.save(sessionModel.toSessionTable());
+    // getSessionBysid(sessionModel.sid);
+    sessions.insert(0, sessionModel);
   }
 
   void remove(SessionModel session) {
