@@ -88,40 +88,28 @@ initServices() async {
   logger.d("Channel name: ${settingsController.channelName}");
 
   TiktokenDataProcessCenter().initata();
-  mainController.checkUpdate(settingsController.packageInfo.version,
-      (ReleaseModel releaseModel) {
-    String tip = "Found a new version".tr;
-    Get.defaultDialog(
-        title: "Update!".tr,
-        textConfirm: "Download".tr,
-        textCancel: "Cancel".tr,
-        onCancel: () => Get.back(),
-        onConfirm: () {
-          logger.d("confirm click");
-          launchUrl(
-              Uri.parse("https://github.com/geeker-ai/geek_chat/releases"));
-        },
-        radius: 5,
-        middleText: "$tip : ${releaseModel.version}");
-  });
+
+  /// check update only
+  if (settingsController.channelName == "site") {
+    mainController.checkUpdate(settingsController.packageInfo.version,
+        (ReleaseModel releaseModel) {
+      String tip = "Found a new version".tr;
+      Get.defaultDialog(
+          title: "Update!".tr,
+          textConfirm: "Download".tr,
+          textCancel: "Cancel".tr,
+          onCancel: () => Get.back(),
+          onConfirm: () {
+            logger.d("confirm click");
+            launchUrl(
+                Uri.parse("https://github.com/geeker-ai/geek_chat/releases"));
+          },
+          radius: 5,
+          middleText: "$tip : ${releaseModel.version}");
+    });
+  }
 
   mainController.fetchPrompts();
-  // Future<String> releaseVersion = getReleaseVersion();
-  // releaseVersion.then((value) {
-  //   if (value.isNotEmpty) {
-  //     if (checkVersion(settingsController.packageInfo.version,
-  //         value.replaceFirst('v', ''))) {
-  //       Get.defaultDialog(
-  //           title: "New Version".tr,
-  //           onCancel: () => Get.back(),
-  //           onConfirm: () {
-  //             logger.d("confirm click");
-  //           },
-  //           radius: 5,
-  //           middleText: "New Version $value");
-  //     }
-  //   }
-  // });
 }
 
 // ignore: must_be_immutable
