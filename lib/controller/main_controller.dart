@@ -91,14 +91,10 @@ class MainController extends GetxController {
   List<PromptModel> prompts = [];
   String promptLang = '';
   Future<List<PromptModel>> initPrompts() async {
-    prompts.clear();
-    // if (prompts.isNotEmpty) {
-    //   return prompts;
-    // }
     promptLang = SettingsController.to.lang;
     int datestr = getCurrentDate();
     String key = "$datestr-${SettingsController.to.lang}";
-    logger.d("initPrompts: $key");
+    logger.d("initPrompts: $key prompts length: ${prompts.length}");
     String jsonStr = '';
     if (key == _localStoreRepository.getPromptsLastUpdate()) {
       jsonStr = _localStoreRepository.getPromptsJsonString();
@@ -112,6 +108,7 @@ class MainController extends GetxController {
     }
 
     if (jsonStr.isNotEmpty) {
+      prompts.clear();
       var jsonObj = jsonDecode(jsonStr);
       for (var item in jsonObj) {
         prompts.add(PromptModel(

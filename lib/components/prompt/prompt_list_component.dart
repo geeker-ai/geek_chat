@@ -2,21 +2,13 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
-import 'package:geek_chat/models/language.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
 class PromptListComponent extends StatelessWidget {
-  PromptListComponent({super.key}) {
-    eventBus.on<LanguageModel>().listen((event) {
-      mainController.initPrompts().then((value) {
-        logger.d("init prompts finished!");
-        mainController.update();
-      });
-    });
-  }
+  PromptListComponent({super.key});
 
   ChatListController chatListController = Get.find();
   MainController mainController = Get.find();

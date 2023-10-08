@@ -14,6 +14,7 @@ import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/i18n/translations.dart';
+import 'package:geek_chat/models/language.dart';
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
@@ -83,7 +84,14 @@ initServices() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   settingsController.packageInfo = packageInfo;
 
-  Get.put(EventBus());
+  EventBus eventBus = Get.put(EventBus());
+  // listen language change event;
+  eventBus.on<LanguageModel>().listen((event) {
+    mainController.initPrompts().then((value) {
+      logger.d("init prompts finished!");
+      mainController.update();
+    });
+  });
   // eventBus.fire(LanguageModel(name: 'name'));
 
   // dotenv.load(fileName: ".env");

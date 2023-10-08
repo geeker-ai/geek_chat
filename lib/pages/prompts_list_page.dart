@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
-import 'package:geek_chat/models/language.dart';
 import 'package:geek_chat/models/prompts.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
@@ -12,13 +13,15 @@ import 'package:logger/logger.dart';
 class PromptsListPage extends StatelessWidget {
   EventBus eventBus = Get.find();
   Logger logger = Get.find();
+  late StreamSubscription eventSub;
   PromptsListPage({super.key}) {
-    eventBus.on<LanguageModel>().listen((event) {
-      mainController.initPrompts().then((value) {
-        logger.d("init prompts finished!");
-        mainController.update();
-      });
-    });
+    // eventSub = eventBus.on<LanguageModel>().listen((event) {
+    //   mainController.initPrompts().then((value) {
+    //     logger.d("init prompts finished!");
+    //     mainController.update();
+    //     eventSub.cancel();
+    //   });
+    // });
   }
 
   MainController mainController = Get.find();
