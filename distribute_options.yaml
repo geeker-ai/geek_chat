@@ -58,6 +58,16 @@ releases:
             repo-owner: geeker-ai
             repo-name: geek_chat
 
+      - name: windows-release-exe
+        package:
+          platform: windows
+          target: exe
+        publish:
+          target: github
+          args:
+            repo-owner: geeker-ai
+            repo-name: geek_chat
+
   - name: android-appstore
     jobs:
       - name: android-aab
@@ -67,17 +77,6 @@ releases:
           build_args:
             dart-define:
               APP_ENV: release
-        publish:
-          target: github
-          args:
-            repo-owner: geeker-ai
-            repo-name: geek_chat
-
-
-      - name: windows-release-exe
-        package:
-          platform: windows
-          target: exe
         publish:
           target: github
           args:
