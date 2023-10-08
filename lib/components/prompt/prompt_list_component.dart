@@ -9,7 +9,14 @@ import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
 class PromptListComponent extends StatelessWidget {
-  PromptListComponent({super.key});
+  PromptListComponent({super.key}) {
+    eventBus.on<LanguageModel>().listen((event) {
+      mainController.initPrompts().then((value) {
+        logger.d("init prompts finished!");
+        mainController.update();
+      });
+    });
+  }
 
   ChatListController chatListController = Get.find();
   MainController mainController = Get.find();
@@ -19,14 +26,6 @@ class PromptListComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MainController>(builder: (controller) {
-      eventBus.on<LanguageModel>().listen((event) {
-        logger.d(event);
-        mainController.initPrompts().then((value) {
-          logger.d("init prompts finished!");
-          controller.update();
-        });
-      });
-
       return ListView.builder(
           padding: const EdgeInsets.only(
               left: 10.0, top: 0.0, right: 20.0, bottom: 0.0),

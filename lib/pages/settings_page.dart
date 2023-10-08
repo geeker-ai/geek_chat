@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/models/language.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -49,13 +50,13 @@ class SettingsPage extends StatelessWidget {
                   title: Text('Language'.tr,
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
-                for (var element in controller.locales)
+                for (LanguageModel element in controller.locales)
                   RadioListTile(
-                      title: Text("${element['name']}".tr),
-                      value: element['locale'],
+                      title: Text(element.name.tr),
+                      value: element.locale,
                       groupValue: controller.settings.language,
                       onChanged: (value) {
-                        controller.settings.language = "${element['locale']}";
+                        controller.settings.language = element.locale;
                         // controller.changeSettings();
                         controller.update();
                       }),
