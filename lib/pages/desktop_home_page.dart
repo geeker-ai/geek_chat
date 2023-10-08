@@ -91,6 +91,13 @@ class DesktopHomePage extends StatelessWidget {
                     width: double.infinity,
                     child: Column(children: [
                       LeftMenuButtonComponent(
+                        title: "Prompts".tr,
+                        onPressed: () {
+                          Get.toNamed("/prompts");
+                        },
+                        icon: Icons.smart_toy_outlined,
+                      ),
+                      LeftMenuButtonComponent(
                         title: "Settings".tr,
                         onPressed: () {
                           Get.toNamed("/dsettings");
