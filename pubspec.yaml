@@ -113,7 +113,7 @@ dependencies:
   # easy_rich_text: ^2.0.0
 
   # https://pub.dev/packages/event_bus
-  event_bus: ^2.0.0
+  # event_bus: ^2.0.0
 
 dev_dependencies:
   flutter_test:
