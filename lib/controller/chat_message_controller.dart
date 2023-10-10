@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
@@ -11,7 +10,6 @@ import 'package:geek_chat/service/openai_service.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:moment_dart/moment_dart.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatMessageController extends GetxController {
@@ -49,7 +47,8 @@ class ChatMessageController extends GetxController {
     mm.msgType = 1;
     // mm.generating = generating;
     mm.synced = false;
-    mm.updated = int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString());
+    // mm.updated = int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString());
+    mm.updated = getCurrentDateTime();
     return mm;
   }
 
