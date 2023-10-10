@@ -10,7 +10,6 @@ import 'package:geek_chat/service/openai_service.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:moment_dart/moment_dart.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatMessageController extends GetxController {
@@ -48,7 +47,8 @@ class ChatMessageController extends GetxController {
     mm.msgType = 1;
     // mm.generating = generating;
     mm.synced = false;
-    mm.updated = int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString());
+    // mm.updated = int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString());
+    mm.updated = getCurrentDateTime();
     return mm;
   }
 
@@ -219,10 +219,15 @@ class ChatMessageController extends GetxController {
       (event) async {
         if (true) {
           try {
-            var data = jsonDecode(event);
-            String content = "${data['choices'][0]['delta']['content']}";
-            if (content.trim() != 'null') {
-              targetMessage.content = "${targetMessage.content}$content";
+            // logger.d("before json decode: ${event.trim()}");
+            if ("$event".trim() != "[DONE]" && "$event".isNotEmpty) {
+              var data = jsonDecode(event);
+              String content = "${data['choices'][0]['delta']['content']}";
+              String fullText = content == "null" ? "" : content;
+              // logger.d("${data['choices'][0]['delta']}");
+              // logger.d("message: $content");
+
+              targetMessage.content = "${targetMessage.content}$fullText";
               if (targetMessage.generating == true) {
                 targetMessage.streamContent = targetMessage.content;
               }

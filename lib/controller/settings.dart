@@ -303,8 +303,12 @@ class SettingsController extends GetxController {
 
   // bool activeLicenseLoading = false;
   bool needReactive = false;
+  String activeMessage = '';
+  bool activeResult = false;
+  String inputLicense = '';
+  bool showActiveError = false;
 
-  Future<bool> activeLicense(String license) async {
+  Future<Map<String, dynamic>> activeLicense(String license) async {
     Map<String, dynamic> rtn = {
       'actived': false,
       'license': license,
@@ -330,9 +334,10 @@ class SettingsController extends GetxController {
       settings.isActived = true;
       settings.apiHost = rtn['baseUrl'];
       settings.apiKey = rtn['apiKey'];
-      return true;
+      return rtn;
     } else {
-      return false;
+      activeMessage = rtn['message'];
+      return rtn;
     }
   }
 }

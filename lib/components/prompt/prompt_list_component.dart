@@ -1,4 +1,3 @@
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
@@ -13,7 +12,6 @@ class PromptListComponent extends StatelessWidget {
   ChatListController chatListController = Get.find();
   MainController mainController = Get.find();
   Logger logger = Get.find();
-  EventBus eventBus = Get.find();
 
   @override
   Widget build(BuildContext context) {

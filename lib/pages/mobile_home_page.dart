@@ -12,7 +12,7 @@ class MobileHomePage extends StatelessWidget {
   MainController mainController = Get.find();
   MobileHomePage({super.key}) {
     Get.put(PromptListComponent());
-    Get.put(const SettingsComponent());
+    Get.put(SettingsComponent());
     Get.put(ChatListComponent());
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

@@ -50,10 +50,12 @@ jobs:
         with:
           node-version: 16
 
-      # - name: setup python
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: "3.10"
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - run: |
+          pip install python-dotenv
 
       # - name: install pygithub
       #   run: |
@@ -80,7 +82,7 @@ jobs:
       - name: Change Version
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
-        run: make change-version
+        run: python script/cmd.py -v
 
       - name: Build macos ios and android (site)
         if: matrix.platform == 'macos-latest'
@@ -98,7 +100,7 @@ jobs:
         run: |
           echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
           echo $ANDROID_SIGN_KEY | base64 -d > android/app/key.jks
-          make change-channel
+          python script/cmd.py -c
           flutter_distributor release --name macos-site --skip-clean
           flutter_distributor release --name android-site --skip-clean
 
@@ -115,7 +117,7 @@ jobs:
           ANDROID_SIGN: true
           ANDROID_KEY_PATH: key.jks
         run: |
-          make change-channel
+          python script/cmd.py -c
           flutter_distributor release --name android-appstore --skip-clean
 
       - name: Build windows
@@ -128,5 +130,5 @@ jobs:
         shell: pwsh
         run: |
           echo "$env:LOCALAPPDATA\pub\cache\bin" >> $GITHUB_PATH
-          make change-channel
+          python script/cmd.py -c
           flutter_distributor release --name windows-site --skip-clean

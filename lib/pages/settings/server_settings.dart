@@ -52,7 +52,7 @@ class ServerSettingsPage extends StatelessWidget {
               onTapCallback: (value) {
                 controller.settings.provider = value;
                 controller.update();
-                controller.save();
+                controller.saveSettings();
               },
             ),
             switchServerSettingsComponent(controller.settings.provider)
