@@ -2,7 +2,6 @@ import 'dart:io';
 // import 'dart:math';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:flutter/services.dart';

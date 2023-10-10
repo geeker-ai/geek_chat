@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
@@ -219,10 +220,15 @@ class ChatMessageController extends GetxController {
       (event) async {
         if (true) {
           try {
-            var data = jsonDecode(event);
-            String content = "${data['choices'][0]['delta']['content']}";
-            if (content.trim() != 'null') {
-              targetMessage.content = "${targetMessage.content}$content";
+            // logger.d("before json decode: ${event.trim()}");
+            if ("$event".trim() != "[DONE]" && "$event".isNotEmpty) {
+              var data = jsonDecode(event);
+              String content = "${data['choices'][0]['delta']['content']}";
+              String fullText = content == "null" ? "" : content;
+              // logger.d("${data['choices'][0]['delta']}");
+              // logger.d("message: $content");
+
+              targetMessage.content = "${targetMessage.content}$fullText";
               if (targetMessage.generating == true) {
                 targetMessage.streamContent = targetMessage.content;
               }
