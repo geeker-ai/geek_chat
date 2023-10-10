@@ -11,6 +11,8 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 - Windows [troubleshoot-appinstaller-issues](https://learn.microsoft.com/zh-cn/windows/msix/app-installer/troubleshoot-appinstaller-issues)
 - macOS [Open a Mac app from an unidentified developer](https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac)
 
+English | [简体中文](README-CN.md)
+
 ## Desktop ScreenShots
 
 <table>
