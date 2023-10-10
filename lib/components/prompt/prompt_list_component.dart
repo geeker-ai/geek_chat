@@ -47,6 +47,7 @@ class PromptListComponent extends StatelessWidget {
                       children: [
                         Text(
                           controller.prompts.elementAt(index).name,
+                          maxLines: 1,
                           style: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.bold),
                         ),

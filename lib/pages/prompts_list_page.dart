@@ -74,8 +74,9 @@ class PromptsListPage extends StatelessWidget {
                             controller.update();
                             chatListController.update();
                             Get.back();
-                            Get.toNamed('/chat',
-                                parameters: {'sid': sessionModel.sid});
+                            chatListController.switchSession(sessionModel.sid);
+                            // Get.toNamed('/chat',
+                            //     parameters: {'sid': sessionModel.sid});
                           },
                           child: Container(
                             padding: const EdgeInsets.all(15),
