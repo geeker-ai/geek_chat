@@ -30,10 +30,12 @@ class ChatListComponent extends StatelessWidget {
                     title: Text(
                       sm.name,
                       overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                     subtitle: Text(
                       sm.promptContent,
                       overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                     leading: const Icon(Icons.chat_bubble_outline_outlined),
                     trailing: const Icon(Icons.chevron_right_outlined),
