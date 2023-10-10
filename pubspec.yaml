@@ -115,6 +115,9 @@ dependencies:
   # https://pub.dev/packages/event_bus
   # event_bus: ^2.0.0
 
+  # https://pub.dev/packages/fluent_ui
+  fluent_ui: ^4.7.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

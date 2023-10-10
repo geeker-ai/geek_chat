@@ -2,6 +2,7 @@ import 'dart:io';
 // import 'dart:math';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:flutter/services.dart';
@@ -121,6 +122,19 @@ initServices() async {
 
   mainController.initPrompts();
 }
+
+// class GeekChat extends StatelessWidget {
+//   GeekChat({super.key, required this.mainRouters});
+
+//   List<GetPage<dynamic>> mainRouters;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return FluentApp(
+//       routes: mainRouters,
+//     );
+//   }
+// }
 
 // ignore: must_be_immutable
 class GeekerChat extends StatelessWidget {
