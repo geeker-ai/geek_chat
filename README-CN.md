@@ -1,5 +1,7 @@
 # Geek Chat
 
+[English](README.md) | 简体中文
+
 您设备上一个有用的AI副驾驶。
 
 Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPad、Android手机和Android平板。
@@ -10,8 +12,6 @@ Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPa
 ## 安装建议
 - Windows [troubleshoot-appinstaller-issues](https://learn.microsoft.com/zh-cn/windows/msix/app-installer/troubleshoot-appinstaller-issues)
 - macOS [Open a Mac app from an unidentified developer](https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac)
-
-[English](README.md) | 简体中文
 
 ## 桌面端截图
 
