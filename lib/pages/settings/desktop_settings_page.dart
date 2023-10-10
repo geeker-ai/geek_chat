@@ -11,7 +11,7 @@ class DesktopSettingsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Settings'.tr),
       ),
-      body: const SettingsComponent(),
+      body: SettingsComponent(),
     );
   }
 }

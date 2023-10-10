@@ -84,14 +84,14 @@ initServices() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   settingsController.packageInfo = packageInfo;
 
-  EventBus eventBus = Get.put(EventBus());
+  // EventBus eventBus = Get.put(EventBus());
   // listen language change event;
-  eventBus.on<LanguageModel>().listen((event) {
-    mainController.initPrompts().then((value) {
-      logger.d("init prompts finished!");
-      mainController.update();
-    });
-  });
+  // eventBus.on<LanguageModel>().listen((event) {
+  //   mainController.initPrompts().then((value) {
+  //     logger.d("init prompts finished!");
+  //     mainController.update();
+  //   });
+  // });
   // eventBus.fire(LanguageModel(name: 'name'));
 
   // dotenv.load(fileName: ".env");
