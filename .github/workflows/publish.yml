@@ -56,6 +56,7 @@ jobs:
           python-version: "3.10"
       - run: |
           pip install python-dotenv
+          pip install PyYAML
 
       # - name: install pygithub
       #   run: |
