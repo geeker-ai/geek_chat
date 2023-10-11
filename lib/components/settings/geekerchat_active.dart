@@ -3,6 +3,7 @@ import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class GeekerChatSettingsComponent extends StatelessWidget {
@@ -115,14 +116,44 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                   child: Text("Save".tr)),
               const SizedBox(width: 10),
               OutlinedButton(
-                  onPressed: () {
-                    controller.resetSettings();
-                    controller.showActiveError = false;
-                    Get.back();
-                  },
-                  child: Text("Cancel".tr)),
+                onPressed: () {
+                  controller.resetSettings();
+                  controller.showActiveError = false;
+                  Get.back();
+                },
+                child: Text("Cancel".tr),
+              ),
             ],
           ),
+          if (settingsController.channelName == 'site')
+            Card(
+              margin: const EdgeInsets.only(top: 15),
+              elevation: 5,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("buytips".tr),
+                    Container(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        onPressed: () {
+                          launchUrl(
+                              Uri.parse("https://geeker.lemonsqueezy.com/"));
+                        },
+                        child: Text("Buy".tr),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
         ],
       );
     });
