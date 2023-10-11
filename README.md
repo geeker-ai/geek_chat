@@ -2,7 +2,7 @@
 
 English | [简体中文](README-CN.md)
 
-A helpful AI Co-pilot in your device.
+A helpful AI co-pilot in your device.
 
 Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iPad, Android Phone and Android Tablet.
 
