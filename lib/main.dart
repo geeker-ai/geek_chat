@@ -14,6 +14,7 @@ import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/i18n/translations.dart';
+import 'package:geek_chat/migration.dart';
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
@@ -67,7 +68,7 @@ initServices() async {
   Logger logger = Get.put(Logger());
   logger.d("env: channel: ${dotenv.get('CHANNEL')}");
 
-  String storeageName = "geekchat";
+  String storeageName = "geekchat2";
 
   await GetStorage.init(storeageName);
 
@@ -80,7 +81,7 @@ initServices() async {
   SettingsController.to.dataDir = dir;
   settingsController.deviceType = getDeviceType();
 
-  ///SettingsServerController settingsServerController =
+  ///SettingsServerController settingsServerController = ;
   Get.put(
       SettingsServerController(provider: settingsController.settings.provider));
 
@@ -88,20 +89,12 @@ initServices() async {
   mainController.loadChangeLog();
   Get.put(ChatListController());
   Get.put(ChatMessageController());
+  //// migrate
+  GeekChatMigration geekChatMigration = GeekChatMigration();
+  geekChatMigration.migrate();
+
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   settingsController.packageInfo = packageInfo;
-
-  // EventBus eventBus = Get.put(EventBus());
-  // listen language change event;
-  // eventBus.on<LanguageModel>().listen((event) {
-  //   mainController.initPrompts().then((value) {
-  //     logger.d("init prompts finished!");
-  //     mainController.update();
-  //   });
-  // });
-  // eventBus.fire(LanguageModel(name: 'name'));
-
-  // dotenv.load(fileName: ".env");
 
   // logger.d(dotenv.get("CHANNEL"));
   logger.d("Channel name: ${settingsController.channelName}");
@@ -130,19 +123,6 @@ initServices() async {
 
   mainController.initPrompts();
 }
-
-// class GeekChat extends StatelessWidget {
-//   GeekChat({super.key, required this.mainRouters});
-
-//   List<GetPage<dynamic>> mainRouters;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return FluentApp(
-//       routes: mainRouters,
-//     );
-//   }
-// }
 
 // ignore: must_be_immutable
 class GeekerChat extends StatelessWidget {
