@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -13,6 +16,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
   Logger logger = Get.find();
 
   TextEditingController textEditingController = TextEditingController();
+  SettingsServerController settingsServerController = Get.find();
 
   Icon getTextInputIcon(bool isActive, bool needReactive) {
     if (isActive && !needReactive) {
@@ -29,8 +33,9 @@ class GeekerChatSettingsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SettingsController>(builder: (controller) {
-      textEditingController.text = controller.settings.license;
+    return GetBuilder<SettingsServerController>(builder: (controller) {
+      textEditingController.text = controller.defaultServer.license;
+      logger.d("init: ${controller.defaultServer.toJson()}");
       return Wrap(
         children: [
           const SizedBox(
@@ -55,15 +60,16 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                     labelText: 'License',
                     filled: false,
                     suffixIcon: getTextInputIcon(
-                        controller.settings.isActived, controller.needReactive),
+                        controller.defaultServer.isActived,
+                        controller.needReactive),
                   ),
                   onChanged: (value) {
-                    controller.settings.license = value.trim();
+                    controller.defaultServer.license = value.trim();
                     controller.needReactive = true;
                     controller.update();
                   },
                 ),
-                if (controller.showActiveError)
+                if (settingsController.showActiveError)
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.only(top: 10, left: 10),
@@ -76,7 +82,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                         const SizedBox(
                           width: 10,
                         ),
-                        Text(controller.activeMessage)
+                        Text(settingsController.activeMessage)
                       ],
                     ),
                   ),
@@ -88,25 +94,43 @@ class GeekerChatSettingsComponent extends StatelessWidget {
             children: [
               OutlinedButton(
                   onPressed: () {
-                    if (controller.settings.license.isNotEmpty) {
+                    if (controller.defaultServer.license.isNotEmpty) {
                       controller
-                          .activeLicense(controller.settings.license)
+                          .activeLicense(
+                              controller.defaultServer.license,
+                              settingsController.settings.uuid,
+                              settingsController.lang)
                           .then((value) {
-                        logger.d("value: $value");
-                        if (value['actived']) {
-                          showCustomToast(
-                              title: "Active Success".tr, context: context);
-                          controller.needReactive = false;
-                          controller.saveSettings();
-                          Get.back();
+                        if (value.isActived) {
+                          logger.d("actie: ${value.toJson()}");
+                          // controller.defaultServer = value;
+                          controller.saveSettings(value);
+                          settingsController.settings.provider = value.provider;
+                          settingsController.saveSettings();
                         } else {
-                          controller.activeMessage = value['message'];
-                          controller.showActiveError = true;
-                          logger.d("message1: ${controller.activeMessage}");
-                          controller.update();
-                          logger.d("message2: ${controller.activeMessage}");
+                          //
                         }
                       });
+                      // settingsController
+                      //     .activeLicense(controller.defaultServer.license)
+                      //     .then((value) {
+                      //   logger.d("value: $value");
+                      //   if (value['actived']) {
+                      //     showCustomToast(
+                      //         title: "Active Success".tr, context: context);
+                      //     settingsController.needReactive = false;
+                      //     // controller.saveSettings();
+                      //     Get.back();
+                      //   } else {
+                      //     // settingsController.activeMessage = value['message'];
+                      //     // settingsController.showActiveError = true;
+                      //     logger.d(
+                      //         "message1: ${settingsController.activeMessage}");
+                      //     controller.update();
+                      //     logger.d(
+                      //         "message2: ${settingsController.activeMessage}");
+                      //   }
+                      // });
                     } else {
                       showCustomToast(
                           title: "Please Activate First".tr, context: context);
@@ -117,8 +141,8 @@ class GeekerChatSettingsComponent extends StatelessWidget {
               const SizedBox(width: 10),
               OutlinedButton(
                 onPressed: () {
-                  controller.resetSettings();
-                  controller.showActiveError = false;
+                  // controller.resetSettings();
+                  // settingsController.showActiveError = false;
                   Get.back();
                 },
                 child: Text("Cancel".tr),

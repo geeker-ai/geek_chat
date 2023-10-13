@@ -97,6 +97,11 @@ class SettingsController extends GetxController {
       'id': 'geekerchat',
       'name': 'Geeker Chat',
       'url': 'https://capi.fucklina.com',
+    },
+    {
+      'id': 'azure',
+      'name': 'Azure API',
+      'url': 'https://geek.azure.com',
     }
   ];
 
@@ -151,7 +156,7 @@ class SettingsController extends GetxController {
   bool get needSettings {
     logger.d("${settings.toJson()}");
 
-    if (settings.apiKey.trim().isEmpty || settings.apiHost.trim().isEmpty) {
+    if (settings.provider.trim().isEmpty) {
       logger.d("need settings: true");
       return true;
     }
@@ -174,6 +179,7 @@ class SettingsController extends GetxController {
 
   void resetSettings() {
     settings.settingsJson = _localStoreRepository.getSettings().toJson();
+    logger.d("init settings: ${settings.toJson()}");
     needReactive = false;
   }
 
@@ -249,6 +255,7 @@ class SettingsController extends GetxController {
 
   void saveSettings() {
     settings.settingsJson = settings.toJson();
+    logger.d("save settings: ${settings.toJson()}");
     _localStoreRepository.saveSettings(settings);
   }
 

@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class StandardServerSettingsComponent extends StatelessWidget {
-  const StandardServerSettingsComponent({super.key});
+  StandardServerSettingsComponent({super.key});
+
+  SettingsController settingsController = Get.find();
+  SettingsServerController settingsServerController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SettingsController>(builder: (controller) {
+    return GetBuilder<SettingsServerController>(builder: (controller) {
       return Wrap(
         children: [
           const SizedBox(
@@ -21,7 +26,7 @@ class StandardServerSettingsComponent extends StatelessWidget {
             padding:
                 const EdgeInsets.only(left: 20, top: 0, bottom: 0, right: 10),
             child: TextFormField(
-              initialValue: controller.apiHost,
+              initialValue: controller.defaultServer.apiHost,
               decoration: const InputDecoration(
                 labelText: 'API Host',
                 filled: false,
@@ -29,7 +34,7 @@ class StandardServerSettingsComponent extends StatelessWidget {
                 // border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                controller.settings.apiHost = value.trim();
+                controller.defaultServer.apiHost = value.trim();
               },
             ),
           ),
@@ -37,13 +42,13 @@ class StandardServerSettingsComponent extends StatelessWidget {
             padding:
                 const EdgeInsets.only(left: 20, top: 20, bottom: 0, right: 10),
             child: TextFormField(
-              initialValue: controller.apiKey,
+              initialValue: controller.defaultServer.apiKey,
               decoration: const InputDecoration(
                 labelText: 'API Key',
                 filled: false,
               ),
               onChanged: (value) {
-                controller.settings.apiKey = value.trim();
+                controller.defaultServer.apiKey = value.trim();
               },
             ),
           ),
@@ -54,9 +59,14 @@ class StandardServerSettingsComponent extends StatelessWidget {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    controller.settings.isActived = false;
-                    controller.needReactive = true;
-                    controller.saveSettings();
+                    controller.defaultServer.isActived = false;
+                    // settingsController.needReactive = true;
+                    // controller.defaultServer.
+                    // controller.saveSettings();
+                    controller.saveSettings(controller.defaultServer);
+                    settingsController.settings.provider =
+                        controller.defaultServer.provider;
+                    settingsController.saveSettings();
                     Get.snackbar(
                       "Saved successfully!".tr,
                       "The configuration has been updated!".tr,
@@ -74,7 +84,7 @@ class StandardServerSettingsComponent extends StatelessWidget {
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    controller.resetSettings();
+                    // controller.resetSettings();
                     Get.back();
                   },
                   child: Text('Cancel'.tr),

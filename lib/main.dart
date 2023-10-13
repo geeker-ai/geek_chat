@@ -12,6 +12,7 @@ import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/i18n/translations.dart';
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
@@ -51,7 +52,7 @@ void main() async {
     windowManager.setMinimumSize(const Size(800, 600));
   }
   // print("system locale: ${Get.deviceLocale}");
-  await GetStorage.init('geekchat');
+
   await initServices();
   runApp(GeekerChat(
     mainRouters: routers,
@@ -66,7 +67,11 @@ initServices() async {
   Logger logger = Get.put(Logger());
   logger.d("env: channel: ${dotenv.get('CHANNEL')}");
 
-  Get.put(LocalStoreRepository());
+  String storeageName = "geekchat3";
+
+  await GetStorage.init(storeageName);
+
+  Get.put(LocalStoreRepository(storageName: storeageName));
   // Get.put(HttpClientService());
   Directory dir = await getApplicationDocumentsDirectory();
   logger.d("Application Documents Directory: $dir ");
@@ -74,6 +79,10 @@ initServices() async {
   SettingsController settingsController = Get.put(SettingsController());
   SettingsController.to.dataDir = dir;
   settingsController.deviceType = getDeviceType();
+
+  ///SettingsServerController settingsServerController =
+  Get.put(
+      SettingsServerController(provider: settingsController.settings.provider));
 
   MainController mainController = Get.put(MainController());
   mainController.loadChangeLog();
