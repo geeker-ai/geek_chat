@@ -153,6 +153,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
               elevation: 5,
               child: Container(
                 padding: const EdgeInsets.all(10),
+                width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
