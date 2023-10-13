@@ -130,4 +130,4 @@ flutter build ipa
 [![星标历史图](https://api.star-history.com/svg?repos=geeker-ai/geek_chat&type=Date)](https://star-history.com/#geeker-ai/geek_chat&Date)
 
 ## 许可证
-[GNU General Public License v3.0](./LICENSE)
+[BSD 2-Clause License](./LICENSE)
