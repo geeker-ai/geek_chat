@@ -121,7 +121,8 @@ class ChatListController extends GetxController {
     sessionModel.updated = getCurrentDateTime();
     _sessionRepository.save(sessionModel.toSessionTable());
     // getSessionBysid(sessionModel.sid);
-    sessions.insert(0, sessionModel);
+    // sessions.insert(0, sessionModel);
+    reloadSessions();
   }
 
   void updateSessionLastEdit(SessionModel sessionModel) {

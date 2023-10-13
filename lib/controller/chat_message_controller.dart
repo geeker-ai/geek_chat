@@ -72,7 +72,8 @@ class ChatMessageController extends GetxController {
 
   String inputQuestion = '';
 
-  void submit(String sid) {
+  void submit(String sid,
+      {required Function onDone, required Function onError}) {
     if (inputQuestion.isEmpty) {
       return;
     }
@@ -87,7 +88,7 @@ class ChatMessageController extends GetxController {
     inputQuestion = '';
     // _quoteMessages.clear;
     update();
-    replyFromOpenAIWithSSE(input, sid);
+    replyFromOpenAIWithSSE(input, sid, onDone: onDone, onError: onError);
   }
 
   void saveMessage(MessageModel mm) {
@@ -185,7 +186,8 @@ class ChatMessageController extends GetxController {
     return quoteIds;
   }
 
-  void replyFromOpenAIWithSSE(MessageModel input, String sid) async {
+  void replyFromOpenAIWithSSE(MessageModel input, String sid,
+      {required Function onDone, required Function onError}) async {
     SessionModel currentSession = chatListController.currentSession;
     MessageModel targetMessage = createNewMessage(
         const Uuid().v4(), settingsController.chatGPTRoles.assistant, '', true);
@@ -272,6 +274,7 @@ class ChatMessageController extends GetxController {
         logger.d("Error: $e");
         targetMessage.closeStream();
         update();
+        onError();
       },
       onDone: () {
         logger.d("done ------------------- ");
@@ -282,6 +285,7 @@ class ChatMessageController extends GetxController {
           targetMessage.closeStream();
           update();
         }
+        onDone();
       },
     );
   }

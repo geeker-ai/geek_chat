@@ -57,7 +57,8 @@ class GeekChatTranslations extends Translations {
               "Geek Chat is a GPT client that supports desktop, mobile phones and tablets. You only need to simply configure the OpenAI API or the Azure OpenAI API to use it easily.",
           "Price": "Subscription",
           "buytips":
-              "Because there is a fee for chatgpt's API calls, you need to obtain a License after purchase before you can use it. GeekerChat is designed to be convenient for everyone to use, and the price of Token is consistent with the official OpenAI."
+              "Because there is a fee for chatgpt's API calls, you need to obtain a License after purchase before you can use it. GeekerChat is designed to be convenient for everyone to use, and the price of Token is consistent with the official OpenAI.",
+          "History Message": "History Message count"
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -112,7 +113,8 @@ class GeekChatTranslations extends Translations {
               "Geek Chat是一个GPT的客户端，同时支持桌面，手机和平板。只需简单配置OpenAI的API或是Azure OpenAI的API便可轻松使用.",
           "Price": "订阅",
           "buytips":
-              "因chatgpt的API调用是有费用的, 所以需要购买后获取License才能使用. GeekerChat 旨在方便大家使用, Token的价格是和OpenAI官方一致."
+              "因chatgpt的API调用是有费用的, 所以需要购买后获取License才能使用. GeekerChat 旨在方便大家使用, Token的价格是和OpenAI官方一致.",
+          "History Message": "历史消息数量"
         }
       };
 }
