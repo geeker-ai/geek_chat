@@ -67,7 +67,7 @@ initServices() async {
   Logger logger = Get.put(Logger());
   logger.d("env: channel: ${dotenv.get('CHANNEL')}");
 
-  String storeageName = "geekchat3";
+  String storeageName = "geekchat";
 
   await GetStorage.init(storeageName);
 
