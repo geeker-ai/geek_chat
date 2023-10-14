@@ -98,11 +98,11 @@ class SettingsController extends GetxController {
       'name': 'Geeker Chat',
       'url': 'https://capi.fucklina.com',
     },
-    // {
-    //   'id': 'azure',
-    //   'name': 'Azure API',
-    //   'url': 'https://geek.azure.com',
-    // }
+    {
+      'id': 'azure',
+      'name': 'Azure API',
+      'url': 'https://geek.azure.com',
+    }
   ];
 
   final themeModes = [

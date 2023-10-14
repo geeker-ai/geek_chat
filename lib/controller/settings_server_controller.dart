@@ -19,6 +19,9 @@ class SettingsServerController extends GetxController {
     defaultServer = _localStoreRepository.getServerSettings(provider);
     // editServer = _localStoreRepository.getServerSettings(provider);
     logger.d("switchSettings: ${defaultServer.toJson()}");
+    errorMessage = '';
+    activeError = false;
+    needReactive = false;
   }
 
   void saveSettings(ServerModel serverModel) {
@@ -32,6 +35,8 @@ class SettingsServerController extends GetxController {
   // late ServerModel editServer;
 
   /// geeker chat active UI controll
+  String errorMessage = '';
+  bool activeError = false;
   String inputLicense = '';
   bool needReactive = false;
   Future<ServerModel> activeLicense(
@@ -39,14 +44,18 @@ class SettingsServerController extends GetxController {
     ServerModel serverModel = ServerModel(provider: provider, isActived: false);
     String rtnString = await HttpClientService.activeLicense(
         "https://capi.fucklina.com/activate", license, uuid, language);
+    logger.d("rtn string: $rtnString");
     Map<String, dynamic> jsonObj = jsonDecode(rtnString);
     if (jsonObj.containsKey('actived')) {
       serverModel.isActived = jsonObj['actived'];
       serverModel.apiHost = jsonObj['baseUrl'];
       serverModel.apiKey = jsonObj['apiKey'];
       serverModel.license = license;
-    } else {
       serverModel.message = jsonObj['message'];
+    } else {
+      // serverModel.message = jsonObj['message'];
+      errorMessage = jsonObj['message'];
+      activeError = true;
       needReactive = true;
     }
     return serverModel;

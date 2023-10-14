@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
 class AzureServerSettingsComponent extends StatelessWidget {
@@ -9,6 +10,7 @@ class AzureServerSettingsComponent extends StatelessWidget {
 
   SettingsController settingsController = Get.find();
   SettingsServerController settingsServerController = Get.find();
+  Logger logger = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +24,25 @@ class AzureServerSettingsComponent extends StatelessWidget {
             title: Text("Server Configuration".tr),
           ),
           // Padding(padding: paddingOnly())
+          // Padding(
+          //   padding:
+          //       const EdgeInsets.only(left: 20, top: 0, bottom: 0, right: 10),
+          //   child: TextFormField(
+          //     initialValue: controller.defaultServer.apiHost,
+          //     decoration: const InputDecoration(
+          //       labelText: 'API Host',
+          //       filled: false,
+          //       // errorText: 'Error!',
+          //       // border: OutlineInputBorder(),
+          //     ),
+          //     onChanged: (value) {
+          //       controller.defaultServer.apiHost = value.trim();
+          //     },
+          //   ),
+          // ),
           Padding(
             padding:
-                const EdgeInsets.only(left: 20, top: 0, bottom: 0, right: 10),
-            child: TextFormField(
-              initialValue: controller.defaultServer.apiHost,
-              decoration: const InputDecoration(
-                labelText: 'API Host',
-                filled: false,
-                // errorText: 'Error!',
-                // border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                controller.defaultServer.apiHost = value.trim();
-              },
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 20, top: 20, bottom: 0, right: 10),
+                const EdgeInsets.only(left: 20, top: 20, bottom: 10, right: 10),
             child: TextFormField(
               initialValue: controller.defaultServer.apiKey,
               decoration: const InputDecoration(
@@ -52,20 +54,35 @@ class AzureServerSettingsComponent extends StatelessWidget {
               },
             ),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 20, top: 20, bottom: 0, right: 10),
-            child: TextFormField(
-              initialValue: controller.defaultServer.deploymentId,
-              decoration: const InputDecoration(
-                labelText: 'Deployment ID',
-                filled: false,
-              ),
-              onChanged: (value) {
-                controller.defaultServer.deploymentId = value.trim();
-              },
+          for (var modelName in controller.defaultServer.azureConfig.keys)
+            Column(
+              children: [
+                ListTile(
+                  title: Text(modelName),
+                  dense: true,
+                ),
+                for (var ckey
+                    in controller.defaultServer.azureConfig[modelName]!.keys)
+                  if (ckey != "name")
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, top: 10, bottom: 10, right: 10),
+                      child: TextFormField(
+                        initialValue: controller
+                            .defaultServer.azureConfig[modelName]![ckey],
+                        decoration: InputDecoration(
+                          labelText: ckey.capitalizeFirst,
+                          filled: false,
+                        ),
+                        onChanged: (value) {
+                          logger.d("on change: $value");
+                          controller.defaultServer
+                              .azureConfig[modelName]![ckey] = value.trim();
+                        },
+                      ),
+                    ),
+              ],
             ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
             child: Row(

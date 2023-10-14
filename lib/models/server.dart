@@ -8,6 +8,8 @@ class ServerModel {
   String deploymentId;
   bool isActived;
   String message = '';
+  // bool error = false;
+  Map<String, Map<String, String>> azureConfig = {};
 
   ServerModel({
     required this.provider,
@@ -16,10 +18,71 @@ class ServerModel {
     this.license = '',
     this.deploymentId = '',
     this.isActived = false,
-  });
+  }) {
+    if (azureConfig.isEmpty) {
+      azureConfig = {
+        "gpt-3.5-turbo": {
+          "name": "gpt-3.5-turbo",
+          "deploymentId": "",
+          "url": "",
+        },
+        "gpt-3.5-turbo-16k": {
+          "name": "gpt-3.5-turbo-16k",
+          "deploymentId": "",
+          "url": ""
+        },
+        "gpt-4": {"name": "gpt-4", "deploymentId": "", "url": ""}
+      };
+    }
+  }
+
+  Map<String, String> getAzureModelSettings(String modelName) {
+    return azureConfig[modelName]!;
+  }
+
+  String getRequestURL(String modelName) {
+    if (provider == 'azure') {
+      Map<String, String> modelSettings = getAzureModelSettings(modelName);
+      String url = modelSettings['url']!;
+      if (url.substring(url.length - 1) == '/') {
+        url = url.substring(0, url.length - 1);
+      }
+      return "${modelSettings['url']}/openai/deployments/${modelSettings['deploymentId']}/chat/completions?api-version=2023-05-15";
+    } else {
+      return "$apiHost/v1/chat/completions";
+    }
+  }
+
+  Map<String, String> getRequestHeaders() {
+    if (provider == 'azure') {
+      return {
+        'Accept': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'api-key': apiKey,
+        'Content-Type': 'application/json',
+        // 'Accept-Language': settingsController.lang
+      };
+    } else {
+      return {
+        'Accept': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Authorization': 'Bearer $apiKey',
+        'Content-Type': 'application/json',
+        // 'Accept-Language': settingsController.lang
+      };
+    }
+  }
+
+  setModelSettins(String modelName, String deploymentId, String url) {
+    azureConfig[modelName] = {
+      "name": modelName,
+      "deploymentId": deploymentId,
+      "url": url
+    };
+  }
 
   factory ServerModel.fromJson(Map<String, dynamic> jsonObj) {
-    return ServerModel(
+    ServerModel serverModel = ServerModel(
       provider: jsonObj['provider']!,
       apiHost: jsonObj['apiHost']!,
       apiKey: jsonObj['apiKey']!,
@@ -27,6 +90,17 @@ class ServerModel {
       deploymentId: jsonObj['deploymentId']!,
       isActived: jsonObj['isActived']!,
     );
+    if (jsonObj.containsKey("azureConfig")) {
+      var azconfig = jsonObj['azureConfig'];
+      for (var key in azconfig.keys) {
+        serverModel.azureConfig[key] = {
+          "name": azconfig[key]!['name'],
+          "deploymentId": azconfig[key]!['deploymentId'],
+          "url": azconfig[key]!['url']
+        };
+      }
+    }
+    return serverModel;
   }
 
   factory ServerModel.fromJsonStr(String jsonStr) {
@@ -40,6 +114,7 @@ class ServerModel {
         "apiKey": apiKey,
         "license": license,
         "deploymentId": deploymentId,
-        "isActived": isActived
+        "isActived": isActived,
+        "azureConfig": azureConfig
       };
 }

@@ -67,7 +67,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                     controller.update();
                   },
                 ),
-                if (settingsController.showActiveError)
+                if (controller.activeError)
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.only(top: 10, left: 10),
@@ -80,7 +80,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                         const SizedBox(
                           width: 10,
                         ),
-                        Text(settingsController.activeMessage)
+                        Text(controller.errorMessage)
                       ],
                     ),
                   ),
@@ -103,10 +103,23 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                           logger.d("actie: ${value.toJson()}");
                           // controller.defaultServer = value;
                           controller.saveSettings(value);
+                          controller.needReactive = false;
                           settingsController.settings.provider = value.provider;
                           settingsController.saveSettings();
+                          showCustomToast(
+                              title: "Active Success".tr, context: context);
+                          controller.activeError = false;
+                          controller.errorMessage = '';
+                          controller.update();
                         } else {
-                          //
+                          logger.d("active: $value");
+                          showCustomToast(
+                              title: "Active Faild!".tr, context: context);
+                          // controller.defaultServer.message = value.message;
+                          // controller.defaultServer.error = true;
+                          controller.activeError = true;
+                          controller.errorMessage = value.message;
+                          controller.update();
                         }
                       });
                       // settingsController
@@ -131,7 +144,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                       // });
                     } else {
                       showCustomToast(
-                          title: "Please Activate First".tr, context: context);
+                          title: "Please Input License".tr, context: context);
                     }
                     // }
                   },

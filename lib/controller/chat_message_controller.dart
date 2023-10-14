@@ -198,40 +198,43 @@ class ChatMessageController extends GetxController {
       "messages": await getRequestMessages(input)
     };
 
-    String url = "";
+    // String url = "";
 
     logger.d(chatMessage);
     _quoteMessages.clear();
     update();
     messages.insert(0, targetMessage);
     update();
-    var headers = {"": ""};
-    if (settingsServerController.defaultServer.provider == "azure") {
-      url =
-          "${settingsServerController.defaultServer.apiHost}/openai/deployments/${settingsServerController.defaultServer.deploymentId}/chat/completions?api-version=2023-05-15";
-      headers = {
-        'Accept': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'api-key': settingsServerController.defaultServer.apiKey,
-        'Content-Type': 'application/json',
-        'Accept-Language': settingsController.lang
-      };
-    } else {
-      url =
-          "${settingsServerController.defaultServer.apiHost}/v1/chat/completions";
-      headers = {
-        'Accept': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Authorization':
-            'Bearer ${settingsServerController.defaultServer.apiKey}',
-        'Content-Type': 'application/json',
-        'Accept-Language': settingsController.lang
-      };
-    }
-
+    // var headers = {"": ""};
+    // if (settingsServerController.defaultServer.provider == "azure") {
+    //   url =
+    //       "${settingsServerController.defaultServer.apiHost}/openai/deployments/${settingsServerController.defaultServer.deploymentId}/chat/completions?api-version=2023-05-15";
+    //   headers = {
+    //     'Accept': 'text/event-stream',
+    //     'Cache-Control': 'no-cache',
+    //     'api-key': settingsServerController.defaultServer.apiKey,
+    //     'Content-Type': 'application/json',
+    //     'Accept-Language': settingsController.lang
+    //   };
+    // } else {
+    //   url =
+    //       "${settingsServerController.defaultServer.apiHost}/v1/chat/completions";
+    //   headers = {
+    //     'Accept': 'text/event-stream',
+    //     'Cache-Control': 'no-cache',
+    //     'Authorization':
+    //         'Bearer ${settingsServerController.defaultServer.apiKey}',
+    //     'Content-Type': 'application/json',
+    //     'Accept-Language': settingsController.lang
+    //   };
+    // }
+    String url = settingsServerController.defaultServer
+        .getRequestURL(currentSession.model);
+    Map<String, String> headers =
+        settingsServerController.defaultServer.getRequestHeaders();
+    headers['Accept-Language'] = settingsController.lang;
+    logger.d("url: $url");
     logger.d(headers);
-
-    // String url = "";
 
     Stream openai = SSEClient.subscribeToSSE(
       url: url,
