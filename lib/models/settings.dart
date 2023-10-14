@@ -16,7 +16,7 @@ class SettingsModel {
   SettingsModel({
     this.provider = '',
     this.apiKey = '',
-    this.apiHost = 'https://api.openai.com',
+    this.apiHost = '',
     this.showWordCount = false,
     this.showTokenCount = false,
     this.showModelName = true,

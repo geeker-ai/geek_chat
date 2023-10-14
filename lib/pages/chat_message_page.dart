@@ -110,7 +110,15 @@ class ChatMessagePage extends StatelessWidget {
                               },
                               onSubmitted: (String value) {
                                 // onSubmit();
-                                controller.submit(sid ?? '');
+                                controller.submit(sid ?? '', onDone: () {
+                                  chatListController.updateSessionLastEdit(
+                                      chatListController.currentSession);
+                                  chatListController.update();
+                                }, onError: () {
+                                  chatListController.updateSessionLastEdit(
+                                      chatListController.currentSession);
+                                  chatListController.update();
+                                });
                                 // controller.update();
                               },
                               onTap: () {

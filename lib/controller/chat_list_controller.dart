@@ -110,15 +110,23 @@ class ChatListController extends GetxController {
     return getSessionBysid(sid);
   }
 
+  @Deprecated("message")
   void save() {
+    currentSession.updated = getCurrentDateTime();
     _sessionRepository.save(currentSession.toSessionTable());
     getSessionBysid(currentSession.sid);
   }
 
   void saveSession(SessionModel sessionModel) {
+    sessionModel.updated = getCurrentDateTime();
     _sessionRepository.save(sessionModel.toSessionTable());
     // getSessionBysid(sessionModel.sid);
-    sessions.insert(0, sessionModel);
+    // sessions.insert(0, sessionModel);
+    reloadSessions();
+  }
+
+  void updateSessionLastEdit(SessionModel sessionModel) {
+    saveSession(sessionModel);
   }
 
   void remove(SessionModel session) {

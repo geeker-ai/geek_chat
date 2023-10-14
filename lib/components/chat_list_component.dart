@@ -17,32 +17,35 @@ class ChatListComponent extends StatelessWidget {
     return GetBuilder<ChatListController>(builder: ((controller) {
       return ListView(
         padding: const EdgeInsets.only(
-            left: 10.0, top: 0.0, right: 20.0, bottom: 0.0),
+            left: 10.0, top: 0.0, right: 10.0, bottom: 0.0),
         children: [
           for (SessionModel sm in controller.sessions)
             Slidable(
               key: ValueKey("itemid-${sm.sid}"),
               // ignore: sort_child_properties_last
               child: SizedBox(
-                  height: 58,
-                  child: ListTile(
-                    // dense: true,
-                    title: Text(
-                      sm.name,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                    subtitle: Text(
-                      sm.promptContent,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                    leading: const Icon(Icons.chat_bubble_outline_outlined),
-                    trailing: const Icon(Icons.chevron_right_outlined),
-                    onTap: () {
-                      Get.toNamed('/chat', parameters: {'sid': sm.sid});
-                    },
-                  )),
+                // height: 58,
+                child: ListTile(
+                  // dense: true,
+                  visualDensity: const VisualDensity(vertical: -3),
+                  title: Text(
+                    sm.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  subtitle: Text(
+                    sm.promptContent,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  leading: const Icon(Icons.chat_bubble_outline_outlined),
+                  trailing: const Icon(Icons.chevron_right_outlined),
+                  onTap: () {
+                    Get.toNamed('/chat', parameters: {'sid': sm.sid});
+                  },
+                ),
+              ),
               endActionPane:
                   ActionPane(motion: const ScrollMotion(), children: [
                 SlidableAction(

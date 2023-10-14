@@ -92,9 +92,9 @@ Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPa
 
 - [x] 与OpenAI官方API兼容。
 - [x] 可以引用消息进行对话。
-- [ ] 提示库。
-- [ ] 代码块的复制按钮。
-- [ ] 与Azure OpenAI API兼容。
+- [x] 提示词库
+- [x] 与Azure OpenAI API兼容
+- [ ] 代码块的复制按钮
 - [ ] 可以与文件进行对话。
 - [ ] DALL-E3。
 - [ ] 可以与URL进行对话。
@@ -130,4 +130,4 @@ flutter build ipa
 [![星标历史图](https://api.star-history.com/svg?repos=geeker-ai/geek_chat&type=Date)](https://star-history.com/#geeker-ai/geek_chat&Date)
 
 ## 许可证
-[GNU General Public License v3.0](./LICENSE)
+[BSD 2-Clause License](./LICENSE)

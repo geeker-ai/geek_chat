@@ -1,15 +1,37 @@
 import 'dart:convert';
 
+import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/models/settings.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class LocalStoreRepository extends GetxService {
-  final GetStorage store = GetStorage("geekchat");
+  LocalStoreRepository({required storageName}) {
+    store = GetStorage(storageName);
+  }
+  late GetStorage store;
 
   final String _settingsKey = 'settings';
   final String _prompsKey = 'prompts';
   final String _promptsLastUpdateKey = 'prompts_last';
+
+  final String _serverProviderPrefix = '_server_settings_';
+
+  ServerModel getServerSettings(provider) {
+    ServerModel serverModel;
+    String key = "${_serverProviderPrefix}_$provider";
+    if (store.hasData(key)) {
+      serverModel = ServerModel.fromJson(store.read(key));
+    } else {
+      serverModel = ServerModel(provider: provider);
+    }
+    return serverModel;
+  }
+
+  saveSeverSettings(ServerModel serverModel) {
+    String key = "${_serverProviderPrefix}_${serverModel.provider}";
+    store.write(key, serverModel.toJson());
+  }
 
   String getPromptsJsonString() {
     String jsonStr = '';

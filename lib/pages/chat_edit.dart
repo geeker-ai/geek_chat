@@ -172,6 +172,7 @@ class ChatEditPage extends StatelessWidget {
                   OutlinedButton(
                     onPressed: () {
                       controller.save();
+                      chatListController.update();
                       chatListController.reloadSessions();
                       chatListController.update();
                       Get.back();

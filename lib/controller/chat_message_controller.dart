@@ -3,6 +3,7 @@ import 'dart:convert';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
@@ -15,6 +16,7 @@ import 'package:uuid/uuid.dart';
 class ChatMessageController extends GetxController {
   ChatListController chatListController = Get.find<ChatListController>();
   SettingsController settingsController = Get.find<SettingsController>();
+  SettingsServerController settingsServerController = Get.find();
   final SessionRepository _sessionRepository = Get.find<SessionRepository>();
 
   Logger logger = Get.find<Logger>();
@@ -70,7 +72,8 @@ class ChatMessageController extends GetxController {
 
   String inputQuestion = '';
 
-  void submit(String sid) {
+  void submit(String sid,
+      {required Function onDone, required Function onError}) {
     if (inputQuestion.isEmpty) {
       return;
     }
@@ -85,7 +88,7 @@ class ChatMessageController extends GetxController {
     inputQuestion = '';
     // _quoteMessages.clear;
     update();
-    replyFromOpenAIWithSSE(input, sid);
+    replyFromOpenAIWithSSE(input, sid, onDone: onDone, onError: onError);
   }
 
   void saveMessage(MessageModel mm) {
@@ -183,7 +186,8 @@ class ChatMessageController extends GetxController {
     return quoteIds;
   }
 
-  void replyFromOpenAIWithSSE(MessageModel input, String sid) async {
+  void replyFromOpenAIWithSSE(MessageModel input, String sid,
+      {required Function onDone, required Function onError}) async {
     SessionModel currentSession = chatListController.currentSession;
     MessageModel targetMessage = createNewMessage(
         const Uuid().v4(), settingsController.chatGPTRoles.assistant, '', true);
@@ -194,25 +198,49 @@ class ChatMessageController extends GetxController {
       "messages": await getRequestMessages(input)
     };
 
+    // String url = "";
+
     logger.d(chatMessage);
     _quoteMessages.clear();
     update();
     messages.insert(0, targetMessage);
     update();
-    var headers = {
-      'Accept': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Authorization': 'Bearer ${settingsController.apiKey}',
-      'Content-Type': 'application/json',
-      'Accept-Language': settingsController.settings.language
-    };
+    // var headers = {"": ""};
+    // if (settingsServerController.defaultServer.provider == "azure") {
+    //   url =
+    //       "${settingsServerController.defaultServer.apiHost}/openai/deployments/${settingsServerController.defaultServer.deploymentId}/chat/completions?api-version=2023-05-15";
+    //   headers = {
+    //     'Accept': 'text/event-stream',
+    //     'Cache-Control': 'no-cache',
+    //     'api-key': settingsServerController.defaultServer.apiKey,
+    //     'Content-Type': 'application/json',
+    //     'Accept-Language': settingsController.lang
+    //   };
+    // } else {
+    //   url =
+    //       "${settingsServerController.defaultServer.apiHost}/v1/chat/completions";
+    //   headers = {
+    //     'Accept': 'text/event-stream',
+    //     'Cache-Control': 'no-cache',
+    //     'Authorization':
+    //         'Bearer ${settingsServerController.defaultServer.apiKey}',
+    //     'Content-Type': 'application/json',
+    //     'Accept-Language': settingsController.lang
+    //   };
+    // }
+    String url = settingsServerController.defaultServer
+        .getRequestURL(currentSession.model);
+    Map<String, String> headers =
+        settingsServerController.defaultServer.getRequestHeaders();
+    headers['Accept-Language'] = settingsController.lang;
+    logger.d("url: $url");
     logger.d(headers);
 
     Stream openai = SSEClient.subscribeToSSE(
-      url: "${settingsController.apiHost}/v1/chat/completions",
+      url: url,
       headers: headers,
       body: chatMessage,
-      debounce: const Duration(milliseconds: 20),
+      debounce: const Duration(milliseconds: 15),
     );
 
     openai.listen(
@@ -249,6 +277,7 @@ class ChatMessageController extends GetxController {
         logger.d("Error: $e");
         targetMessage.closeStream();
         update();
+        onError();
       },
       onDone: () {
         logger.d("done ------------------- ");
@@ -259,6 +288,7 @@ class ChatMessageController extends GetxController {
           targetMessage.closeStream();
           update();
         }
+        onDone();
       },
     );
   }

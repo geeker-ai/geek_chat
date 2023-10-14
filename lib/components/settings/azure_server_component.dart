@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
-class StandardServerSettingsComponent extends StatelessWidget {
-  StandardServerSettingsComponent({super.key});
+class AzureServerSettingsComponent extends StatelessWidget {
+  AzureServerSettingsComponent({super.key});
 
   SettingsController settingsController = Get.find();
   SettingsServerController settingsServerController = Get.find();
+  Logger logger = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +24,25 @@ class StandardServerSettingsComponent extends StatelessWidget {
             title: Text("Server Configuration".tr),
           ),
           // Padding(padding: paddingOnly())
+          // Padding(
+          //   padding:
+          //       const EdgeInsets.only(left: 20, top: 0, bottom: 0, right: 10),
+          //   child: TextFormField(
+          //     initialValue: controller.defaultServer.apiHost,
+          //     decoration: const InputDecoration(
+          //       labelText: 'API Host',
+          //       filled: false,
+          //       // errorText: 'Error!',
+          //       // border: OutlineInputBorder(),
+          //     ),
+          //     onChanged: (value) {
+          //       controller.defaultServer.apiHost = value.trim();
+          //     },
+          //   ),
+          // ),
           Padding(
             padding:
-                const EdgeInsets.only(left: 20, top: 0, bottom: 0, right: 10),
-            child: TextFormField(
-              initialValue: controller.defaultServer.apiHost,
-              decoration: const InputDecoration(
-                labelText: 'API Host',
-                filled: false,
-                // errorText: 'Error!',
-                // border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                controller.defaultServer.apiHost = value.trim();
-              },
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 20, top: 20, bottom: 0, right: 10),
+                const EdgeInsets.only(left: 20, top: 20, bottom: 10, right: 10),
             child: TextFormField(
               initialValue: controller.defaultServer.apiKey,
               decoration: const InputDecoration(
@@ -52,6 +54,35 @@ class StandardServerSettingsComponent extends StatelessWidget {
               },
             ),
           ),
+          for (var modelName in controller.defaultServer.azureConfig.keys)
+            Column(
+              children: [
+                ListTile(
+                  title: Text(modelName),
+                  dense: true,
+                ),
+                for (var ckey
+                    in controller.defaultServer.azureConfig[modelName]!.keys)
+                  if (ckey != "name")
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, top: 10, bottom: 10, right: 10),
+                      child: TextFormField(
+                        initialValue: controller
+                            .defaultServer.azureConfig[modelName]![ckey],
+                        decoration: InputDecoration(
+                          labelText: ckey.capitalizeFirst,
+                          filled: false,
+                        ),
+                        onChanged: (value) {
+                          logger.d("on change: $value");
+                          controller.defaultServer
+                              .azureConfig[modelName]![ckey] = value.trim();
+                        },
+                      ),
+                    ),
+              ],
+            ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
             child: Row(
@@ -60,13 +91,12 @@ class StandardServerSettingsComponent extends StatelessWidget {
                 OutlinedButton(
                   onPressed: () {
                     controller.defaultServer.isActived = false;
-                    // settingsController.needReactive = true;
-                    // controller.defaultServer.
-                    // controller.saveSettings();
                     controller.saveSettings(controller.defaultServer);
                     settingsController.settings.provider =
                         controller.defaultServer.provider;
                     settingsController.saveSettings();
+                    // controller.needReactive = true;
+                    // controller.saveSettings();
                     Get.snackbar(
                       "Saved successfully!".tr,
                       "The configuration has been updated!".tr,

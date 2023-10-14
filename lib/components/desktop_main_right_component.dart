@@ -274,6 +274,7 @@ class QuestionInputComponent extends StatelessWidget {
   FocusNode questionInputFocus;
 
   TextEditingController textEditingController = TextEditingController();
+  ChatListController chatListController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -294,7 +295,15 @@ class QuestionInputComponent extends StatelessWidget {
               filled: false,
               suffixIcon: IconButton(
                   onPressed: () {
-                    controller.submit(sid);
+                    controller.submit(sid, onDone: () {
+                      chatListController.updateSessionLastEdit(
+                          chatListController.currentSession);
+                      chatListController.update();
+                    }, onError: () {
+                      chatListController.updateSessionLastEdit(
+                          chatListController.currentSession);
+                      chatListController.update();
+                    });
                     scrollToBottom();
                   },
                   icon: const Icon(Icons.send)),
@@ -308,7 +317,15 @@ class QuestionInputComponent extends StatelessWidget {
               // controller.update(['inputQuestion']);
             },
             onSubmitted: (String value) {
-              controller.submit(sid);
+              controller.submit(sid, onDone: () {
+                chatListController
+                    .updateSessionLastEdit(chatListController.currentSession);
+                chatListController.update();
+              }, onError: () {
+                chatListController
+                    .updateSessionLastEdit(chatListController.currentSession);
+                chatListController.update();
+              });
               scrollToBottom();
             },
             onTap: () {

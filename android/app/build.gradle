@@ -74,6 +74,7 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             ndk {
                 debugSymbolLevel 'FULL'
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
             }
             signingConfig signingConfigs.release
         }

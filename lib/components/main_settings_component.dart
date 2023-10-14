@@ -5,6 +5,7 @@ import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/language.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
 class SettingsComponent extends StatelessWidget {
@@ -12,6 +13,7 @@ class SettingsComponent extends StatelessWidget {
 
   // late List<Map<String, String>> options;
   MainController mainController = Get.find();
+  Logger logger = Get.find();
 
   List<Map<String, String>> getLanguageOptions() {
     List<Map<String, String>> options = [];
@@ -98,6 +100,7 @@ class SettingsComponent extends StatelessWidget {
             leadingIcon: Icons.language_outlined,
             onTapCallback: (value) {
               controller.settingsLanguage = value;
+              logger.d("language: $value");
               controller.saveSettings();
               mainController.initPrompts().then((value) {
                 mainController.update();

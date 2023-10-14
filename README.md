@@ -2,7 +2,7 @@
 
 English | [简体中文](README-CN.md)
 
-A helpful AI co-pilot in your device.
+A helpful AI Co-pilot in your device.
 
 Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iPad, Android Phone and Android Tablet.
 
@@ -84,9 +84,9 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 
 ## Features
 
-- Supports iPhone, Android Phone, iPad, Android Tablet, Windows and MacOS
+- Compatible with iPhone, Android devices, iPad, Android tablets, Windows, and MacOS.
 - Enhanced prompting capability
-- Data is stored locally and will not be lost
+- Data is securely stored locally to protect privacy and enhance security.
 - Supports multiple cutting-edge LLM models and providers, such as OpenAI and Azure OpenAI
 - Markdown & Code Highlighting & Latex
 - Prompt Library, Message Quoting
@@ -98,10 +98,12 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 ## Roadmap
 
 - [x] OpenAI Offical API compatibility.
+- [x] Dark/Light Theme Mode.
 - [x] Talk with quoted messages.
-- [ ] Prompt Library
-- [ ] Copy button for code blocks
+- [x] Multi Language support (en_US, zh-Hans).
+- [x] Prompt Library
 - [ ] Azure OpenAI API compatibility
+- [ ] Copy button for code blocks
 - [ ] Chat with files.
 - [ ] DALL-E3
 - [ ] Chat with URLs.
@@ -137,4 +139,4 @@ flutter build ipa
 [![Star History Chart](https://api.star-history.com/svg?repos=geeker-ai/geek_chat&type=Date)](https://star-history.com/#geeker-ai/geek_chat&Date)
 
 ## License
-[GNU General Public License v3.0](./LICENSE)
+[BSD 2-Clause License](./LICENSE)
