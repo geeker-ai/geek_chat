@@ -77,39 +77,39 @@ Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPa
 
 ## 特性
 
-- 支持 iPhone、Android 手机、iPad、Android 平板、Windows 和 MacOS
-- 增强提示能力
-- 数据存储在本地，不会丢失
-- 支持多个先进的 LLM 模型和服务提供商，如 OpenAI 和 Azure OpenAI
-- Markdown 和代码高亮以及 Latex
-- 提示库、消息引用
-- 流式回复
-- 人体工程学 UI 设计和夜间模式
-- 提供安装包，无需部署
-- 免费和开源
+- 支持 iPhone、Android 手机、iPad、Android 平板、Windows 和 MacOS。
+- 增强提示能力。
+- 数据存储在本地，不会丢失。
+- 支持多个先进的 LLM 模型和服务提供商，如 OpenAI 和 Azure OpenAI。
+- Markdown 和代码高亮以及 Latex。
+- 提示库，消息引用。
+- 流式回复。
+- 人体工程学 UI 设计和夜间模式。
+- 提供安装包，无需部署。
+- 免费和开源。
 
 ## 进展
 
 - [x] 与OpenAI官方API兼容。
 - [x] 可以引用消息进行对话。
 - [x] 提示词库
-- [ ] 与Azure OpenAI API兼容
+- [x] 与Azure OpenAI API兼容
 - [ ] 代码块的复制按钮
 - [ ] 可以与文件进行对话。
-- [ ] DALL-E3
+- [ ] DALL-E3。
 - [ ] 可以与URL进行对话。
 
 ## 如何贡献
 
 欢迎任何形式的贡献，包括但不限于：
 
-- 提交问题
-- 提交拉取请求
-- 提交功能请求
-- 提交错误报告
-- 提交文档修订
-- 提交翻译
-- 提交任何其他形式的贡献
+- 提交问题。
+- 提交拉取请求。
+- 提交功能请求。
+- 提交错误报告。
+- 提交文档修订。
+- 提交翻译。
+- 提交任何其他形式的贡献。
 
 ## 开发
 
