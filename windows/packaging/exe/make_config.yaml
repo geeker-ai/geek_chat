@@ -2,9 +2,9 @@
 # 不要在其他应用的安装程序中使用相同的 AppId 值。
 app_id: 5B599538-42B1-4826-A479-AF079F21A65F
 publisher: GeekChat
-publisher_url: https://apps.macgeeker.com
+publisher_url: https://geekerchat.com
 display_name: GeekChat
 create_desktop_icon: true
-install_dir_name: GeekChat
+install_dir_name: C:\Program Files\GeekChat
 locales:
   - en

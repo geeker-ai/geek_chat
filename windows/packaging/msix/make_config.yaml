@@ -1,15 +1,6 @@
-display_name: Geek Chat
+display_name: GeekChat
 msix_version: 0.0.1.1
-publisher_display_name: Geek Chat
+publisher_display_name: GeekChat
 identity_name: com.macgeeker.geekchat
 capabilities: internetClient, location
 install_certificate: 'false'
-logo_path: assets/icon.png
-app_id: 5A699538-42B1-4826-A479-AF079F21A65F
-publisher: GeekChat
-publisher_url: https://apps.macgeeker.com
-create_desktop_icon: true
-install_dir_name: HELLO-WORLD
-locales:
-  - en
-  - zh
