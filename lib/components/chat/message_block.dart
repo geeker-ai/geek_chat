@@ -568,7 +568,11 @@ Widget markDownWidget(String message, bool isDark) {
     shrinkWrap: true,
     config: isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig,
     physics: const ScrollPhysics(),
-    markdownGeneratorConfig: MarkdownGeneratorConfig(
+    // markdownGeneratorConfig: MarkdownGeneratorConfig(
+    //   generators: [latexGenerator],
+    //   inlineSyntaxList: [LatexSyntax()],
+    // ),
+    markdownGenerator: MarkdownGenerator(
       generators: [latexGenerator],
       inlineSyntaxList: [LatexSyntax()],
     ),
