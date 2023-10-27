@@ -30,9 +30,13 @@ class ChatMessagePage extends StatelessWidget {
   ChatListController chatListController = Get.find<ChatListController>();
   TextEditingController textEditingController = TextEditingController();
 
-  scrollToBottom() {
-    return scrollController.animateTo(scrollController.position.minScrollExtent,
-        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+  scrollToBottom({animate = true}) async {
+    int duration = 10;
+    if (animate) {
+      duration = 500;
+    }
+    await scrollController.animateTo(scrollController.position.minScrollExtent,
+        duration: Duration(milliseconds: duration), curve: Curves.easeInOut);
   }
 
   ScrollController scrollController = ScrollController();
@@ -108,7 +112,7 @@ class ChatMessagePage extends StatelessWidget {
                                   filled: false,
                                   suffixIcon: IconButton(
                                       onPressed: () async {
-                                        await scrollToBottom();
+                                        await scrollToBottom(animate: false);
                                         controller.submit(sid ?? '',
                                             onDone: () {
                                           chatListController
@@ -130,7 +134,7 @@ class ChatMessagePage extends StatelessWidget {
                               },
                               onSubmitted: (String value) async {
                                 // onSubmit();
-                                await scrollToBottom();
+                                await scrollToBottom(animate: false);
                                 controller.submit(sid ?? '', onDone: () {
                                   chatListController.updateSessionLastEdit(
                                       chatListController.currentSession);
