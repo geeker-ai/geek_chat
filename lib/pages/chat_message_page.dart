@@ -31,7 +31,7 @@ class ChatMessagePage extends StatelessWidget {
   TextEditingController textEditingController = TextEditingController();
 
   scrollToBottom() {
-    return scrollController.animateTo(scrollController.position.maxScrollExtent,
+    return scrollController.animateTo(scrollController.position.minScrollExtent,
         duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
