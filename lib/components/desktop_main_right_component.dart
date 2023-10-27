@@ -72,8 +72,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
             20);
   }
 
-  void scrollToBottom() {
-    scrollController.animateTo(
+  Future<void> scrollToBottom() {
+    return scrollController.animateTo(
       scrollController.position.minScrollExtent,
       duration: const Duration(milliseconds: 500),
       curve: Curves.linear,
@@ -294,7 +294,8 @@ class QuestionInputComponent extends StatelessWidget {
               focusedBorder: InputBorder.none,
               filled: false,
               suffixIcon: IconButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await scrollToBottom();
                     controller.submit(sid, onDone: () {
                       chatListController.updateSessionLastEdit(
                           chatListController.currentSession);
@@ -304,7 +305,6 @@ class QuestionInputComponent extends StatelessWidget {
                           chatListController.currentSession);
                       chatListController.update();
                     });
-                    scrollToBottom();
                   },
                   icon: const Icon(Icons.send)),
             ),
@@ -316,7 +316,8 @@ class QuestionInputComponent extends StatelessWidget {
               controller.inputQuestion = value;
               // controller.update(['inputQuestion']);
             },
-            onSubmitted: (String value) {
+            onSubmitted: (String value) async {
+              await scrollToBottom();
               controller.submit(sid, onDone: () {
                 chatListController
                     .updateSessionLastEdit(chatListController.currentSession);
@@ -326,7 +327,6 @@ class QuestionInputComponent extends StatelessWidget {
                     .updateSessionLastEdit(chatListController.currentSession);
                 chatListController.update();
               });
-              scrollToBottom();
             },
             onTap: () {
               //

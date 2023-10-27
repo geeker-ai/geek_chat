@@ -30,8 +30,8 @@ class ChatMessagePage extends StatelessWidget {
   ChatListController chatListController = Get.find<ChatListController>();
   TextEditingController textEditingController = TextEditingController();
 
-  void scrollToBottom() {
-    scrollController.animateTo(scrollController.position.maxScrollExtent,
+  scrollToBottom() {
+    return scrollController.animateTo(scrollController.position.minScrollExtent,
         duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
@@ -104,12 +104,33 @@ class ChatMessagePage extends StatelessWidget {
                               minLines: 1,
                               maxLines: 3,
                               textInputAction: TextInputAction.go,
-                              decoration: const InputDecoration(filled: false),
+                              decoration: InputDecoration(
+                                  filled: false,
+                                  suffixIcon: IconButton(
+                                      onPressed: () async {
+                                        await scrollToBottom();
+                                        controller.submit(sid ?? '',
+                                            onDone: () {
+                                          chatListController
+                                              .updateSessionLastEdit(
+                                                  chatListController
+                                                      .currentSession);
+                                          chatListController.update();
+                                        }, onError: () {
+                                          chatListController
+                                              .updateSessionLastEdit(
+                                                  chatListController
+                                                      .currentSession);
+                                          chatListController.update();
+                                        });
+                                      },
+                                      icon: const Icon(Icons.send))),
                               onChanged: (value) {
                                 controller.inputQuestion = value;
                               },
-                              onSubmitted: (String value) {
+                              onSubmitted: (String value) async {
                                 // onSubmit();
+                                await scrollToBottom();
                                 controller.submit(sid ?? '', onDone: () {
                                   chatListController.updateSessionLastEdit(
                                       chatListController.currentSession);
