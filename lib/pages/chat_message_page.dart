@@ -30,8 +30,8 @@ class ChatMessagePage extends StatelessWidget {
   ChatListController chatListController = Get.find<ChatListController>();
   TextEditingController textEditingController = TextEditingController();
 
-  void scrollToBottom() {
-    scrollController.animateTo(scrollController.position.maxScrollExtent,
+  scrollToBottom() {
+    return scrollController.animateTo(scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
@@ -108,8 +108,9 @@ class ChatMessagePage extends StatelessWidget {
                               onChanged: (value) {
                                 controller.inputQuestion = value;
                               },
-                              onSubmitted: (String value) {
+                              onSubmitted: (String value) async {
                                 // onSubmit();
+                                await scrollToBottom();
                                 controller.submit(sid ?? '', onDone: () {
                                   chatListController.updateSessionLastEdit(
                                       chatListController.currentSession);
