@@ -104,7 +104,27 @@ class ChatMessagePage extends StatelessWidget {
                               minLines: 1,
                               maxLines: 3,
                               textInputAction: TextInputAction.go,
-                              decoration: const InputDecoration(filled: false),
+                              decoration: InputDecoration(
+                                  filled: false,
+                                  suffixIcon: IconButton(
+                                      onPressed: () async {
+                                        await scrollToBottom();
+                                        controller.submit(sid ?? '',
+                                            onDone: () {
+                                          chatListController
+                                              .updateSessionLastEdit(
+                                                  chatListController
+                                                      .currentSession);
+                                          chatListController.update();
+                                        }, onError: () {
+                                          chatListController
+                                              .updateSessionLastEdit(
+                                                  chatListController
+                                                      .currentSession);
+                                          chatListController.update();
+                                        });
+                                      },
+                                      icon: const Icon(Icons.send))),
                               onChanged: (value) {
                                 controller.inputQuestion = value;
                               },
