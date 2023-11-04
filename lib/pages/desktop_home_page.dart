@@ -23,8 +23,38 @@ class DesktopHomePage extends StatelessWidget {
   ChatMessageController chatMessageController =
       Get.find<ChatMessageController>();
 
-  Widget getPriceMenu() {
-    return const SizedBox();
+  List<Widget> getLeftMenus() {
+    List<Widget> leftMenus = [
+      LeftMenuButtonComponent(
+        title: "Prompts".tr,
+        onPressed: () {
+          Get.toNamed("/prompts");
+        },
+        icon: Icons.smart_toy_outlined,
+      ),
+      LeftMenuButtonComponent(
+        title: "Settings".tr,
+        onPressed: () {
+          Get.toNamed("/dsettings");
+        },
+        icon: Icons.settings,
+      ),
+      // getPriceMenu(),
+      LeftMenuButtonComponent(
+        title: "${'About'.tr}(v${settingsController.packageInfo.version})",
+        onPressed: () {
+          Get.toNamed("/about");
+          // Get.snackbar(
+          //   'Sorry!'.tr,
+          //   'This feature will coming soon!'.tr,
+          //   duration: const Duration(seconds: 2),
+          //   snackPosition: SnackPosition.TOP,
+          // );
+        },
+        icon: Icons.info_outline,
+      ),
+    ];
+    return leftMenus;
   }
 
   @override
@@ -89,37 +119,7 @@ class DesktopHomePage extends StatelessWidget {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: Column(children: [
-                      LeftMenuButtonComponent(
-                        title: "Prompts".tr,
-                        onPressed: () {
-                          Get.toNamed("/prompts");
-                        },
-                        icon: Icons.smart_toy_outlined,
-                      ),
-                      LeftMenuButtonComponent(
-                        title: "Settings".tr,
-                        onPressed: () {
-                          Get.toNamed("/dsettings");
-                        },
-                        icon: Icons.settings,
-                      ),
-                      getPriceMenu(),
-                      LeftMenuButtonComponent(
-                        title:
-                            "${'About'.tr}(v${settingsController.packageInfo.version})",
-                        onPressed: () {
-                          Get.toNamed("/about");
-                          // Get.snackbar(
-                          //   'Sorry!'.tr,
-                          //   'This feature will coming soon!'.tr,
-                          //   duration: const Duration(seconds: 2),
-                          //   snackPosition: SnackPosition.TOP,
-                          // );
-                        },
-                        icon: Icons.info_outline,
-                      ),
-                    ]),
+                    child: Column(children: getLeftMenus()),
                   ),
                 ],
               ),
