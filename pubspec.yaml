@@ -157,6 +157,7 @@ flutter:
     - assets/chatgpt-grey.svg
     - assets/google-grey.svg
     - assets/changelog.json
+    - assets/icon-1024.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -189,17 +190,18 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon.png"
+  image_path_ios: "assets/icon-ios.png"
+  image_path_android: "assets/icon-android.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
   web:
     generate: true
-    image_path: "assets/icon.png"
+    image_path: "assets/icon-1024.png"
     background_color: "#hexcode"
     theme_color: "#hexcode"
   windows:
     generate: true
-    image_path: "assets/icon.png"
+    image_path: "assets/icon-1024.png"
     icon_size: 48 # min:48, max:256, default: 48
   macos:
     generate: true
-    image_path: "assets/icon.png"
+    image_path: "assets/icon-1024.png"
