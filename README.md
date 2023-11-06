@@ -15,7 +15,7 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
     src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
   >
 </a> -->
-<a title="Logo Designed by BOB">Logo Designed by BOB</a>
+<a title="Logo Designed by bbmm007" href="https://github.com/bbmm007">Logo Designed by BOB</a>
 
 ## Install Issues
 - Windows [troubleshoot-appinstaller-issues](https://learn.microsoft.com/zh-cn/windows/msix/app-installer/troubleshoot-appinstaller-issues)
