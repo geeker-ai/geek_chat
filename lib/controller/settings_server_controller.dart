@@ -34,6 +34,15 @@ class SettingsServerController extends GetxController {
   late ServerModel defaultServer;
   // late ServerModel editServer;
 
+  bool get isPro {
+    if (defaultServer.provider == 'geekerchat' &&
+        defaultServer.isActived == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /// geeker chat active UI controll
   String errorMessage = '';
   bool activeError = false;

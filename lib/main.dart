@@ -57,6 +57,7 @@ void main() async {
   await initServices();
   runApp(GeekerChat(
     mainRouters: routers,
+    trans: GeekChatTranslations(),
   ));
 }
 
@@ -126,9 +127,10 @@ initServices() async {
 
 // ignore: must_be_immutable
 class GeekerChat extends StatelessWidget {
-  GeekerChat({super.key, required this.mainRouters});
+  GeekerChat({super.key, required this.mainRouters, required this.trans});
 
   List<GetPage<dynamic>> mainRouters;
+  Translations trans;
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +171,7 @@ class GeekerChat extends StatelessWidget {
       // darkTheme: ThemeData.dark(useMaterial3: true),
       themeMode: SettingsController.to.getThemeMode(),
       locale: Locale(SettingsController.to.settings.language),
-      translations: GeekChatTranslations(),
+      translations: trans,
       builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.rightToLeft,
