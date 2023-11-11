@@ -23,6 +23,41 @@ class MobileHomePage extends StatelessWidget {
     });
   }
 
+  Widget appBarAddChatAction(int index) {
+    Widget widget = const SizedBox();
+    if (index == 0) {
+      widget = IconButton(
+          onPressed: () {
+            Get.toNamed('/editchat', parameters: {'opt': 'new', 'sid': ''});
+          },
+          icon: const Icon(Icons.add));
+    }
+    return widget;
+  }
+
+  Widget getSettingsComponent() {
+    return Get.find<SettingsComponent>();
+  }
+
+  Widget navigationRoute(int index) {
+    Widget widget = const Text("data");
+    switch (index) {
+      case 0:
+        // widget = Text("data $index");
+        widget = Get.find<ChatListComponent>();
+        break;
+      case 1:
+        widget = Get.find<PromptListComponent>();
+        break;
+      case 2:
+      // widget = Text("data $index");
+      // break;
+      default:
+        widget = getSettingsComponent();
+    }
+    return widget;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,39 +101,4 @@ class MobileHomePage extends StatelessWidget {
       }),
     );
   }
-}
-
-Widget appBarAddChatAction(int index) {
-  Widget widget = const SizedBox();
-  if (index == 0) {
-    widget = IconButton(
-        onPressed: () {
-          Get.toNamed('/editchat', parameters: {'opt': 'new', 'sid': ''});
-        },
-        icon: const Icon(Icons.add));
-  }
-  return widget;
-}
-
-Widget getSettingsComponent() {
-  return Get.find<SettingsComponent>();
-}
-
-Widget navigationRoute(int index) {
-  Widget widget = const Text("data");
-  switch (index) {
-    case 0:
-      // widget = Text("data $index");
-      widget = Get.find<ChatListComponent>();
-      break;
-    case 1:
-      widget = Get.find<PromptListComponent>();
-      break;
-    case 2:
-    // widget = Text("data $index");
-    // break;
-    default:
-      widget = getSettingsComponent();
-  }
-  return widget;
 }
