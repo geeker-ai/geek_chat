@@ -10,6 +10,7 @@ class ServerModel {
   String message = '';
   // bool error = false;
   Map<String, Map<String, String>> azureConfig = {};
+  String azureApiVersion = "2023-05-15";
 
   ServerModel({
     required this.provider,
@@ -47,7 +48,7 @@ class ServerModel {
       if (url.substring(url.length - 1) == '/') {
         url = url.substring(0, url.length - 1);
       }
-      return "${modelSettings['url']}/openai/deployments/${modelSettings['deploymentId']}/chat/completions?api-version=2023-05-15";
+      return "${modelSettings['url']}/openai/deployments/${modelSettings['deploymentId']}/chat/completions?api-version=$azureApiVersion";
     } else {
       return "$apiHost/v1/chat/completions";
     }
@@ -90,6 +91,9 @@ class ServerModel {
       deploymentId: jsonObj['deploymentId']!,
       isActived: jsonObj['isActived']!,
     );
+    if (jsonObj.containsKey('azureApiVersion')) {
+      serverModel.azureApiVersion = jsonObj['azureApiVersion'];
+    }
     if (jsonObj.containsKey("azureConfig")) {
       var azconfig = jsonObj['azureConfig'];
       for (var key in azconfig.keys) {
@@ -115,6 +119,7 @@ class ServerModel {
         "license": license,
         "deploymentId": deploymentId,
         "isActived": isActived,
-        "azureConfig": azureConfig
+        "azureConfig": azureConfig,
+        "azureApiVersion": azureApiVersion,
       };
 }
