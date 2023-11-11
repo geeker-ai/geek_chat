@@ -59,7 +59,8 @@ class GeekChatTranslations extends Translations {
           "buytips":
               "Because there is a fee for chatgpt's API calls, you need to obtain a License after purchase before you can use it. GeekerChat is designed to be convenient for everyone to use, and the price of Token is consistent with the official OpenAI.",
           "History Message": "History Message count",
-          // "Subscription": "Subscription",
+          "Model name deployed on Azure":
+              "The Deployment name which is the GPT model deployed on Azure",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -116,7 +117,7 @@ class GeekChatTranslations extends Translations {
           "buytips":
               "因chatgpt的API调用是有费用的, 所以需要购买后获取License才能使用. GeekerChat 旨在方便大家使用, Token的价格是和OpenAI官方一致.",
           "History Message": "历史消息数量",
-          // "Subscription": "订阅",
+          "Model name deployed on Azure": "在 Azure 上部署的模型对应的 Deployment name",
         }
       };
 }

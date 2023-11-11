@@ -54,6 +54,45 @@ class AzureServerSettingsComponent extends StatelessWidget {
               },
             ),
           ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 20, top: 20, bottom: 10, right: 10),
+            child: TextFormField(
+              initialValue: controller.defaultServer.azureApiVersion,
+              decoration: const InputDecoration(
+                labelText: 'API Version',
+                filled: false,
+              ),
+              onChanged: (value) {
+                controller.defaultServer.azureApiVersion = value.trim();
+              },
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 15, top: 20, bottom: 10, right: 10),
+            child: SizedBox(
+              width: double.infinity,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      top: 8, bottom: 8, right: 10, left: 10),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.warning_amber_rounded),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      const Text("Deploymentid: "),
+                      Text("Model name deployed on Azure".tr)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
           for (var modelName in controller.defaultServer.azureConfig.keys)
             Column(
               children: [
