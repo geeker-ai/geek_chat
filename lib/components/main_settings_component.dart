@@ -38,108 +38,114 @@ class SettingsComponent extends StatelessWidget {
         // padding: EdgeInsets.zero,
         padding: const EdgeInsets.only(
             left: 10.0, top: 0.0, right: 20.0, bottom: 0.0),
-        children: [
-          const Divider(),
-          ListTile(
-            dense: true,
-            title: Text(
-              'OpenAI Settings'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("OpenAI Settings".tr),
-                const Text(
-                  "API Key, API Server ",
-                  style: TextStyle(fontSize: 12),
-                )
-              ],
-            ),
-            leading: const Icon(Icons.smart_toy_outlined),
-            trailing: const Icon(Icons.chevron_right_outlined),
-            onTap: () {
-              // SmartSelect.single(selectedValue: selectedValue)
-              Get.toNamed('/settings');
-            },
-          ),
-          const Divider(),
-          ListTile(
-            dense: true,
-            title: Text(
-              'theme'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          BottomSheetSwitcherComponent(
-            title: "Theme Settings",
-            subTitle: controller.settings.theme,
-            selectedValue: controller.settings.theme,
-            options: getThemeOptions(),
-            leadingIcon: Icons.color_lens_outlined,
-            onTapCallback: (value) {
-              controller.settingsTheme = value;
-              controller.saveSettings();
-            },
-          ),
-          const Divider(),
-          ListTile(
-            dense: true,
-            title: Text(
-              'Language Settings'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          BottomSheetSwitcherComponent(
-            title: "Language Settings",
-            subTitle: controller.locale,
-            selectedValue: controller.settings.language,
-            options: getLanguageOptions(),
-            leadingIcon: Icons.language_outlined,
-            onTapCallback: (value) {
-              controller.settingsLanguage = value;
-              logger.d("language: $value");
-              controller.saveSettings();
-              mainController.initPrompts().then((value) {
-                mainController.update();
-              });
-
-              // EventBus eventBus = Get.find();
-              // eventBus.fire(SettingsController.to.getLocale(value));
-            },
-          ),
-
-          /// about me
-          const Divider(),
-          ListTile(
-            dense: true,
-            title: Text(
-              'About'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("About".tr),
-                Text(
-                  "${'Version'.tr}, v${controller.packageInfo.version} ",
-                  style: const TextStyle(fontSize: 12),
-                )
-              ],
-            ),
-            leading: const Icon(Icons.info_outline),
-            trailing: const Icon(Icons.chevron_right_outlined),
-            onTap: () {
-              // SmartSelect.single(selectedValue: selectedValue)
-              Get.toNamed('/about');
-            },
-          ),
-        ],
+        children: getSettingMenu(controller, context),
       );
     }));
+  }
+
+  List<Widget> getSettingMenu(
+      SettingsController controller, BuildContext context) {
+    List<Widget> menus = [
+      const Divider(),
+      ListTile(
+        dense: true,
+        title: Text(
+          'OpenAI Settings'.tr,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      ListTile(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("OpenAI Settings".tr),
+            const Text(
+              "API Key, API Server ",
+              style: TextStyle(fontSize: 12),
+            )
+          ],
+        ),
+        leading: const Icon(Icons.smart_toy_outlined),
+        trailing: const Icon(Icons.chevron_right_outlined),
+        onTap: () {
+          // SmartSelect.single(selectedValue: selectedValue)
+          Get.toNamed('/settings');
+        },
+      ),
+      const Divider(),
+      ListTile(
+        dense: true,
+        title: Text(
+          'theme'.tr,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      BottomSheetSwitcherComponent(
+        title: "Theme Settings",
+        subTitle: controller.settings.theme,
+        selectedValue: controller.settings.theme,
+        options: getThemeOptions(),
+        leadingIcon: Icons.color_lens_outlined,
+        onTapCallback: (value) {
+          controller.settingsTheme = value;
+          controller.saveSettings();
+        },
+      ),
+      const Divider(),
+      ListTile(
+        dense: true,
+        title: Text(
+          'Language Settings'.tr,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      BottomSheetSwitcherComponent(
+        title: "Language Settings",
+        subTitle: controller.locale,
+        selectedValue: controller.settings.language,
+        options: getLanguageOptions(),
+        leadingIcon: Icons.language_outlined,
+        onTapCallback: (value) {
+          controller.settingsLanguage = value;
+          logger.d("language: $value");
+          controller.saveSettings();
+          mainController.initPrompts().then((value) {
+            mainController.update();
+          });
+
+          // EventBus eventBus = Get.find();
+          // eventBus.fire(SettingsController.to.getLocale(value));
+        },
+      ),
+
+      /// about me
+      const Divider(),
+      ListTile(
+        dense: true,
+        title: Text(
+          'About'.tr,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      ListTile(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("About".tr),
+            Text(
+              "${'Version'.tr}, v${controller.packageInfo.version} ",
+              style: const TextStyle(fontSize: 12),
+            )
+          ],
+        ),
+        leading: const Icon(Icons.info_outline),
+        trailing: const Icon(Icons.chevron_right_outlined),
+        onTap: () {
+          // SmartSelect.single(selectedValue: selectedValue)
+          Get.toNamed('/about');
+        },
+      ),
+    ];
+    return menus;
   }
 }

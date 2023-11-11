@@ -80,6 +80,10 @@ Widget appBarAddChatAction(int index) {
   return widget;
 }
 
+Widget getSettingsComponent() {
+  return Get.find<SettingsComponent>();
+}
+
 Widget navigationRoute(int index) {
   Widget widget = const Text("data");
   switch (index) {
@@ -94,7 +98,7 @@ Widget navigationRoute(int index) {
     // widget = Text("data $index");
     // break;
     default:
-      widget = Get.find<SettingsComponent>();
+      widget = getSettingsComponent();
   }
   return widget;
 }
