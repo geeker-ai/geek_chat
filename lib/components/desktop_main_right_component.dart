@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
@@ -229,29 +230,41 @@ class DeskTopMainRightComponent extends StatelessWidget {
             child: GetBuilder<ChatMessageController>(builder: (controller) {
               return Container(
                 padding: const EdgeInsets.only(top: 1),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 2, right: 2),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Theme.of(context).colorScheme.primary),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            QuestionInputComponent(
-                              sid: sid,
-                              scrollToBottom: scrollToBottom,
-                              questionInputFocus: questionInputFocus,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 2, right: 2),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Theme.of(context).colorScheme.primary),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(3)),
                             ),
-                            QuoteMessagesComponent(),
-                          ],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                QuestionInputComponent(
+                                  sid: sid,
+                                  scrollToBottom: scrollToBottom,
+                                  questionInputFocus: questionInputFocus,
+                                ),
+                                QuoteMessagesComponent(),
+                              ],
+                            ),
+                          ),
                         ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(top: 5, bottom: 3),
+                      child: Text(
+                        "input tips".tr,
+                        style: TextStyle(color: Colors.grey[600]),
                       ),
                     ),
                   ],
@@ -280,19 +293,70 @@ class QuestionInputComponent extends StatelessWidget {
 
   TextEditingController textEditingController = TextEditingController();
   ChatListController chatListController = Get.find();
+  Logger logger = Get.find();
+  ChatMessageController chatMessageController = Get.find();
+
+  KeyEventResult onKey(FocusNode focusNode, RawKeyEvent event) {
+    // if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+    //   logger.d("Enter key is pressed!");
+    //   if (event.isShiftPressed) {
+    //     logger.d("Shift Enter is pressed!");
+    //   } else {
+    //     logger.d("Enter key is pressed!");
+    //     return KeyEventResult.ignored;
+    //   }
+    //   return KeyEventResult.handled;
+    // }
+    // if (event.isKeyPressed(LogicalKeyboardKey.backspace)) {
+    //   logger.d("event: $event");
+    //   return KeyEventResult.skipRemainingHandlers;
+    // }
+    // event.physicalKey.is
+    if (event.isKeyPressed(LogicalKeyboardKey.enter) &&
+        !event.isShiftPressed &&
+        !event.isControlPressed &&
+        !event.isAltPressed) {
+      logger.d("Enter key is pressed!");
+      // process submit
+      submit(chatMessageController);
+      return KeyEventResult.handled;
+    } else if (event.isKeyPressed(LogicalKeyboardKey.enter) &&
+        event.isShiftPressed) {
+      logger.d("Shit + Enter is pressed!");
+      return KeyEventResult.ignored;
+    }
+    return KeyEventResult.ignored;
+  }
+
+  submit(ChatMessageController controller) async {
+    await scrollToBottom(animate: false);
+    controller.submit(sid, onDone: () {
+      chatListController
+          .updateSessionLastEdit(chatListController.currentSession);
+      chatListController.update();
+    }, onError: () {
+      chatListController
+          .updateSessionLastEdit(chatListController.currentSession);
+      chatListController.update();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    // questionInputFocus.
+    // questionInputFocus.attach(context, onKey: onKey);
+    questionInputFocus.onKey = onKey;
     return GetBuilder<ChatMessageController>(
         id: 'inputQuestion',
         builder: (controller) {
           textEditingController.text = controller.inputQuestion;
-          return TextField(
+          return TextFormField(
             controller: textEditingController,
             focusNode: questionInputFocus,
             minLines: 1,
             maxLines: 5,
-            textInputAction: TextInputAction.go,
+            textInputAction: TextInputAction.newline,
+            // keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
@@ -300,20 +364,22 @@ class QuestionInputComponent extends StatelessWidget {
               filled: false,
               suffixIcon: IconButton(
                   onPressed: () async {
-                    await scrollToBottom(animate: false);
-                    controller.submit(sid, onDone: () {
-                      chatListController.updateSessionLastEdit(
-                          chatListController.currentSession);
-                      chatListController.update();
-                    }, onError: () {
-                      chatListController.updateSessionLastEdit(
-                          chatListController.currentSession);
-                      chatListController.update();
-                    });
+                    submit(controller);
+                    // await scrollToBottom(animate: false);
+                    // controller.submit(sid, onDone: () {
+                    //   chatListController.updateSessionLastEdit(
+                    //       chatListController.currentSession);
+                    //   chatListController.update();
+                    // }, onError: () {
+                    //   chatListController.updateSessionLastEdit(
+                    //       chatListController.currentSession);
+                    //   chatListController.update();
+                    // });
                   },
                   icon: const Icon(Icons.send)),
             ),
             onChanged: (value) {
+              // logger.d("onChanged $value");
               if (controller.isMessagesTooLong(controller.quoteMessages)) {
                 showCustomToast(
                     title: "Too many quote messages".tr, context: context);
@@ -321,18 +387,19 @@ class QuestionInputComponent extends StatelessWidget {
               controller.inputQuestion = value;
               // controller.update(['inputQuestion']);
             },
-            onSubmitted: (String value) async {
-              await scrollToBottom(animate: false);
-              controller.submit(sid, onDone: () {
-                chatListController
-                    .updateSessionLastEdit(chatListController.currentSession);
-                chatListController.update();
-              }, onError: () {
-                chatListController
-                    .updateSessionLastEdit(chatListController.currentSession);
-                chatListController.update();
-              });
-            },
+            // onSubmitted: (String value) async {
+            //   logger.d("onSubmitted $value");
+            //   await scrollToBottom(animate: false);
+            //   controller.submit(sid, onDone: () {
+            //     chatListController
+            //         .updateSessionLastEdit(chatListController.currentSession);
+            //     chatListController.update();
+            //   }, onError: () {
+            //     chatListController
+            //         .updateSessionLastEdit(chatListController.currentSession);
+            //     chatListController.update();
+            //   });
+            // },
             onTap: () {
               //
             },
