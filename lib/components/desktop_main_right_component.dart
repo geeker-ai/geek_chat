@@ -230,29 +230,41 @@ class DeskTopMainRightComponent extends StatelessWidget {
             child: GetBuilder<ChatMessageController>(builder: (controller) {
               return Container(
                 padding: const EdgeInsets.only(top: 1),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 2, right: 2),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Theme.of(context).colorScheme.primary),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            QuestionInputComponent(
-                              sid: sid,
-                              scrollToBottom: scrollToBottom,
-                              questionInputFocus: questionInputFocus,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 2, right: 2),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Theme.of(context).colorScheme.primary),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(3)),
                             ),
-                            QuoteMessagesComponent(),
-                          ],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                QuestionInputComponent(
+                                  sid: sid,
+                                  scrollToBottom: scrollToBottom,
+                                  questionInputFocus: questionInputFocus,
+                                ),
+                                QuoteMessagesComponent(),
+                              ],
+                            ),
+                          ),
                         ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(top: 5, bottom: 3),
+                      child: Text(
+                        "input tips".tr,
+                        style: TextStyle(color: Colors.grey[600]),
                       ),
                     ),
                   ],
