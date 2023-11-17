@@ -83,7 +83,9 @@ jobs:
       - name: Change Version
         env:
           VERSION: "${{ steps.get_version.outputs.version-without-v }}"
-        run: python script/cmd.py -v
+        run: |
+          python script/cmd.py -i
+          python script/cmd.py -v
 
       - name: Build macos ios and android (site)
         if: matrix.platform == 'macos-latest'
