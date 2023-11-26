@@ -74,6 +74,15 @@ class SettingsController extends GetxController {
         maxContextSize: 4000,
         modelMaxContextSize: 4000,
         maxTokens: 0),
+    AiModel(
+        modelName: 'gpt-4-32k',
+        alias: 'gpt-4-32k',
+        aiType: AiType.chatgpt,
+        modelType: ModelType.chat,
+        temperature: 0.7,
+        maxContextSize: 15000,
+        modelMaxContextSize: 15000,
+        maxTokens: 0),
   ];
 
   final List<Map<String, String>> locales1 = [
