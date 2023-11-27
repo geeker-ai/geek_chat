@@ -230,6 +230,7 @@ class ChatMessageController extends GetxController {
     // }
     String url = settingsServerController.defaultServer
         .getRequestURL(currentSession.model);
+    // url = "https://api2.fucklina.com/v1/chat/completions";
     Map<String, String> headers =
         settingsServerController.defaultServer.getRequestHeaders();
     headers['Accept-Language'] = settingsController.lang;
@@ -240,7 +241,7 @@ class ChatMessageController extends GetxController {
       url: url,
       headers: headers,
       body: chatMessage,
-      debounce: const Duration(milliseconds: 15),
+      debounce: const Duration(milliseconds: 7),
     );
 
     openai.listen(
