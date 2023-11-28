@@ -89,8 +89,17 @@ class SettingsController extends GetxController {
         aiType: AiType.bard,
         modelType: ModelType.chat,
         temperature: 0.7,
-        maxContextSize: 15000,
-        modelMaxContextSize: 15000,
+        maxContextSize: 7000,
+        modelMaxContextSize: 8192,
+        maxTokens: 0),
+    AiModel(
+        modelName: 'codechat-bison',
+        alias: 'codechat-bison',
+        aiType: AiType.bard,
+        modelType: ModelType.chat,
+        temperature: 0.7,
+        maxContextSize: 5000,
+        modelMaxContextSize: 6144,
         maxTokens: 0),
   ];
 

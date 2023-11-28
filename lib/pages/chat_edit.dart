@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/components/settings/bottom_sheet_switcher.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:get/get.dart';
 
@@ -10,11 +11,15 @@ class ChatEditPage extends StatelessWidget {
   ChatEditPage({super.key});
 
   SettingsController settingsController = Get.find<SettingsController>();
+  SettingsServerController settingsServerController = Get.find();
 
   List<Map<String, String>> getModelOptions() {
     List<Map<String, String>> options = [];
     for (AiModel item in settingsController.models) {
-      options.add({'name': item.modelName, 'title': item.modelName});
+      options.add({
+        'name': item.modelName,
+        'title': item.modelName,
+      });
     }
     return options;
   }
@@ -164,6 +169,20 @@ class ChatEditPage extends StatelessWidget {
                   controller.currentSession.model = value;
                   controller.update();
                 }),
+            Container(
+              padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+              child: Card(
+                elevation: 5,
+                shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      top: 10, left: 10, right: 10, bottom: 10),
+                  child: Text("model intro".tr),
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
               child: Row(
@@ -171,7 +190,7 @@ class ChatEditPage extends StatelessWidget {
                 children: [
                   OutlinedButton(
                     onPressed: () {
-                      controller.save();
+                      controller.saveSession(controller.currentSession);
                       chatListController.update();
                       chatListController.reloadSessions();
                       chatListController.update();
