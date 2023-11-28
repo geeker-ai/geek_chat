@@ -5,6 +5,7 @@ import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/service/openai_service.dart';
@@ -166,7 +167,9 @@ class ChatMessageController extends GetxController {
       if (tokenCount > currentSession.maxContextSize) {
         break;
       }
-      requestMessages.add({"role": message.role, "content": message.content});
+      requestMessages
+          .insert(1, {"role": message.role, "content": message.content});
+      // requestMessages.add({"role": message.role, "content": message.content});
       i++;
     }
     requestMessages.add({"role": input.role, "content": input.content});
@@ -228,20 +231,26 @@ class ChatMessageController extends GetxController {
     //     'Accept-Language': settingsController.lang
     //   };
     // }
-    String url = settingsServerController.defaultServer
-        .getRequestURL(currentSession.model);
+    // String url = settingsServerController.defaultServer
+    //     .getRequestURL(currentSession.model);
     // url = "https://api2.fucklina.com/v1/chat/completions";
+    AiModel model = settingsController.getModelByName(currentSession.model);
+    String url =
+        settingsServerController.defaultServer.getRequestURLByModel(model);
     Map<String, String> headers =
         settingsServerController.defaultServer.getRequestHeaders();
     headers['Accept-Language'] = settingsController.lang;
     logger.d("url: $url");
     logger.d(headers);
-
+    int debounce = 7;
+    if (model.aiType == AiType.bard) {
+      debounce = 15;
+    }
     Stream openai = SSEClient.subscribeToSSE(
       url: url,
       headers: headers,
       body: chatMessage,
-      debounce: const Duration(milliseconds: 7),
+      debounce: Duration(milliseconds: debounce),
     );
 
     openai.listen(

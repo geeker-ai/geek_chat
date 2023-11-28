@@ -44,7 +44,11 @@ DeviceType getDeviceType() {
 }
 
 int numTokenCounter(String model, String content) {
-  final encoding = encodingForModel(model);
+  String modelStr = model;
+  if (model == "chat-bison" || model == "codechat-bison") {
+    modelStr = "gpt-3.5-turbo";
+  }
+  final encoding = encodingForModel(modelStr);
   final numTokens = encoding.encode(content).length;
   return numTokens;
 }

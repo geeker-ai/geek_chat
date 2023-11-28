@@ -83,6 +83,24 @@ class SettingsController extends GetxController {
         maxContextSize: 15000,
         modelMaxContextSize: 15000,
         maxTokens: 0),
+    AiModel(
+        modelName: 'chat-bison',
+        alias: 'chat-bison',
+        aiType: AiType.bard,
+        modelType: ModelType.chat,
+        temperature: 0.7,
+        maxContextSize: 7000,
+        modelMaxContextSize: 8192,
+        maxTokens: 0),
+    AiModel(
+        modelName: 'codechat-bison',
+        alias: 'codechat-bison',
+        aiType: AiType.bard,
+        modelType: ModelType.chat,
+        temperature: 0.7,
+        maxContextSize: 5000,
+        modelMaxContextSize: 6144,
+        maxTokens: 0),
   ];
 
   final List<Map<String, String>> locales1 = [
@@ -181,6 +199,7 @@ class SettingsController extends GetxController {
     for (AiModel item in _aiModels) {
       if (item.modelName == name) {
         model = item;
+        break;
       }
     }
     return model;

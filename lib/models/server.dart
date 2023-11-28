@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:geek_chat/models/model.dart';
+
 class ServerModel {
   String provider;
   String apiHost;
@@ -51,6 +53,24 @@ class ServerModel {
       return "${modelSettings['url']}/openai/deployments/${modelSettings['deploymentId']}/chat/completions?api-version=$azureApiVersion";
     } else {
       return "$apiHost/v1/chat/completions";
+    }
+  }
+
+  String getRequestURLByModel(AiModel model) {
+    if (provider == 'azure') {
+      Map<String, String> modelSettings =
+          getAzureModelSettings(model.modelName);
+      String url = modelSettings['url']!;
+      if (url.substring(url.length - 1) == '/') {
+        url = url.substring(0, url.length - 1);
+      }
+      return "${modelSettings['url']}/openai/deployments/${modelSettings['deploymentId']}/chat/completions?api-version=$azureApiVersion";
+    } else {
+      if (model.aiType == AiType.bard) {
+        return "$apiHost/app/gbard";
+      } else {
+        return "$apiHost/v1/chat/completions";
+      }
     }
   }
 

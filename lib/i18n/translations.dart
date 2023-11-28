@@ -62,6 +62,8 @@ class GeekChatTranslations extends Translations {
           "Model name deployed on Azure":
               "The Deployment name which is the GPT model deployed on Azure",
           "input tips": "[Enter] send, [Shift+Enter] line break",
+          "model intro":
+              "Only when activated using the GeekChat service can the chat-bison and codechat-bison models be used normally.",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -119,7 +121,9 @@ class GeekChatTranslations extends Translations {
               "因chatgpt的API调用是有费用的, 所以需要购买后获取License才能使用. GeekerChat 旨在方便大家使用, Token的价格是和OpenAI官方一致.",
           "History Message": "历史消息数量",
           "Model name deployed on Azure": "在 Azure 上部署的模型对应的 Deployment name",
-          "input tips": "[回车键] 发送，[Shift+回车键] 换行"
+          "input tips": "[回车键] 发送，[Shift+回车键] 换行",
+          "model intro":
+              "只有在使用 GeekChat 服务激活的情况下，才可以正常使用 chat-bison 和 codechat-bison 模型",
         }
       };
 }
