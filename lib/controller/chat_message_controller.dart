@@ -166,7 +166,9 @@ class ChatMessageController extends GetxController {
       if (tokenCount > currentSession.maxContextSize) {
         break;
       }
-      requestMessages.add({"role": message.role, "content": message.content});
+      requestMessages
+          .insert(1, {"role": message.role, "content": message.content});
+      // requestMessages.add({"role": message.role, "content": message.content});
       i++;
     }
     requestMessages.add({"role": input.role, "content": input.content});
@@ -228,9 +230,11 @@ class ChatMessageController extends GetxController {
     //     'Accept-Language': settingsController.lang
     //   };
     // }
-    String url = settingsServerController.defaultServer
-        .getRequestURL(currentSession.model);
+    // String url = settingsServerController.defaultServer
+    //     .getRequestURL(currentSession.model);
     // url = "https://api2.fucklina.com/v1/chat/completions";
+    String url = settingsServerController.defaultServer.getRequestURLByModel(
+        settingsController.getModelByName(currentSession.model));
     Map<String, String> headers =
         settingsServerController.defaultServer.getRequestHeaders();
     headers['Accept-Language'] = settingsController.lang;
