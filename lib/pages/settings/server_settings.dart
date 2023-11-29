@@ -77,15 +77,15 @@ class ServerSettingsPage extends StatelessWidget {
       })),
     );
   }
-}
 
-Widget switchServerSettingsComponent(String provider) {
-  if (provider == 'geekerchat') {
-    return GeekerChatSettingsComponent();
-  } else if (provider == 'openai') {
-    return StandardServerSettingsComponent();
-  } else if (provider == 'azure') {
-    return AzureServerSettingsComponent();
+  Widget switchServerSettingsComponent(String provider) {
+    if (provider == 'geekerchat') {
+      return GeekerChatSettingsComponent();
+    } else if (provider == 'openai') {
+      return StandardServerSettingsComponent();
+    } else if (provider == 'azure') {
+      return AzureServerSettingsComponent();
+    }
+    return const SizedBox();
   }
-  return const SizedBox();
 }
