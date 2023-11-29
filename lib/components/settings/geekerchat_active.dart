@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -34,6 +35,8 @@ class GeekerChatSettingsComponent extends StatelessWidget {
     return GetBuilder<SettingsServerController>(builder: (controller) {
       textEditingController.text = controller.defaultServer.license;
       logger.d("init: ${controller.defaultServer.toJson()}");
+      textEditingController.selection = TextSelection.fromPosition(
+          TextPosition(offset: textEditingController.text.length));
       return Wrap(
         children: [
           const SizedBox(
@@ -54,6 +57,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                 TextField(
                   // initialValue: controller.settings.license,
                   controller: textEditingController,
+                  autofocus: true,
                   decoration: InputDecoration(
                     labelText: 'License',
                     filled: false,
@@ -92,61 +96,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
             children: [
               OutlinedButton(
                   onPressed: () {
-                    if (controller.defaultServer.license.isNotEmpty) {
-                      controller
-                          .activeLicense(
-                              controller.defaultServer.license,
-                              settingsController.settings.uuid,
-                              settingsController.lang)
-                          .then((value) {
-                        if (value.isActived) {
-                          logger.d("actie: ${value.toJson()}");
-                          // controller.defaultServer = value;
-                          controller.saveSettings(value);
-                          controller.needReactive = false;
-                          settingsController.settings.provider = value.provider;
-                          settingsController.saveSettings();
-                          showCustomToast(
-                              title: "Active Success".tr, context: context);
-                          controller.activeError = false;
-                          controller.errorMessage = '';
-                          controller.update();
-                        } else {
-                          logger.d("active: $value");
-                          showCustomToast(
-                              title: "Active Faild!".tr, context: context);
-                          // controller.defaultServer.message = value.message;
-                          // controller.defaultServer.error = true;
-                          controller.activeError = true;
-                          controller.errorMessage = value.message;
-                          controller.update();
-                        }
-                      });
-                      // settingsController
-                      //     .activeLicense(controller.defaultServer.license)
-                      //     .then((value) {
-                      //   logger.d("value: $value");
-                      //   if (value['actived']) {
-                      //     showCustomToast(
-                      //         title: "Active Success".tr, context: context);
-                      //     settingsController.needReactive = false;
-                      //     // controller.saveSettings();
-                      //     Get.back();
-                      //   } else {
-                      //     // settingsController.activeMessage = value['message'];
-                      //     // settingsController.showActiveError = true;
-                      //     logger.d(
-                      //         "message1: ${settingsController.activeMessage}");
-                      //     controller.update();
-                      //     logger.d(
-                      //         "message2: ${settingsController.activeMessage}");
-                      //   }
-                      // });
-                    } else {
-                      showCustomToast(
-                          title: "Please Input License".tr, context: context);
-                    }
-                    // }
+                    submitActive(controller, context);
                   },
                   child: Text("Save".tr)),
               const SizedBox(width: 10),
@@ -161,37 +111,134 @@ class GeekerChatSettingsComponent extends StatelessWidget {
             ],
           ),
           if (settingsController.channelName == 'site')
-            Card(
-              margin: const EdgeInsets.only(top: 15),
-              elevation: 5,
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("buytips".tr),
-                    Container(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        onPressed: () {
-                          launchUrl(
-                              Uri.parse("https://geeker.lemonsqueezy.com/"));
-                        },
-                        child: Text("Buy".tr),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+            Column(
+              children: getPaymentInfo(controller, context),
             ),
         ],
       );
     });
+  }
+
+  submitActive(SettingsServerController controller, BuildContext context) {
+    if (controller.defaultServer.license.isNotEmpty) {
+      controller
+          .activeLicense(controller.defaultServer.license,
+              settingsController.settings.uuid, settingsController.lang)
+          .then((value) {
+        if (value.isActived) {
+          logger.d("actie: ${value.toJson()}");
+          // controller.defaultServer = value;
+          controller.saveSettings(value);
+          controller.needReactive = false;
+          settingsController.settings.provider = value.provider;
+          settingsController.saveSettings();
+          showCustomToast(title: "Active Success".tr, context: context);
+          controller.activeError = false;
+          controller.errorMessage = '';
+          controller.update();
+        } else {
+          logger.d("active: $value");
+          showCustomToast(title: "Active Faild!".tr, context: context);
+          // controller.defaultServer.message = value.message;
+          // controller.defaultServer.error = true;
+          controller.activeError = true;
+          controller.errorMessage = value.message;
+          controller.update();
+        }
+      });
+    } else {
+      showCustomToast(title: "Please Input License".tr, context: context);
+    }
+  }
+
+  List<Widget> getPaymentInfo(
+      SettingsServerController controller, BuildContext context) {
+    List<Widget> widgets = [];
+    widgets.add(Card(
+      shape: BeveledRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
+      elevation: 5,
+      child: Container(
+        padding:
+            const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("buytips".tr),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Supported Models: ".tr,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 5, left: 5),
+              child: const Text("• OpenAI"),
+            ),
+            for (AiModel model in settingsController.models)
+              if (model.aiType == AiType.chatgpt)
+                Container(
+                  padding: const EdgeInsets.only(left: 15, top: 5),
+                  child: Text("⁃ ${model.modelName}"),
+                ),
+            Container(
+              padding: const EdgeInsets.only(top: 5, left: 5),
+              child: const Text("• Google Vertex AI"),
+            ),
+            for (AiModel model in settingsController.models)
+              if (model.aiType == AiType.bard)
+                Container(
+                  padding: const EdgeInsets.only(left: 15, top: 5),
+                  child: Text("⁃ ${model.modelName}"),
+                ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              "Model Price: ".tr,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 10, top: 0),
+              child: Row(
+                children: [
+                  const Text("OpenAi: "),
+                  TextButton(
+                      onPressed: () {
+                        launchUrl(Uri.parse("https://openai.com/pricing"));
+                      },
+                      child: const Text(
+                        "https://openai.com/pricing",
+                        overflow: TextOverflow.ellipsis,
+                      ))
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 10, top: 0),
+              child: Row(
+                children: [
+                  const Text("Google:"),
+                  TextButton(
+                      onPressed: () {
+                        launchUrl(Uri.parse(
+                            "https://cloud.google.com/vertex-ai/pricing?hl=en"));
+                      },
+                      child: const Text(
+                        "https://cloud.google.com/.../pricing",
+                        overflow: TextOverflow.ellipsis,
+                      ))
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ));
+    return widgets;
   }
 }
