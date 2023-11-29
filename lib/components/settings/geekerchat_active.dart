@@ -96,41 +96,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
             children: [
               OutlinedButton(
                   onPressed: () {
-                    if (controller.defaultServer.license.isNotEmpty) {
-                      controller
-                          .activeLicense(
-                              controller.defaultServer.license,
-                              settingsController.settings.uuid,
-                              settingsController.lang)
-                          .then((value) {
-                        if (value.isActived) {
-                          logger.d("actie: ${value.toJson()}");
-                          // controller.defaultServer = value;
-                          controller.saveSettings(value);
-                          controller.needReactive = false;
-                          settingsController.settings.provider = value.provider;
-                          settingsController.saveSettings();
-                          showCustomToast(
-                              title: "Active Success".tr, context: context);
-                          controller.activeError = false;
-                          controller.errorMessage = '';
-                          controller.update();
-                        } else {
-                          logger.d("active: $value");
-                          showCustomToast(
-                              title: "Active Faild!".tr, context: context);
-                          // controller.defaultServer.message = value.message;
-                          // controller.defaultServer.error = true;
-                          controller.activeError = true;
-                          controller.errorMessage = value.message;
-                          controller.update();
-                        }
-                      });
-                    } else {
-                      showCustomToast(
-                          title: "Please Input License".tr, context: context);
-                    }
-                    // }
+                    submitActive(controller, context);
                   },
                   child: Text("Save".tr)),
               const SizedBox(width: 10),
@@ -146,18 +112,48 @@ class GeekerChatSettingsComponent extends StatelessWidget {
           ),
           if (settingsController.channelName == 'site')
             Column(
-              children: getPaymentInfo(),
+              children: getPaymentInfo(controller, context),
             ),
         ],
       );
     });
   }
 
-  List<Widget> getPaymentInfo() {
-    List<Widget> widgets = [];
-    if (settingsServerController.defaultServer.license.length > 10) {
-      //TODO: 增加付费信息和付费链接
+  submitActive(SettingsServerController controller, BuildContext context) {
+    if (controller.defaultServer.license.isNotEmpty) {
+      controller
+          .activeLicense(controller.defaultServer.license,
+              settingsController.settings.uuid, settingsController.lang)
+          .then((value) {
+        if (value.isActived) {
+          logger.d("actie: ${value.toJson()}");
+          // controller.defaultServer = value;
+          controller.saveSettings(value);
+          controller.needReactive = false;
+          settingsController.settings.provider = value.provider;
+          settingsController.saveSettings();
+          showCustomToast(title: "Active Success".tr, context: context);
+          controller.activeError = false;
+          controller.errorMessage = '';
+          controller.update();
+        } else {
+          logger.d("active: $value");
+          showCustomToast(title: "Active Faild!".tr, context: context);
+          // controller.defaultServer.message = value.message;
+          // controller.defaultServer.error = true;
+          controller.activeError = true;
+          controller.errorMessage = value.message;
+          controller.update();
+        }
+      });
+    } else {
+      showCustomToast(title: "Please Input License".tr, context: context);
     }
+  }
+
+  List<Widget> getPaymentInfo(
+      SettingsServerController controller, BuildContext context) {
+    List<Widget> widgets = [];
     widgets.add(Card(
       shape: BeveledRectangleBorder(
         borderRadius: BorderRadius.circular(5),
