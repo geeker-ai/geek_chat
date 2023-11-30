@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/model.dart';
@@ -16,6 +17,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
 
   TextEditingController textEditingController = TextEditingController();
   SettingsServerController settingsServerController = Get.find();
+  MainController mainController = Get.find();
 
   Icon getTextInputIcon(bool isActive, bool needReactive) {
     if (isActive && !needReactive) {
@@ -98,7 +100,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                   onPressed: () {
                     submitActive(controller, context);
                   },
-                  child: Text("Active".tr)),
+                  child: Text("Save".tr)),
               const SizedBox(width: 10),
               OutlinedButton(
                 onPressed: () {
@@ -120,8 +122,11 @@ class GeekerChatSettingsComponent extends StatelessWidget {
   }
 
   submitActive(SettingsServerController controller, BuildContext context) {
+    logger.d(
+        "default server provider: ${settingsServerController.defaultServer.provider}");
+    logger.d("settings server provider: ${settingsServerController.provider}");
     if (controller.defaultServer.license.isNotEmpty) {
-      if (controller.needReactive || !controller.defaultServer.isActived) {
+      if (controller.needReactive) {
         controller
             .activeLicense(controller.defaultServer.license,
                 settingsController.settings.uuid, settingsController.lang)
@@ -148,11 +153,19 @@ class GeekerChatSettingsComponent extends StatelessWidget {
           }
         });
       } else {
-        //
+        if (settingsServerController.defaultServer.isActived) {
+          // settingsController.settings.provider = value.provider;
+          settingsController.settings.provider =
+              settingsServerController.provider;
+          settingsController.saveSettings();
+          showCustomToast(title: "Save successful".tr, context: context);
+        }
       }
     } else {
-      showCustomToast(title: "Please Input License".tr, context: context);
+      showCustomToast(title: "Save successful".tr, context: context);
     }
+    // mainController.update();
+    // settingsController.update(['subscription']);
   }
 
   List<Widget> getPaymentInfo(

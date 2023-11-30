@@ -5,6 +5,7 @@ import 'package:geek_chat/components/desktop_main_right_component.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
@@ -23,7 +24,7 @@ class DesktopHomePage extends StatelessWidget {
   ChatMessageController chatMessageController =
       Get.find<ChatMessageController>();
 
-  List<Widget> getLeftMenus() {
+  List<Widget> getLeftMenus(SettingsServerController controller) {
     List<Widget> leftMenus = [
       LeftMenuButtonComponent(
         title: "Prompts".tr,
@@ -35,7 +36,9 @@ class DesktopHomePage extends StatelessWidget {
       LeftMenuButtonComponent(
         title: "Settings".tr,
         onPressed: () {
-          Get.toNamed("/dsettings");
+          Get.toNamed("/dsettings")?.then((value) {
+            controller.update(['subscription']);
+          });
         },
         icon: Icons.settings,
       ),
@@ -119,7 +122,11 @@ class DesktopHomePage extends StatelessWidget {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: Column(children: getLeftMenus()),
+                    child: GetBuilder<SettingsServerController>(
+                        id: 'subscription',
+                        builder: (controler) {
+                          return Column(children: getLeftMenus(controler));
+                        }),
                   ),
                 ],
               ),

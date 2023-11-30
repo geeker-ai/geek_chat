@@ -69,6 +69,7 @@ class GeekChatTranslations extends Translations {
           "Active": "Active",
           "Server Settings": "Server Settings",
           "Please Select a server": "Please Select a server",
+          "Save successful": "Save successful",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -134,6 +135,7 @@ class GeekChatTranslations extends Translations {
           "Active": "激活",
           "Server Settings": "服务器设置",
           "Please Select a server": "请选择服务器",
+          "Save successful": "保存成功",
         }
       };
 }
