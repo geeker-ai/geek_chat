@@ -98,7 +98,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
                   onPressed: () {
                     submitActive(controller, context);
                   },
-                  child: Text("Save".tr)),
+                  child: Text("Active".tr)),
               const SizedBox(width: 10),
               OutlinedButton(
                 onPressed: () {
@@ -121,31 +121,35 @@ class GeekerChatSettingsComponent extends StatelessWidget {
 
   submitActive(SettingsServerController controller, BuildContext context) {
     if (controller.defaultServer.license.isNotEmpty) {
-      controller
-          .activeLicense(controller.defaultServer.license,
-              settingsController.settings.uuid, settingsController.lang)
-          .then((value) {
-        if (value.isActived) {
-          logger.d("actie: ${value.toJson()}");
-          // controller.defaultServer = value;
-          controller.saveSettings(value);
-          controller.needReactive = false;
-          settingsController.settings.provider = value.provider;
-          settingsController.saveSettings();
-          showCustomToast(title: "Active Success".tr, context: context);
-          controller.activeError = false;
-          controller.errorMessage = '';
-          controller.update();
-        } else {
-          logger.d("active: $value");
-          showCustomToast(title: "Active Faild!".tr, context: context);
-          // controller.defaultServer.message = value.message;
-          // controller.defaultServer.error = true;
-          controller.activeError = true;
-          controller.errorMessage = value.message;
-          controller.update();
-        }
-      });
+      if (controller.needReactive) {
+        controller
+            .activeLicense(controller.defaultServer.license,
+                settingsController.settings.uuid, settingsController.lang)
+            .then((value) {
+          if (value.isActived) {
+            logger.d("actie: ${value.toJson()}");
+            // controller.defaultServer = value;
+            controller.saveSettings(value);
+            controller.needReactive = false;
+            settingsController.settings.provider = value.provider;
+            settingsController.saveSettings();
+            showCustomToast(title: "Active Success".tr, context: context);
+            controller.activeError = false;
+            controller.errorMessage = '';
+            controller.update();
+          } else {
+            logger.d("active: $value");
+            showCustomToast(title: "Active Faild!".tr, context: context);
+            // controller.defaultServer.message = value.message;
+            // controller.defaultServer.error = true;
+            controller.activeError = true;
+            controller.errorMessage = value.message;
+            controller.update();
+          }
+        });
+      } else {
+        //
+      }
     } else {
       showCustomToast(title: "Please Input License".tr, context: context);
     }

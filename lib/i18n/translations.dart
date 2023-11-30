@@ -66,6 +66,9 @@ class GeekChatTranslations extends Translations {
               "Only when activated using the GeekChat service can the chat-bison and codechat-bison models be used normally.",
           "Supported Models: ": "Supported Models: ",
           "Model Price: ": "Model Price: ",
+          "Active": "Active",
+          "Server Settings": "Server Settings",
+          "Please Select a server": "Please Select a server",
         },
         'zh_Hans_CN': {
           "appTitle": "GeekerChat",
@@ -128,6 +131,9 @@ class GeekChatTranslations extends Translations {
               "只有在使用 GeekChat 服务激活的情况下，才可以正常使用 chat-bison 和 codechat-bison 模型",
           "Supported Models: ": "支持的模型: ",
           "Model Price: ": "模型价格",
+          "Active": "激活",
+          "Server Settings": "服务器设置",
+          "Please Select a server": "请选择服务器",
         }
       };
 }

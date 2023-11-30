@@ -28,7 +28,7 @@ class ServerSettingsPage extends StatelessWidget {
   }
 
   String getServerTitle(String name) {
-    String title = '';
+    String title = 'Please Select a server';
     for (Map<String, String> option in getOptions()) {
       if (option['name'] == name) {
         title = option['title']!;
@@ -59,7 +59,7 @@ class ServerSettingsPage extends StatelessWidget {
               ),
             ),
             BottomSheetSwitcherComponent(
-              title: "OpenAI Settings",
+              title: "Server Settings",
               subTitle: getServerTitle(controller.defaultServer.provider),
               selectedValue: controller.defaultServer.provider,
               options: getOptions(),
