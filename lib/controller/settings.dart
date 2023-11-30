@@ -46,6 +46,31 @@ class SettingsController extends GetxController {
 
   DeviceType deviceType = DeviceType.wide;
 
+  final List<AiGroup> _aiGroups = [
+    AiGroup(
+        aitype: AiType.chatgpt,
+        groupName: "ChatGPT",
+        groupDesc: "OpenAI ChatGPT"),
+    AiGroup(
+        aitype: AiType.bard,
+        groupName: "Google Vertex AI",
+        groupDesc: "Google Vertex AI")
+  ];
+
+  List<AiGroup> get aiGroups {
+    return _aiGroups;
+  }
+
+  List<AiModel> getModelsByType(AiType aiType) {
+    List<AiModel> models = [];
+    for (AiModel aiModel in _aiModels) {
+      if (aiModel.aiType == aiType) {
+        models.add(aiModel);
+      }
+    }
+    return models;
+  }
+
   final List<AiModel> _aiModels = [
     AiModel(
         modelName: 'gpt-3.5-turbo',

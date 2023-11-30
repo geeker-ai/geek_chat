@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:geek_chat/components/settings/bottom_sheet_switcher.dart';
+// import 'package:geek_chat/components/settings/bottom_sheet_switcher.dart';
+import 'package:geek_chat/components/settings/grouped_bottom_sheet_switcher.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
+import 'package:geek_chat/models/bottom_switcher_model.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
 class ChatEditPage extends StatelessWidget {
@@ -12,6 +15,7 @@ class ChatEditPage extends StatelessWidget {
 
   SettingsController settingsController = Get.find<SettingsController>();
   SettingsServerController settingsServerController = Get.find();
+  Logger logger = Get.find();
 
   List<Map<String, String>> getModelOptions() {
     List<Map<String, String>> options = [];
@@ -20,6 +24,29 @@ class ChatEditPage extends StatelessWidget {
         'name': item.modelName,
         'title': item.modelName,
       });
+    }
+    return options;
+  }
+
+  List<GroupedBottomSwitcherOption> getGroupedModelOptions() {
+    List<GroupedBottomSwitcherOption> options = [];
+    for (AiGroup group in settingsController.aiGroups) {
+      // options.add(value)
+      GroupedBottomSwitcherOption gOptions = GroupedBottomSwitcherOption(
+          groupName: group.groupName, groupDesc: group.groupDesc);
+      for (AiModel model in settingsController.getModelsByType(group.aitype)) {
+        bool disabled = false;
+        if (settingsServerController.defaultServer.provider != "geekerchat" &&
+            model.aiType == AiType.bard) {
+          disabled = true;
+        }
+        gOptions.options.add(BottomSwitcherOption(
+            id: model.modelName,
+            name: model.modelName,
+            additionalText: "",
+            disabled: disabled));
+      }
+      options.add(gOptions);
     }
     return options;
   }
@@ -37,7 +64,8 @@ class ChatEditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var data = Get.parameters;
-    var options = getModelOptions();
+    // var options = getModelOptions();
+
     if (data['opt'] == 'new') {
       chatListController.createNewSession();
     } else {
@@ -159,11 +187,11 @@ class ChatEditPage extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            BottomSheetSwitcherComponent(
+            GroupedBottomSheetSwitcherComponent(
                 title: 'Model',
                 subTitle: controller.currentSession.model,
                 selectedValue: controller.currentSession.model,
-                options: options,
+                options: getGroupedModelOptions(),
                 leadingIcon: Icons.smart_toy_outlined,
                 onTapCallback: (value) {
                   controller.currentSession.model = value;

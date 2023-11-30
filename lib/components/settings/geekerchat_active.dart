@@ -121,7 +121,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
 
   submitActive(SettingsServerController controller, BuildContext context) {
     if (controller.defaultServer.license.isNotEmpty) {
-      if (controller.needReactive) {
+      if (controller.needReactive || !controller.defaultServer.isActived) {
         controller
             .activeLicense(controller.defaultServer.license,
                 settingsController.settings.uuid, settingsController.lang)
