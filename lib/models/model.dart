@@ -5,6 +5,17 @@ enum AiType {
 
 enum ModelType { chat, text, image }
 
+class AiGroup {
+  AiGroup({
+    required this.aitype,
+    required this.groupName,
+    required this.groupDesc,
+  });
+  String groupName;
+  AiType aitype;
+  String groupDesc;
+}
+
 class AiModel {
   String modelName;
   String alias;
