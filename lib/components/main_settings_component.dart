@@ -33,14 +33,16 @@ class SettingsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SettingsController>(builder: ((controller) {
-      return ListView(
-        // padding: EdgeInsets.zero,
-        padding: const EdgeInsets.only(
-            left: 10.0, top: 0.0, right: 20.0, bottom: 0.0),
-        children: getSettingMenu(controller, context),
-      );
-    }));
+    return GetBuilder<SettingsController>(
+        id: "setting_list",
+        builder: ((controller) {
+          return ListView(
+            // padding: EdgeInsets.zero,
+            padding: const EdgeInsets.only(
+                left: 10.0, top: 0.0, right: 20.0, bottom: 0.0),
+            children: getSettingMenu(controller, context),
+          );
+        }));
   }
 
   List<Widget> getSettingMenu(
@@ -69,7 +71,9 @@ class SettingsComponent extends StatelessWidget {
         trailing: const Icon(Icons.chevron_right_outlined),
         onTap: () {
           // SmartSelect.single(selectedValue: selectedValue)
-          Get.toNamed('/settings');
+          Get.toNamed('/settings')!.then((value) {
+            controller.update(['setting_list']);
+          });
         },
       ),
       const Divider(),
