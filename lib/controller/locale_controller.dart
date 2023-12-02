@@ -82,7 +82,7 @@ class LocaleController extends GetxController {
       locale = tmp;
       logger.d("locale: ${locale.toJson()}");
       lang = tmp.languageStr;
-      // saveLocale(locale.id);
+      saveLocale(locale.id);
     }
   }
 
