@@ -2,6 +2,7 @@ import 'dart:convert';
 
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/message.dart';
@@ -18,6 +19,7 @@ class ChatMessageController extends GetxController {
   ChatListController chatListController = Get.find<ChatListController>();
   SettingsController settingsController = Get.find<SettingsController>();
   SettingsServerController settingsServerController = Get.find();
+  final LocaleController localeController = Get.find();
   final SessionRepository _sessionRepository = Get.find<SessionRepository>();
 
   Logger logger = Get.find<Logger>();
@@ -239,7 +241,7 @@ class ChatMessageController extends GetxController {
         settingsServerController.defaultServer.getRequestURLByModel(model);
     Map<String, String> headers =
         settingsServerController.defaultServer.getRequestHeaders();
-    headers['Accept-Language'] = settingsController.lang;
+    headers['Accept-Language'] = localeController.locale.id;
     logger.d("url: $url");
     logger.d(headers);
     int debounce = 7;

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/models/prompts.dart';
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
@@ -21,6 +21,7 @@ class MainController extends GetxController {
   static MainController get to => Get.find();
   Logger logger = Get.find();
   final LocalStoreRepository _localStoreRepository = Get.find();
+  final LocaleController localeController = Get.find();
 
   @override
   void onInit() {
@@ -80,20 +81,21 @@ class MainController extends GetxController {
       needRefresh = true;
       return needRefresh;
     }
-    if (promptLang == SettingsController.to.lang) {
+    if (promptLang == localeController.locale.id) {
       needRefresh = false;
     } else {
       return false;
     }
+    logger.d("need refresh prompts: $needRefresh");
     return needRefresh;
   }
 
   List<PromptModel> prompts = [];
   String promptLang = '';
   Future<List<PromptModel>> initPrompts() async {
-    promptLang = SettingsController.to.lang;
+    promptLang = localeController.locale.id;
     int datestr = getCurrentDate();
-    String key = "$datestr-${SettingsController.to.lang}";
+    String key = "prompts5-$datestr-${localeController.locale.id}";
     logger.d("initPrompts: $key prompts length: ${prompts.length}");
     String jsonStr = '';
     if (key == _localStoreRepository.getPromptsLastUpdate()) {
@@ -101,9 +103,11 @@ class MainController extends GetxController {
       logger.d("get prompts from local store");
     } else {
       jsonStr = await _fetchPrompts();
+      logger.d("prompt jsonstr: $jsonStr");
       if (jsonStr.isNotEmpty) {
         _localStoreRepository.savePrompts(jsonStr);
         _localStoreRepository.updatePromptsLastUpdate(key);
+        update();
       }
     }
 
@@ -122,8 +126,10 @@ class MainController extends GetxController {
   Future<String> _fetchPrompts() async {
     String url = "http://capi.fucklina.com/app/prompt";
     Map<String, String> headers = {
-      "lang": SettingsController.to.lang,
+      "lang": localeController.locale.promptLang,
     };
+
+    logger.d("fetch prompts headers: $headers");
 
     String responseString = await HttpClientService.getPrompts(url, headers);
     return responseString;

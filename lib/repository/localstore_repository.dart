@@ -64,7 +64,7 @@ class LocalStoreRepository extends GetxService {
       jsonstr = store.read(_settingsKey);
       settings.settingsJson = jsonDecode(jsonstr);
     } else {
-      settings.language = Get.deviceLocale.toString();
+      // settings.language = Get.deviceLocale.toString();
     }
 
     return settings;
@@ -73,5 +73,13 @@ class LocalStoreRepository extends GetxService {
   saveSettings(SettingsModel settings) {
     String jsonStr = jsonEncode(settings);
     store.write(_settingsKey, jsonStr);
+  }
+
+  T? read<T>(String key) {
+    return store.read(key);
+  }
+
+  Future<void> write(String key, dynamic value) async {
+    await store.write(key, value);
   }
 }

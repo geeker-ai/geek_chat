@@ -158,6 +158,7 @@ flutter:
     - assets/google-grey.svg
     - assets/changelog.json
     - assets/icon-1024.png
+    - assets/locales/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
