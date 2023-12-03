@@ -6,6 +6,7 @@
 
 Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPad、Android手机和Android平板。
 
+> 请点击“Starred”以表达对作者的鼓励。
 
 ![iOS](https://img.shields.io/badge/-iOS-black?style=flat-square&logo=apple&logoColor=white) ![Android](https://img.shields.io/badge/-Android-black?style=flat-square&logo=android&logoColor=white) ![macOS](https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white) ![Windows](https://img.shields.io/badge/-Windows-black?style=flat-square&logo=windows&logoColor=white) ![GitHub all releases](https://img.shields.io/github/downloads/geeker-ai/geek_chat/total)
 
