@@ -32,10 +32,12 @@ class LocaleModel {
   }
 
   String get promptLang {
-    if (languageCode == "zh") {
+    if (lang == "zh_CN") {
       return "zh-Hans";
+    } else if (lang == "en_US") {
+      return "en";
     } else {
-      return languageCode;
+      return lang;
     }
   }
 
