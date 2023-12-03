@@ -85,7 +85,7 @@ class DesktopHomePage extends StatelessWidget {
                         Get.toNamed('/editchat',
                             parameters: {'opt': 'new', 'sid': ''});
                       },
-                      label: const Text("New Chat"),
+                      label: Text("New Chat".tr),
                       icon: const Icon(Icons.add),
                     ),
                   ),

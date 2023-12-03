@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
@@ -13,6 +14,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
   GeekerChatSettingsComponent({super.key});
 
   SettingsController settingsController = Get.find();
+  LocaleController localeController = Get.find();
   Logger logger = Get.find();
 
   TextEditingController textEditingController = TextEditingController();
@@ -129,7 +131,7 @@ class GeekerChatSettingsComponent extends StatelessWidget {
       if (controller.needReactive) {
         controller
             .activeLicense(controller.defaultServer.license,
-                settingsController.settings.uuid, settingsController.lang)
+                settingsController.settings.uuid, localeController.locale.lang)
             .then((value) {
           if (value.isActived) {
             logger.d("actie: ${value.toJson()}");

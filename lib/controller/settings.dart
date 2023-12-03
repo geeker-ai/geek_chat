@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:geek_chat/models/language.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
@@ -40,9 +39,6 @@ class SettingsController extends GetxController {
   late Directory _dataDir;
 
   bool debug = kDebugMode;
-
-  var _oriTheme = 'System';
-  var _oriLanguage = 'en_US';
 
   DeviceType deviceType = DeviceType.wide;
 
@@ -128,17 +124,6 @@ class SettingsController extends GetxController {
         maxTokens: 0),
   ];
 
-  final List<Map<String, String>> locales1 = [
-    {'name': 'Simplified Chinese', 'locale': 'zh_Hans_CN', 'lang': 'zh-Hans'},
-    {'name': 'English', 'locale': 'en_US', 'lang': 'en'}
-  ];
-
-  final List<LanguageModel> locales = [
-    LanguageModel(
-        name: 'Simplified Chinese', locale: 'zh_Hans_CN', lang: 'zh-Hans'),
-    LanguageModel(name: "English", locale: 'en_US', lang: 'en')
-  ];
-
   final List<Map<String, String>> serverList = [
     {
       'id': 'openai',
@@ -182,27 +167,6 @@ class SettingsController extends GetxController {
       channel = envChannel;
     }
     return channel;
-  }
-
-  LanguageModel getLocale(String locale) {
-    LanguageModel lm = locales[0];
-    for (LanguageModel languageModel in locales) {
-      if (languageModel.locale == locale) {
-        lm = languageModel;
-        break;
-      }
-    }
-    return lm;
-  }
-
-  String get lang {
-    String lang = 'en';
-    for (LanguageModel locale in locales) {
-      if (locale.locale == settings.language) {
-        lang = locale.lang;
-      }
-    }
-    return lang;
   }
 
   bool get needSettings {
@@ -255,21 +219,6 @@ class SettingsController extends GetxController {
     return apiKey;
   }
 
-  String get locale {
-    String currentLocale = locales[0].name; //"${locales[0]['name']}";
-    // print(currentLocale);
-    // print(settings.language);
-    for (LanguageModel element in locales) {
-      // print("${element['locale']}");
-      if (element.locale == settings.language) {
-        currentLocale = element.name;
-        break;
-      }
-    }
-    // print(currentLocale);
-    return currentLocale;
-  }
-
   String getProviderServer() {
     String server = '';
     for (var item in serverList) {
@@ -312,16 +261,6 @@ class SettingsController extends GetxController {
     _localStoreRepository.saveSettings(settings);
   }
 
-  @Deprecated("message")
-  void changeSettings() async {
-    if (settings.theme != _oriTheme) {
-      setThemeMode(getThemeMode());
-    }
-    if (settings.language != _oriLanguage) {
-      setLocale(settings.language);
-    }
-  }
-
   set settingsTheme(String theme) {
     settings.theme = theme;
     setThemeMode(getThemeMode());
@@ -329,19 +268,8 @@ class SettingsController extends GetxController {
     update();
   }
 
-  set settingsLanguage(String language) {
-    settings.language = language;
-    setLocale(settings.language);
-    update();
-    saveSettings();
-  }
-
   setThemeMode(ThemeMode themeMode) {
     Get.changeThemeMode(themeMode);
-  }
-
-  setLocale(String locale) {
-    Get.updateLocale(Locale(locale));
   }
 
   String _switcherSelected = '';

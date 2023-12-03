@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/settings/bottom_sheet_switcher.dart';
+import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
-import 'package:geek_chat/models/language.dart';
+import 'package:geek_chat/models/locale_model.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -13,12 +14,13 @@ class SettingsComponent extends StatelessWidget {
 
   // late List<Map<String, String>> options;
   MainController mainController = Get.find();
+  LocaleController localeController = Get.find();
   Logger logger = Get.find();
 
   List<Map<String, String>> getLanguageOptions() {
     List<Map<String, String>> options = [];
-    for (LanguageModel item in SettingsController.to.locales) {
-      options.add({'name': item.locale, 'title': item.name});
+    for (LocaleModel item in localeController.locales) {
+      options.add({'name': item.id, 'title': item.languageName});
     }
     return options;
   }
@@ -105,14 +107,16 @@ class SettingsComponent extends StatelessWidget {
       ),
       BottomSheetSwitcherComponent(
         title: "Language Settings",
-        subTitle: controller.locale,
-        selectedValue: controller.settings.language,
+        subTitle: localeController.locale.languageName,
+        selectedValue: localeController.locale.id,
         options: getLanguageOptions(),
         leadingIcon: Icons.language_outlined,
         onTapCallback: (value) {
-          controller.settingsLanguage = value;
+          // controller.settingsLanguage = value;
+          localeController.setLocale(value);
           logger.d("language: $value");
-          controller.saveSettings();
+          logger.d("localeController.locale.id: ${localeController.locale.id}");
+          // controller.saveSettings();
           mainController.initPrompts().then((value) {
             mainController.update();
           });

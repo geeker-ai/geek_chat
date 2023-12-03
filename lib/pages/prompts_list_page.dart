@@ -42,6 +42,7 @@ class PromptsListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // mainController.initPrompts();
     return Scaffold(
       appBar: AppBar(
         title: Text("Prompts".tr),

@@ -10,15 +10,18 @@ import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 // import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
+import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
+import 'package:geek_chat/controller/translation_controller.dart';
 import 'package:geek_chat/i18n/translations.dart';
 import 'package:geek_chat/migration.dart';
 import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -53,6 +56,10 @@ void main() async {
     windowManager.setMinimumSize(const Size(800, 600));
   }
   // print("system locale: ${Get.deviceLocale}");
+  // init languages
+
+  TranslationController trans = Get.put(TranslationController());
+  await trans.initTranslations();
 
   await initServices();
   runApp(GeekerChat(
@@ -62,11 +69,19 @@ void main() async {
 }
 
 initServices() async {
-  // TODO zh_Hans_CN, en_US
+  // TODO zh_Hans_CN, en_US, zh_Hant_HK
 
   await dotenv.load(fileName: ".env");
 
   Logger logger = Get.put(Logger());
+
+  // Locale locale = Get.deviceLocale ?? const Locale("en_US");
+  // locale = Locale("zh", "CN");
+  // locale = Locale.fromSubtags(
+  //     languageCode: "zh", countryCode: "HK", scriptCode: "Hant");
+  // logger.d(
+  //     "system locale: $locale ,${locale.countryCode}, ${locale.languageCode}, ${locale.scriptCode}");
+
   logger.d("env: channel: ${dotenv.get('CHANNEL')}");
 
   String storeageName = "geekchat";
@@ -81,6 +96,13 @@ initServices() async {
   SettingsController settingsController = Get.put(SettingsController());
   SettingsController.to.dataDir = dir;
   settingsController.deviceType = getDeviceType();
+
+  /// init locale
+  LocaleController localeController = Get.put(LocaleController());
+  localeController.lang = settingsController.settings.language;
+  localeController.detectiveLocale();
+  logger.d("localeController.lang : ${localeController.lang}");
+  logger.d("locale: ${localeController.locale.toJson()}");
 
   ///SettingsServerController settingsServerController = ;
   Get.put(
@@ -131,6 +153,7 @@ class GeekerChat extends StatelessWidget {
 
   List<GetPage<dynamic>> mainRouters;
   Translations trans;
+  LocaleController localeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -170,8 +193,11 @@ class GeekerChat extends StatelessWidget {
       // theme: ThemeData.light(useMaterial3: true),
       // darkTheme: ThemeData.dark(useMaterial3: true),
       themeMode: SettingsController.to.getThemeMode(),
-      locale: Locale(SettingsController.to.settings.language),
+      locale: localeController.locale.locale,
+      supportedLocales: localeController.supportedLocales,
+      localizationsDelegates: localeController.localizationsDelegates(),
       translations: trans,
+      fallbackLocale: AppConstants.defaultLocale.locale,
       builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.rightToLeft,
