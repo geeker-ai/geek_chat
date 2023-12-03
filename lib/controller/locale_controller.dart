@@ -1,5 +1,6 @@
-import 'dart:ui';
-
+// import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:geek_chat/models/locale_model.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/util/app_constants.dart';
@@ -17,6 +18,22 @@ class LocaleController extends GetxController {
   Logger logger = Get.find();
 
   final List<LocaleModel> locales = AppConstants.locales;
+
+  List<Locale> get supportedLocales {
+    List<Locale> slm = [];
+    for (LocaleModel lm in AppConstants.locales) {
+      slm.add(lm.locale);
+    }
+    return slm;
+  }
+
+  Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates() {
+    return [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ];
+  }
 
   LocaleModel? getLocaleByString(String lang) {
     LocaleModel? localeModel;
@@ -95,6 +112,7 @@ class LocaleController extends GetxController {
     localeModel ??= AppConstants.defaultLocale;
     locale = localeModel;
     saveLocale(localeId);
-    Get.updateLocale(Locale(localeModel.languageCode, localeModel.countryCode));
+    // Get.updateLocale(Locale(localeModel.languageCode, localeModel.countryCode));
+    Get.updateLocale(locale.locale);
   }
 }

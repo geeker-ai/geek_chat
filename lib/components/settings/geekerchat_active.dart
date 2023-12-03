@@ -130,10 +130,8 @@ class GeekerChatSettingsComponent extends StatelessWidget {
     if (controller.defaultServer.license.isNotEmpty) {
       if (controller.needReactive) {
         controller
-            .activeLicense(
-                controller.defaultServer.license,
-                settingsController.settings.uuid,
-                localeController.locale.languageStr)
+            .activeLicense(controller.defaultServer.license,
+                settingsController.settings.uuid, localeController.locale.lang)
             .then((value) {
           if (value.isActived) {
             logger.d("actie: ${value.toJson()}");

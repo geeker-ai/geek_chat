@@ -9,9 +9,10 @@ class TranslationController extends GetxController {
   final Map<String, Map<String, String>> keys = {};
   initTranslations() async {
     for (LocaleModel lang in AppConstants.locales) {
-      String transFile = "assets/locales/${lang.locale}.json";
+      String transFile = "assets/locales/${lang.lang}.json";
       String json = await rootBundle.loadString(transFile);
-      keys[lang.languageCode] = Map.castFrom(jsonDecode(json));
+      keys[lang.lang] =
+          Map.castFrom<String, dynamic, String, String>(jsonDecode(json));
     }
   }
 }

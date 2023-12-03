@@ -39,6 +39,10 @@ class LocaleModel {
     }
   }
 
+  String get lang {
+    return "${languageCode}_$countryCode";
+  }
+
   String toJson() {
     return jsonEncode({
       "id": id,

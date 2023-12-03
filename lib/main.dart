@@ -21,6 +21,7 @@ import 'package:geek_chat/models/release.dart';
 import 'package:geek_chat/pages/unkown_page.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -193,7 +194,10 @@ class GeekerChat extends StatelessWidget {
       // darkTheme: ThemeData.dark(useMaterial3: true),
       themeMode: SettingsController.to.getThemeMode(),
       locale: localeController.locale.locale,
+      supportedLocales: localeController.supportedLocales,
+      localizationsDelegates: localeController.localizationsDelegates(),
       translations: trans,
+      fallbackLocale: AppConstants.defaultLocale.locale,
       builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.rightToLeft,

@@ -103,7 +103,7 @@ class MainController extends GetxController {
       logger.d("get prompts from local store");
     } else {
       jsonStr = await _fetchPrompts();
-      logger.d("prompt jsonstr: $jsonStr");
+      // logger.d("prompt jsonstr: $jsonStr");
       if (jsonStr.isNotEmpty) {
         _localStoreRepository.savePrompts(jsonStr);
         _localStoreRepository.updatePromptsLastUpdate(key);
