@@ -85,10 +85,16 @@ class LocaleController extends GetxController {
           logger.d("device locale: $tmp");
           if (tmp == null) {
             for (LocaleModel lm in AppConstants.locales) {
-              if (lm.languageCode == deviceLocale.languageCode) {
+              if (lm.languageCode == deviceLocale.languageCode &&
+                  lm.countryCode == deviceLocale.countryCode) {
                 tmp = lm;
+                break;
+              } else if (lm.languageCode == deviceLocale.languageCode) {
+                tmp = lm;
+                break;
               } else if (lm.countryCode == deviceLocale.countryCode) {
                 tmp = lm;
+                break;
               }
             }
           }
