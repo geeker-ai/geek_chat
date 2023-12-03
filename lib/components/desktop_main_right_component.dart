@@ -5,6 +5,7 @@ import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/chat_message_scroll_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/util/functions.dart';
@@ -293,8 +294,10 @@ class QuestionInputComponent extends StatelessWidget {
 
   TextEditingController textEditingController = TextEditingController();
   ChatListController chatListController = Get.find();
+  SettingsController settingsController = Get.find();
   Logger logger = Get.find();
   ChatMessageController chatMessageController = Get.find();
+  final TrackerController tracker = Get.find();
 
   KeyEventResult onKey(FocusNode focusNode, RawKeyEvent event) {
     // if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
@@ -339,6 +342,7 @@ class QuestionInputComponent extends StatelessWidget {
           .updateSessionLastEdit(chatListController.currentSession);
       chatListController.update();
     });
+    tracker.trackEvent("chat", {"uuid": settingsController.settings.uuid});
   }
 
   @override

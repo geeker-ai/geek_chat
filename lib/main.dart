@@ -14,6 +14,7 @@ import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
+import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/controller/translation_controller.dart';
 import 'package:geek_chat/i18n/translations.dart';
 import 'package:geek_chat/migration.dart';
@@ -23,6 +24,7 @@ import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
+import 'package:geek_chat/util/tracker/tracker_impl.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
@@ -74,6 +76,8 @@ initServices() async {
   await dotenv.load(fileName: ".env");
 
   Logger logger = Get.put(Logger());
+  TrackerController trackerController = Get.put(TrackerController());
+  trackerController.addTracker(GeekChatTrackerImpl());
 
   // Locale locale = Get.deviceLocale ?? const Locale("en_US");
   // locale = Locale("zh", "CN");

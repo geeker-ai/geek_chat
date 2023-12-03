@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:get/get.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
@@ -10,9 +11,12 @@ class AboutPage extends StatelessWidget {
 
   MainController mainController = Get.find();
   SettingsController settingsController = Get.find();
+  TrackerController tracker = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    tracker
+        .trackEvent("Page-About", {"uuid": settingsController.settings.uuid});
     return Scaffold(
       appBar: AppBar(
         title: Text("About".tr),

@@ -27,7 +27,7 @@ final routers = [
   GetPage(
       name: '/dsettings',
       page: () {
-        return const DesktopSettingsPage();
+        return DesktopSettingsPage();
       }),
   GetPage(name: '/editchat', page: () => ChatEditPage()),
   GetPage(name: '/chat', page: () => ChatMessagePage()),

@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
+import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/prompts.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,7 @@ import 'package:logger/logger.dart';
 class PromptsListPage extends StatelessWidget {
   // EventBus eventBus = Get.find();
   Logger logger = Get.find();
+  TrackerController tracker = Get.find();
   late StreamSubscription eventSub;
   PromptsListPage({super.key}) {
     // eventSub = eventBus.on<LanguageModel>().listen((event) {
@@ -26,6 +29,7 @@ class PromptsListPage extends StatelessWidget {
 
   MainController mainController = Get.find();
   ChatListController chatListController = Get.find();
+  SettingsController settingsController = Get.find();
 
   double getFittedCardWidth(BuildContext context) {
     double width = 330;
@@ -43,6 +47,8 @@ class PromptsListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // mainController.initPrompts();
+    tracker
+        .trackEvent("Page-Prompts", {"uuid": settingsController.settings.uuid});
     return Scaffold(
       appBar: AppBar(
         title: Text("Prompts".tr),

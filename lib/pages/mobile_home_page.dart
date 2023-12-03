@@ -4,12 +4,14 @@ import 'package:geek_chat/components/main_settings_component.dart';
 import 'package:geek_chat/components/prompt/prompt_list_component.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class MobileHomePage extends StatelessWidget {
   SettingsController settingsController = Get.find<SettingsController>();
   MainController mainController = Get.find();
+  TrackerController tracker = Get.find();
   MobileHomePage({super.key}) {
     Get.put(PromptListComponent());
     Get.put(SettingsComponent());
@@ -45,15 +47,21 @@ class MobileHomePage extends StatelessWidget {
       case 0:
         // widget = Text("data $index");
         widget = Get.find<ChatListComponent>();
+        tracker.trackEvent(
+            "Page-Home", {"uuid": settingsController.settings.uuid});
         break;
       case 1:
         widget = Get.find<PromptListComponent>();
+        tracker.trackEvent(
+            "Page-Prompts", {"uuid": settingsController.settings.uuid});
         break;
       case 2:
       // widget = Text("data $index");
       // break;
       default:
         widget = getSettingsComponent();
+        tracker.trackEvent(
+            "Page-Settings", {"uuid": settingsController.settings.uuid});
     }
     return widget;
   }

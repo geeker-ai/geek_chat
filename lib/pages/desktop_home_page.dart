@@ -6,6 +6,7 @@ import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
+import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
@@ -23,6 +24,7 @@ class DesktopHomePage extends StatelessWidget {
   SettingsController settingsController = Get.find<SettingsController>();
   ChatMessageController chatMessageController =
       Get.find<ChatMessageController>();
+  final TrackerController tracker = Get.find();
 
   List<Widget> getLeftMenus(SettingsServerController controller) {
     List<Widget> leftMenus = [
@@ -104,6 +106,9 @@ class DesktopHomePage extends StatelessWidget {
                                 onTap: (String sid) {
                                   controller.switchSession(sid);
                                   controller.update();
+                                  tracker.trackEvent("switchSession", {
+                                    "uuid": settingsController.settings.uuid
+                                  });
                                 },
                                 currentSession: controller.currentSession,
                                 onDelete: (SessionModel session) {
@@ -112,6 +117,9 @@ class DesktopHomePage extends StatelessWidget {
                                   controller.remove(session);
                                   controller.reloadSessions();
                                   controller.update();
+                                  tracker.trackEvent("removeSession", {
+                                    "uuid": settingsController.settings.uuid
+                                  });
                                 });
                           });
                     }),
