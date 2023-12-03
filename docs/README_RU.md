@@ -1,6 +1,6 @@
 # Geek Chat
 
-[English](README.md) | [简体中文](./docs/README_CN.md) | Русский
+[English](../README.md) | [简体中文](./README_CN.md) | Русский
 
 Полезный AI-помощник на вашем устройстве.
 
