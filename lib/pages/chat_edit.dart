@@ -4,6 +4,7 @@ import 'package:geek_chat/components/settings/grouped_bottom_sheet_switcher.dart
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
+import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/bottom_switcher_model.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class ChatEditPage extends StatelessWidget {
 
   SettingsController settingsController = Get.find<SettingsController>();
   SettingsServerController settingsServerController = Get.find();
+  TrackerController tracker = Get.find();
   Logger logger = Get.find();
 
   List<Map<String, String>> getModelOptions() {
@@ -68,8 +70,12 @@ class ChatEditPage extends StatelessWidget {
 
     if (data['opt'] == 'new') {
       chatListController.createNewSession();
+      tracker.trackEvent(
+          "Page-newchat", {"uuid": settingsController.settings.uuid});
     } else {
       chatListController.getSessionBysid(data['sid']!);
+      tracker.trackEvent(
+          "Page-editchat", {"uuid": settingsController.settings.uuid});
     }
     return Scaffold(
       appBar: AppBar(

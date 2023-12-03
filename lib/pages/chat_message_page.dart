@@ -3,6 +3,7 @@ import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ class ChatMessagePage extends StatelessWidget {
   late ChatMessageController chatMessageController;
   SettingsController settingsController = Get.find();
   Logger logger = Get.find<Logger>();
+  TrackerController tracker = Get.find();
   ChatMessagePage({super.key}) {
     var data = Get.parameters;
     sid = data['sid'];
@@ -145,6 +147,8 @@ class ChatMessagePage extends StatelessWidget {
                                   chatListController.update();
                                 });
                                 // controller.update();
+                                tracker.trackEvent("chat",
+                                    {"uuid": settingsController.settings.uuid});
                               },
                               onTap: () {
                                 //

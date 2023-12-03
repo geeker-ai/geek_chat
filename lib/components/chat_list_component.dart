@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:geek_chat/controller/chat_list_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
+import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +13,8 @@ class ChatListComponent extends StatelessWidget {
 
   ChatMessageController chatMessageController =
       Get.find<ChatMessageController>();
+  TrackerController tracker = Get.find();
+  SettingsController settingsController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,8 @@ class ChatListComponent extends StatelessWidget {
                   trailing: const Icon(Icons.chevron_right_outlined),
                   onTap: () {
                     Get.toNamed('/chat', parameters: {'sid': sm.sid});
+                    tracker.trackEvent("switchSession",
+                        {"uuid": settingsController.settings.uuid});
                   },
                 ),
               ),
