@@ -28,6 +28,14 @@ class AppConstants {
       countryCode: "HK",
       scriptCode: "Hant",
       languageStr: "zh_Hant_HK",
+    ),
+    LocaleModel(
+      imageIcon: "🇷🇺",
+      languageName: "Russian",
+      languageCode: "ru",
+      countryCode: "RU",
+      // scriptCode: "Hant",
+      languageStr: "ru_RU",
     )
   ];
 }

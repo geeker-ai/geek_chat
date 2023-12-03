@@ -95,7 +95,7 @@ class MainController extends GetxController {
   Future<List<PromptModel>> initPrompts() async {
     promptLang = localeController.locale.id;
     int datestr = getCurrentDate();
-    String key = "prompts21-$datestr-${localeController.locale.lang}";
+    String key = "prompts22-$datestr-${localeController.locale.lang}";
     logger.d("initPrompts: $key prompts length: ${prompts.length}");
     String jsonStr = '';
     if (key == _localStoreRepository.getPromptsLastUpdate()) {
