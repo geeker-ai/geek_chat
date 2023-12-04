@@ -9,6 +9,7 @@ import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/service/http_service.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -42,16 +43,7 @@ class SettingsController extends GetxController {
 
   DeviceType deviceType = DeviceType.wide;
 
-  final List<AiGroup> _aiGroups = [
-    AiGroup(
-        aitype: AiType.chatgpt,
-        groupName: "ChatGPT",
-        groupDesc: "OpenAI ChatGPT"),
-    AiGroup(
-        aitype: AiType.bard,
-        groupName: "Google Vertex AI",
-        groupDesc: "Google Vertex AI")
-  ];
+  final List<AiGroup> _aiGroups = AppConstants.aiGroups;
 
   List<AiGroup> get aiGroups {
     return _aiGroups;
@@ -67,86 +59,11 @@ class SettingsController extends GetxController {
     return models;
   }
 
-  final List<AiModel> _aiModels = [
-    AiModel(
-        modelName: 'gpt-3.5-turbo',
-        alias: 'gpt-3.5',
-        aiType: AiType.chatgpt,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 4000,
-        modelMaxContextSize: 4000,
-        maxTokens: 0),
-    AiModel(
-        modelName: 'gpt-3.5-turbo-16k',
-        alias: 'gpt-3.5-16k',
-        aiType: AiType.chatgpt,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 10000,
-        modelMaxContextSize: 16000,
-        maxTokens: 0),
-    AiModel(
-        modelName: 'gpt-4',
-        alias: 'gpt-4',
-        aiType: AiType.chatgpt,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 4000,
-        modelMaxContextSize: 4000,
-        maxTokens: 0),
-    AiModel(
-        modelName: 'gpt-4-32k',
-        alias: 'gpt-4-32k',
-        aiType: AiType.chatgpt,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 15000,
-        modelMaxContextSize: 15000,
-        maxTokens: 0),
-    AiModel(
-        modelName: 'chat-bison',
-        alias: 'chat-bison',
-        aiType: AiType.bard,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 7000,
-        modelMaxContextSize: 8192,
-        maxTokens: 0),
-    AiModel(
-        modelName: 'codechat-bison',
-        alias: 'codechat-bison',
-        aiType: AiType.bard,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 5000,
-        modelMaxContextSize: 6144,
-        maxTokens: 0),
-  ];
+  final List<AiModel> _aiModels = AppConstants.aiModels;
 
-  final List<Map<String, String>> serverList = [
-    {
-      'id': 'openai',
-      'name': 'OpenAI',
-      'url': 'https://api.openai.com',
-    },
-    {
-      'id': 'geekerchat',
-      'name': 'Geeker Chat',
-      'url': 'https://capi.fucklina.com',
-    },
-    {
-      'id': 'azure',
-      'name': 'Azure API',
-      'url': 'https://geek.azure.com',
-    }
-  ];
+  final List<Map<String, String>> serverList = AppConstants.serverList;
 
-  final themeModes = [
-    GCThemeMode(name: 'System', themeMode: ThemeMode.system),
-    GCThemeMode(name: 'Dark', themeMode: ThemeMode.dark),
-    GCThemeMode(name: 'Light', themeMode: ThemeMode.light),
-  ];
+  final themeModes = AppConstants.themeModes;
 
   Logger logger = Get.find();
 
