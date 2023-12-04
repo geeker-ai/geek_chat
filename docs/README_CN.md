@@ -100,6 +100,7 @@ Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPa
 - [ ] 可以与文件进行对话。
 - [ ] DALL-E3。
 - [ ] 可以与URL进行对话。
+- [ ] 实时语对话
 
 ## 如何贡献
 
