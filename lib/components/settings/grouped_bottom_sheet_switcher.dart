@@ -110,6 +110,7 @@ class GroupedBottomSheetSwitcherComponent extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0)),
               context: context,
+              isScrollControlled: true,
               builder: (context) {
                 return SafeArea(
                     child: Wrap(
