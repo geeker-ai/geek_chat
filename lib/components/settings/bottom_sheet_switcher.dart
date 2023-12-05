@@ -38,6 +38,7 @@ class BottomSheetSwitcherComponent extends StatelessWidget {
         trailing: const Icon(Icons.chevron_right_outlined),
         onTap: () {
           showModalBottomSheet(
+              isScrollControlled: true,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0)),
               context: context,
