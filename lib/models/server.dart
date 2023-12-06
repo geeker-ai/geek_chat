@@ -2,6 +2,22 @@ import 'dart:convert';
 
 import 'package:geek_chat/models/model.dart';
 
+class ProviderModel {
+  ProviderModel(
+      {required this.id,
+      required this.name,
+      required this.baseUrl,
+      required this.supportedModels});
+  String id;
+  String name;
+  String baseUrl;
+  List<String> supportedModels;
+
+  String get url {
+    return baseUrl;
+  }
+}
+
 class ServerModel {
   String provider;
   String apiHost;

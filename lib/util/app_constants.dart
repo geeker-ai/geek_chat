@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/models/locale_model.dart';
 import 'package:geek_chat/models/model.dart';
+import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/models/theme.dart';
 
 class AppConstants {
@@ -138,24 +139,80 @@ class AppConstants {
     return AppConstants.aiModels[0];
   }
 
-  //// Server List
-  static List<Map<String, String>> serverList = [
-    {
-      'id': 'openai',
-      'name': 'OpenAI',
-      'url': 'https://api.openai.com',
-    },
-    {
-      'id': 'geekerchat',
-      'name': 'Geeker Chat',
-      'url': 'https://capi.fucklina.com',
-    },
-    {
-      'id': 'azure',
-      'name': 'Azure API',
-      'url': 'https://geek.azure.com',
+  static List<String> get allModelNameList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      list.add(model.modelName);
     }
+    return list;
+  }
+
+  static List<String> get openaiModelNameList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      if (model.aiType == AiType.chatgpt) {
+        list.add(model.modelName);
+      }
+    }
+    return list;
+  }
+
+  static List<String> get azureModelNameList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      if (model.aiType == AiType.chatgpt && model.modelType == ModelType.chat) {
+        list.add(model.modelName);
+      }
+    }
+    return list;
+  }
+
+  static List<ProviderModel> servers = [
+    ProviderModel(
+      id: "openai",
+      name: "OpenAI",
+      baseUrl: "https://api.openai.com",
+      supportedModels: openaiModelNameList,
+    ),
+    ProviderModel(
+      id: "geekerchat",
+      name: "Geeker Chat",
+      baseUrl: "https://capi.fucklina.com",
+      supportedModels: allModelNameList,
+    ),
+    ProviderModel(
+      id: "azure",
+      name: "Azure API",
+      baseUrl: "",
+      supportedModels: azureModelNameList,
+    )
   ];
+  static ProviderModel getProvider(String providerId) {
+    for (ProviderModel provider in servers) {
+      if (provider.id == providerId) {
+        return provider;
+      }
+    }
+    return servers[0];
+  }
+  //// Server List
+  // static List<Map<String, String>> serverList = [
+  //   {
+  //     'id': 'openai',
+  //     'name': 'OpenAI',
+  //     'url': 'https://api.openai.com',
+  //   },
+  //   {
+  //     'id': 'geekerchat',
+  //     'name': 'Geeker Chat',
+  //     'url': 'https://capi.fucklina.com',
+  //   },
+  //   {
+  //     'id': 'azure',
+  //     'name': 'Azure API',
+  //     'url': 'https://geek.azure.com',
+  //   }
+  // ];
 
   static List<GCThemeMode> themeModes = [
     GCThemeMode(name: 'System', themeMode: ThemeMode.system),

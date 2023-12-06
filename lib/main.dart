@@ -71,20 +71,11 @@ void main() async {
 }
 
 initServices() async {
-  // TODO zh_Hans_CN, en_US, zh_Hant_HK
-
   await dotenv.load(fileName: ".env");
 
   Logger logger = Get.put(Logger());
   TrackerController trackerController = Get.put(TrackerController());
   trackerController.addTracker(GeekChatTrackerImpl());
-
-  // Locale locale = Get.deviceLocale ?? const Locale("en_US");
-  // locale = Locale("zh", "CN");
-  // locale = Locale.fromSubtags(
-  //     languageCode: "zh", countryCode: "HK", scriptCode: "Hant");
-  // logger.d(
-  //     "system locale: $locale ,${locale.countryCode}, ${locale.languageCode}, ${locale.scriptCode}");
 
   logger.d("env: channel: ${dotenv.get('CHANNEL')}");
 

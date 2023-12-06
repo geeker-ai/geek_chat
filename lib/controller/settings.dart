@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geek_chat/models/model.dart';
+import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/models/settings.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
@@ -61,7 +62,8 @@ class SettingsController extends GetxController {
 
   final List<AiModel> _aiModels = AppConstants.aiModels;
 
-  final List<Map<String, String>> serverList = AppConstants.serverList;
+  // final List<Map<String, String>> serverList = AppConstants.serverList;
+  final List<ProviderModel> servers = AppConstants.servers;
 
   final themeModes = AppConstants.themeModes;
 
@@ -136,24 +138,18 @@ class SettingsController extends GetxController {
     return apiKey;
   }
 
+  @Deprecated("message")
   String getProviderServer() {
-    String server = '';
-    for (var item in serverList) {
-      if (item['id'] == settings.provider) {
-        server = "${item['name']}";
-      }
-    }
-    return server;
+    ProviderModel serverConstModel =
+        AppConstants.getProvider(settings.provider);
+    return serverConstModel.name;
   }
 
+  @Deprecated("message")
   String getProviderServerDefaultUrl() {
-    String url = '';
-    for (var item in serverList) {
-      if (item['id'] == settings.provider) {
-        url = "${item['url']}";
-      }
-    }
-    return url;
+    ProviderModel serverConstModel =
+        AppConstants.getProvider(settings.provider);
+    return serverConstModel.baseUrl;
   }
 
   ThemeMode getThemeMode() {

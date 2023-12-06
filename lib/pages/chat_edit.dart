@@ -7,6 +7,8 @@ import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/bottom_switcher_model.dart';
 import 'package:geek_chat/models/model.dart';
+import 'package:geek_chat/models/server.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
@@ -32,14 +34,19 @@ class ChatEditPage extends StatelessWidget {
 
   List<GroupedBottomSwitcherOption> getGroupedModelOptions() {
     List<GroupedBottomSwitcherOption> options = [];
+    ProviderModel providerModel = AppConstants.getProvider(
+        settingsServerController.defaultServer.provider);
     for (AiGroup group in settingsController.aiGroups) {
       // options.add(value)
       GroupedBottomSwitcherOption gOptions = GroupedBottomSwitcherOption(
           groupName: group.groupName, groupDesc: group.groupDesc);
+
       for (AiModel model in settingsController.getModelsByType(group.aitype)) {
         bool disabled = false;
-        if (settingsServerController.defaultServer.provider != "geekerchat" &&
-            model.aiType == AiType.bard) {
+        //// is supported model
+        // if (settingsServerController.defaultServer.provider != "geekerchat" &&
+        //     model.aiType == AiType.bard) {
+        if (!providerModel.supportedModels.contains(model.modelName)) {
           disabled = true;
         } else if (isEdit) {
           if (chatListController.currentSession.modelType !=
