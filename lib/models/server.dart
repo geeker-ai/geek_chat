@@ -66,6 +66,7 @@ class ServerModel {
       }
       return "${modelSettings['url']}/openai/deployments/${modelSettings['deploymentId']}/chat/completions?api-version=$azureApiVersion";
     } else {
+      // apiHost = "https://api2.fucklina.com";
       if (model.aiType == AiType.bard) {
         return "$apiHost/app/gbard";
       } else {

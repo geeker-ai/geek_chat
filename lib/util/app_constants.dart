@@ -36,6 +36,14 @@ class AppConstants {
       countryCode: "RU",
       // scriptCode: "Hant",
       languageStr: "ru_RU",
+    ),
+    LocaleModel(
+      imageIcon: "🇯🇵",
+      languageName: "Japanese",
+      languageCode: "ja",
+      countryCode: "JP",
+      // scriptCode: "Hant",
+      languageStr: "ja_JP",
     )
   ];
 }
