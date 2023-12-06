@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
@@ -25,12 +26,12 @@ class ChatListMenuItemComponent extends StatelessWidget {
       // value: session.sid,
       child: ListTile(
         minVerticalPadding: 0,
-        visualDensity: const VisualDensity(horizontal: -2, vertical: -3),
+        visualDensity: const VisualDensity(horizontal: -2, vertical: -4),
         contentPadding:
             const EdgeInsets.only(right: 2, left: 16, top: 0, bottom: 0),
         title: buildMenuItem(context, isSelected, onDelete),
         selectedTileColor: const Color.fromARGB(50, 84, 77, 77),
-        leading: const Icon(Icons.chat_bubble_outline),
+        leading: leadingIcon(context),
         onTap: () {
           onTap(session.sid);
         },
@@ -38,6 +39,13 @@ class ChatListMenuItemComponent extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
       ),
     );
+  }
+
+  Widget leadingIcon(BuildContext context) {
+    if (session.modelType == ModelType.image.name) {
+      return const Icon(Icons.image_outlined);
+    }
+    return const Icon(Icons.chat_bubble_outline);
   }
 
   Widget buildMenuItem(

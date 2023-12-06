@@ -118,7 +118,25 @@ class AppConstants {
         maxContextSize: 5000,
         modelMaxContextSize: 6144,
         maxTokens: 0),
+    AiModel(
+        modelName: 'dall-e-3',
+        alias: 'dall-e-3',
+        aiType: AiType.chatgpt,
+        modelType: ModelType.image,
+        temperature: 1,
+        maxContextSize: 0,
+        modelMaxContextSize: 0,
+        maxTokens: 0),
   ];
+
+  static AiModel getAiModel(String modelName) {
+    for (AiModel model in AppConstants.aiModels) {
+      if (modelName == model.modelName) {
+        return model;
+      }
+    }
+    return AppConstants.aiModels[0];
+  }
 
   //// Server List
   static List<Map<String, String>> serverList = [

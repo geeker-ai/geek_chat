@@ -8,6 +8,7 @@ import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/app_constants.dart';
 // import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
@@ -50,59 +51,59 @@ class MessageContent extends StatelessWidget {
   CustomPopupMenuController customPopupMenuController =
       CustomPopupMenuController();
 
-  Widget _buildLongPressMenu() {
-    List<ItemModel> menuItems = [
-      ItemModel("Copy", Icons.content_copy, (MessageModel msg) {
-        Clipboard.setData(ClipboardData(text: msg.content));
-      }),
-      ItemModel("Delete", Icons.delete, (MessageModel msg) {
-        onDelete(msg);
-      }),
-    ];
+  // Widget _buildLongPressMenu() {
+  //   List<ItemModel> menuItems = [
+  //     ItemModel("Copy", Icons.content_copy, (MessageModel msg) {
+  //       Clipboard.setData(ClipboardData(text: msg.content));
+  //     }),
+  //     ItemModel("Delete", Icons.delete, (MessageModel msg) {
+  //       onDelete(msg);
+  //     }),
+  //   ];
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: Container(
-        width: 90,
-        color: const Color(0xFF4C4C4C),
-        child: GridView.count(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-          crossAxisCount: menuItems.length,
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 10,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: menuItems
-              .map((item) => GestureDetector(
-                    onTap: () {
-                      logger.d("gesture detector ${message.msgId}");
-                      item.onTap(message);
-                      customPopupMenuController.hideMenu();
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(
-                          item.icon,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            item.title.tr,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 12),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ))
-              .toList(),
-        ),
-      ),
-    );
-  }
+  //   return ClipRRect(
+  //     borderRadius: BorderRadius.circular(5),
+  //     child: Container(
+  //       width: 90,
+  //       color: const Color(0xFF4C4C4C),
+  //       child: GridView.count(
+  //         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+  //         crossAxisCount: menuItems.length,
+  //         crossAxisSpacing: 0,
+  //         mainAxisSpacing: 10,
+  //         shrinkWrap: true,
+  //         physics: const NeverScrollableScrollPhysics(),
+  //         children: menuItems
+  //             .map((item) => GestureDetector(
+  //                   onTap: () {
+  //                     logger.d("gesture detector ${message.msgId}");
+  //                     item.onTap(message);
+  //                     customPopupMenuController.hideMenu();
+  //                   },
+  //                   child: Column(
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: <Widget>[
+  //                       Icon(
+  //                         item.icon,
+  //                         size: 20,
+  //                         color: Colors.white,
+  //                       ),
+  //                       Container(
+  //                         margin: const EdgeInsets.only(top: 2),
+  //                         child: Text(
+  //                           item.title.tr,
+  //                           style: const TextStyle(
+  //                               color: Colors.white, fontSize: 12),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ))
+  //             .toList(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   double getAvataSize() {
     if (deviceType == DeviceType.small) {
@@ -119,8 +120,10 @@ class MessageContent extends StatelessWidget {
       );
     }
 
+    AiModel model = AppConstants.getAiModel(message.model!);
+
     String svgPic = 'assets/chatgpt-grey.svg';
-    if (session.type == AiType.bard.name) {
+    if (model.aiType.name == AiType.bard.name) {
       svgPic = 'assets/google-grey.svg';
     }
     return SvgPicture.asset(
