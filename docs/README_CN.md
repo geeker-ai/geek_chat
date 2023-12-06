@@ -93,7 +93,7 @@ Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPa
 
 - [x] 与OpenAI官方API兼容。
 - [x] 可以引用消息进行对话。
-- [x] 支持多语言 (English, 简体中文, 繁體中文, Русский).
+- [x] 支持多语言 (English, 简体中文, 繁體中文, Русский, 日本語).
 - [x] 提示词库
 - [x] 与Azure OpenAI API兼容
 - [ ] 代码块的复制按钮

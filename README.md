@@ -103,7 +103,7 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 - [x] OpenAI Offical API compatibility.
 - [x] Dark/Light Theme Mode.
 - [x] Talk with quoted messages.
-- [x] Multi Language support (English, 简体中文, 繁體中文, Русский).
+- [x] Multi Language support (English, 简体中文, 繁體中文, Русский, 日本語).
 - [x] Prompt Library
 - [x] Azure OpenAI API compatibility
 - [ ] Copy button for code blocks
