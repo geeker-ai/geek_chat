@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/repository/localstore_repository.dart';
 import 'package:geek_chat/service/http_service.dart';
@@ -24,25 +23,6 @@ class SettingsServerController extends GetxController {
     activeError = false;
     needReactive = false;
   }
-
-  // OpenAIClient get openAIClient {
-  //   OpenAIClient openAIClient = OpenAIClient(
-  //       apiKey: defaultServer.apiKey, baseUrl: defaultServer.apiHost);
-  //   return openAIClient;
-  // }
-
-  // OpenAIClient get geekChatClient {
-  //   return openAIClient;
-  // }
-
-  // OpenAIClient getAzureClient(AiModel model) {
-  //   OpenAIClient openAIClient = OpenAIClient(
-  //     baseUrl: defaultServer.getRequestURLByModel(model),
-  //     headers: {'api-key': defaultServer.apiKey},
-  //     queryParams: {'api-version': defaultServer.azureApiVersion},
-  //   );
-  //   return openAIClient;
-  // }
 
   void saveSettings(ServerModel serverModel) {
     _localStoreRepository.saveSeverSettings(serverModel);
