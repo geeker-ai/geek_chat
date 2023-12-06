@@ -127,7 +127,10 @@ dependencies:
   # event_bus: ^2.0.0
 
   # https://pub.dev/packages/fluent_ui
-  fluent_ui: ^4.7.6
+  # fluent_ui: ^4.7.6
+
+  # https://pub.dev/packages/dart_openai
+  dart_openai: ^5.0.0
 
 dev_dependencies:
   flutter_test:
