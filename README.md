@@ -1,6 +1,6 @@
 # Geek Chat
 
-English | [简体中文](./docs/README_CN.md) | [Русский](./docs/README_RU.md)
+English | [简体中文](./docs/README_CN.md) | [Русский](./docs/README_RU.md) | [日本語](./docs/README_JP.md)
 
 A helpful AI Co-pilot in your device.
 

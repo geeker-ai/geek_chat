@@ -239,6 +239,7 @@ class ChatMessageController extends GetxController {
     AiModel model = settingsController.getModelByName(currentSession.model);
     String url =
         settingsServerController.defaultServer.getRequestURLByModel(model);
+    // url = "https://api2.fucklina.com/v1/chat/completions";
     Map<String, String> headers =
         settingsServerController.defaultServer.getRequestHeaders();
     headers['Accept-Language'] = localeController.locale.id;

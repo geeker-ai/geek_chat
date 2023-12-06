@@ -43,7 +43,10 @@ class AboutPage extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
-                  child: Text("Geeker Chat Intro".tr),
+                  child: MarkdownWidget(
+                    data: "Geeker Chat Intro".tr,
+                    shrinkWrap: true,
+                  ),
                 ),
               ),
               for (ChangeLogModel version in mainController.versions)
