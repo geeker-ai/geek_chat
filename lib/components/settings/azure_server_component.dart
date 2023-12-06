@@ -40,6 +40,7 @@ class AzureServerSettingsComponent extends StatelessWidget {
           //     },
           //   ),
           // ),
+          /*
           Padding(
             padding:
                 const EdgeInsets.only(left: 20, top: 20, bottom: 10, right: 10),
@@ -67,7 +68,7 @@ class AzureServerSettingsComponent extends StatelessWidget {
                 controller.defaultServer.azureApiVersion = value.trim();
               },
             ),
-          ),
+          ),*/
           Padding(
             padding:
                 const EdgeInsets.only(left: 15, top: 20, bottom: 10, right: 10),

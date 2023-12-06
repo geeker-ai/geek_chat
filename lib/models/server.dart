@@ -42,15 +42,32 @@ class ServerModel {
       azureConfig = {
         "gpt-3.5-turbo": {
           "name": "gpt-3.5-turbo",
+          "apiKey": "",
           "deploymentId": "",
           "url": "",
+          "apiVersion": "",
         },
         "gpt-3.5-turbo-16k": {
           "name": "gpt-3.5-turbo-16k",
+          "apiKey": "",
           "deploymentId": "",
-          "url": ""
+          "url": "",
+          "apiVersion": "",
         },
-        "gpt-4": {"name": "gpt-4", "deploymentId": "", "url": ""}
+        "gpt-4": {
+          "name": "gpt-4",
+          "apiKey": "",
+          "deploymentId": "",
+          "url": "",
+          "apiVersion": "",
+        },
+        "gpt-4-32k": {
+          "name": "gpt-4-32k",
+          "apiKey": "",
+          "deploymentId": "",
+          "url": "",
+          "apiVersion": "",
+        }
       };
     }
   }
@@ -72,6 +89,17 @@ class ServerModel {
     }
   }
 
+  String getApiKey(AiModel model) {
+    if (provider == 'azure') {
+      Map<String, String> modelSettings =
+          getAzureModelSettings(model.modelName);
+      if (modelSettings.containsKey("apiKey")) {
+        return "${modelSettings['apiKey']}";
+      }
+    }
+    return apiKey;
+  }
+
   String getRequestURLByModel(AiModel model) {
     if (provider == 'azure') {
       Map<String, String> modelSettings =
@@ -91,12 +119,12 @@ class ServerModel {
     }
   }
 
-  Map<String, String> getRequestHeaders() {
+  Map<String, String> getRequestHeaders(AiModel model) {
     if (provider == 'azure') {
       return {
         'Accept': 'text/event-stream',
         'Cache-Control': 'no-cache',
-        'api-key': apiKey,
+        'api-key': getApiKey(model),
         'Content-Type': 'application/json',
         // 'Accept-Language': settingsController.lang
       };
@@ -115,6 +143,7 @@ class ServerModel {
     azureConfig[modelName] = {
       "name": modelName,
       "deploymentId": deploymentId,
+      "apiKey": apiKey,
       "url": url
     };
   }
@@ -133,11 +162,28 @@ class ServerModel {
     }
     if (jsonObj.containsKey("azureConfig")) {
       var azconfig = jsonObj['azureConfig'];
+      String apiKey = jsonObj['apiKey'];
+
       for (var key in azconfig.keys) {
+        String tmpKey = "";
+        String tmpVersion = "";
+        // print("--------------------------${azconfig[key].keys}");
+        if (azconfig[key]!.containsKey("apiKey")) {
+          tmpKey = azconfig[key]!['apiKey'];
+        } else {
+          tmpKey = apiKey;
+        }
+        if (azconfig[key]!.containsKey("apiVersion")) {
+          tmpVersion = azconfig[key]!['apiVersion'];
+        } else {
+          tmpVersion = serverModel.azureApiVersion;
+        }
         serverModel.azureConfig[key] = {
           "name": azconfig[key]!['name'],
           "deploymentId": azconfig[key]!['deploymentId'],
-          "url": azconfig[key]!['url']
+          "apiKey": tmpKey,
+          "url": azconfig[key]!['url'],
+          "apiVersion": tmpVersion
         };
       }
     }
