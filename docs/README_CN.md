@@ -1,6 +1,6 @@
 # Geek Chat
 
-[English](../README.md) | 简体中文 | [Русский](./README_RU.md)
+[English](../README.md) | 简体中文 | [Русский](./README_RU.md) | [日本語](./README_JP.md)
 
 您设备上一个有用的AI副驾驶。
 
