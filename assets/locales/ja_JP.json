@@ -54,7 +54,7 @@
     "Price": "価格",
     "buytips": "GeekChatは、現在人気のある大規模言語モデルをサポートするクライアントです。現在、OpenAI公式APIとAzureに展開されたOpenAIモデルをサポートしています。ユーザーは独自のAPIアクセスポイントを構成するか、GeekChatのデフォルトサービスを選択することができます。GeekChatは、誰もが簡単に使用できるようにすることを目的としており、モデルの使用料金は公式の価格と一致しています。詳細はこちら：https://github.com/geeker-ai/geek_chat ",
     "History Message": "履歴メッセージ数",
-    "Model name deployed on Azure": "Azure にデプロイされたモデルの展開名と URL は Azure リソースのエンドポイントに対応しています。",
+    "Model name deployed on Azure": "Azureに展開されたモデルのデプロイ名",
     "input tips": "[Enter] キーで送信、[Shift+Enter] キーで改行",
     "model intro": "Geek Chatサービスをアクティブにした場合にのみ、chat-bisonおよびcodechat-bisonモデルを正常に使用できます。",
     "Supported Models: ": "サポートされているモデル: ",
