@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
@@ -9,7 +9,7 @@ import 'package:logger/logger.dart';
 class PromptListComponent extends StatelessWidget {
   PromptListComponent({super.key});
 
-  ChatListController chatListController = Get.find();
+  ChatSessionController chatSessionController = Get.find();
   MainController mainController = Get.find();
   Logger logger = Get.find();
 
@@ -29,15 +29,15 @@ class PromptListComponent extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     SessionModel sessionModel =
-                        chatListController.createSession(
+                        chatSessionController.createSession(
                       name: controller.prompts.elementAt(index).name,
                       prompt: controller.prompts.elementAt(index).prompt,
                     );
                     // chatListController.save();
-                    chatListController.saveSession(sessionModel);
+                    chatSessionController.saveSession(sessionModel);
                     controller.navIndex = 0;
                     controller.update();
-                    chatListController.update();
+                    chatSessionController.update();
                     Get.toNamed('/chat', parameters: {'sid': sessionModel.sid});
                   },
                   child: Container(

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
@@ -16,7 +16,8 @@ import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatMessageController extends GetxController {
-  ChatListController chatListController = Get.find<ChatListController>();
+  ChatSessionController chatSessionController =
+      Get.find<ChatSessionController>();
   SettingsController settingsController = Get.find<SettingsController>();
   SettingsServerController settingsServerController = Get.find();
   final LocaleController localeController = Get.find();
@@ -47,7 +48,7 @@ class ChatMessageController extends GetxController {
         role: role,
         content: content,
         generating: generating);
-    SessionModel? session = chatListController.getSessionBysid(sid);
+    SessionModel? session = chatSessionController.getSessionBysid(sid);
     mm.model = session.model;
     mm.msgType = 1;
     // mm.generating = generating;
@@ -119,7 +120,7 @@ class ChatMessageController extends GetxController {
       return false;
     }
     int tokenCount = 0;
-    SessionModel currentSession = chatListController.currentSession;
+    SessionModel currentSession = chatSessionController.currentSession;
     tokenCount =
         numTokenCounter(currentSession.model, currentSession.promptContent);
     if (inputQuestion.isNotEmpty) {
@@ -141,7 +142,7 @@ class ChatMessageController extends GetxController {
 
   Future<List<Map<String, String>>> getRequestMessages(
       MessageModel input) async {
-    SessionModel currentSession = chatListController.currentSession;
+    SessionModel currentSession = chatSessionController.currentSession;
     var requestMessages = [
       {"role": "system", "content": currentSession.promptContent},
     ];
@@ -193,7 +194,7 @@ class ChatMessageController extends GetxController {
 
   void replyFromOpenAIWithSSE(MessageModel input, String sid,
       {required Function onDone, required Function onError}) async {
-    SessionModel currentSession = chatListController.currentSession;
+    SessionModel currentSession = chatSessionController.currentSession;
     MessageModel targetMessage = createNewMessage(
         const Uuid().v4(), settingsController.chatGPTRoles.assistant, '', true);
     targetMessage.sId = sid;

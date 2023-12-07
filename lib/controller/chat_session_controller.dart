@@ -16,7 +16,7 @@ class ChatListScrollToolController extends GetxController {
   late double dx, dy;
 }
 
-class ChatListController extends GetxController {
+class ChatSessionController extends GetxController {
   List<SessionModel> sessions = [];
 
   late SessionModel currentSession;
@@ -24,7 +24,7 @@ class ChatListController extends GetxController {
 
   final SessionRepository _sessionRepository = Get.find<SessionRepository>();
 
-  ChatListController() {
+  ChatSessionController() {
     // _sessionRepository = SessionRepository.getInstance();
     // Directory dir = SettingsController.to.dataDir;
     // _sessionRepository = SessionRepository(dir);

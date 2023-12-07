@@ -4,6 +4,8 @@ import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/models/theme.dart';
 
+enum ImageModelType { create, edit, variation }
+
 class AppConstants {
   static LocaleModel defaultLocale = locales[0];
 
@@ -195,28 +197,26 @@ class AppConstants {
     }
     return servers[0];
   }
-  //// Server List
-  // static List<Map<String, String>> serverList = [
-  //   {
-  //     'id': 'openai',
-  //     'name': 'OpenAI',
-  //     'url': 'https://api.openai.com',
-  //   },
-  //   {
-  //     'id': 'geekerchat',
-  //     'name': 'Geeker Chat',
-  //     'url': 'https://capi.fucklina.com',
-  //   },
-  //   {
-  //     'id': 'azure',
-  //     'name': 'Azure API',
-  //     'url': 'https://geek.azure.com',
-  //   }
-  // ];
 
   static List<GCThemeMode> themeModes = [
     GCThemeMode(name: 'System', themeMode: ThemeMode.system),
     GCThemeMode(name: 'Dark', themeMode: ThemeMode.dark),
     GCThemeMode(name: 'Light', themeMode: ThemeMode.light),
   ];
+
+  static List<String> dalle3ImageSizes = [
+    '1024x1024',
+    '1792x1024',
+    '1024x1792'
+  ];
+  static String defaultDall3ImageSize = dalle3ImageSizes[0];
+
+  static List<String> dalle3ImageQualities = ['standard', 'hd'];
+  static String defaultDall3ImageQuality = dalle3ImageQualities[0];
+
+  static List<String> dalle3ImageStyles = ['natural', 'vivid'];
+  static String defaultDall3ImageStyle = dalle3ImageStyles[0];
+
+  static List<int> dalle3ImageN = [1, 2, 4];
+  static int defaultDall3ImageN = dalle3ImageN[0];
 }

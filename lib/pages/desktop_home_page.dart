@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/chat_list_menu_item.dart';
 import 'package:geek_chat/components/chat/menu_button.dart';
 import 'package:geek_chat/components/desktop_main_right_component.dart';
-import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
+import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
@@ -20,11 +21,12 @@ class DesktopHomePage extends StatelessWidget {
     });
   }
 
-  ChatListController chatListController = Get.find();
+  ChatSessionController chatSessionController = Get.find();
   SettingsController settingsController = Get.find<SettingsController>();
   ChatMessageController chatMessageController =
       Get.find<ChatMessageController>();
   final TrackerController tracker = Get.find();
+  final QuestionInputController questionInputController = Get.find();
 
   List<Widget> getLeftMenus(SettingsServerController controller) {
     List<Widget> leftMenus = [
@@ -95,8 +97,8 @@ class DesktopHomePage extends StatelessWidget {
                     height: 5,
                   ),
                   Expanded(
-                    child:
-                        GetBuilder<ChatListController>(builder: (controller) {
+                    child: GetBuilder<ChatSessionController>(
+                        builder: (controller) {
                       return ListView.builder(
                           itemCount: controller.sessions.length,
                           controller: ScrollController(),
@@ -144,11 +146,13 @@ class DesktopHomePage extends StatelessWidget {
               // color: Colors.black,
             ),
             Expanded(
-              child: GetBuilder<ChatListController>(builder: (controller) {
-                return chatListController.currentSessionId.isEmpty
+              child: GetBuilder<ChatSessionController>(builder: (controller) {
+                return chatSessionController.currentSessionId.isEmpty
                     ? const Text("Please select or create a chat!")
                     : DeskTopMainRightComponent(
-                        sid: chatListController.currentSession.sid);
+                        sid: chatSessionController.currentSession.sid,
+                        questionInputController: questionInputController,
+                      );
               }),
             )
           ],

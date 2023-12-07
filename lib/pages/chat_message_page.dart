@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
-import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
@@ -20,7 +20,7 @@ class ChatMessagePage extends StatelessWidget {
     sid = data['sid'];
     logger.d("ChatMessageController: $sid ");
     chatMessageController = Get.find<ChatMessageController>();
-    session = chatListController.getSessionBysid(sid!);
+    session = chatSessionController.getSessionBysid(sid!);
     chatMessageController.findBySessionId(sid);
   }
 
@@ -29,7 +29,8 @@ class ChatMessagePage extends StatelessWidget {
   // late SessionModel session;
   late String? sid;
 
-  ChatListController chatListController = Get.find<ChatListController>();
+  ChatSessionController chatSessionController =
+      Get.find<ChatSessionController>();
   TextEditingController textEditingController = TextEditingController();
 
   scrollToBottom({animate = true}) async {
@@ -51,7 +52,7 @@ class ChatMessagePage extends StatelessWidget {
     // SessionModel session = chatListController.getSessionBysid(sid);
     return Scaffold(
       appBar: AppBar(
-        title: GetBuilder<ChatListController>(builder: (controller) {
+        title: GetBuilder<ChatSessionController>(builder: (controller) {
           return Text(session.name);
         }),
       ),
@@ -117,17 +118,17 @@ class ChatMessagePage extends StatelessWidget {
                                         await scrollToBottom(animate: false);
                                         controller.submit(sid ?? '',
                                             onDone: () {
-                                          chatListController
+                                          chatSessionController
                                               .updateSessionLastEdit(
-                                                  chatListController
+                                                  chatSessionController
                                                       .currentSession);
-                                          chatListController.update();
+                                          chatSessionController.update();
                                         }, onError: () {
-                                          chatListController
+                                          chatSessionController
                                               .updateSessionLastEdit(
-                                                  chatListController
+                                                  chatSessionController
                                                       .currentSession);
-                                          chatListController.update();
+                                          chatSessionController.update();
                                         });
                                       },
                                       icon: const Icon(Icons.send))),
@@ -138,13 +139,13 @@ class ChatMessagePage extends StatelessWidget {
                                 // onSubmit();
                                 await scrollToBottom(animate: false);
                                 controller.submit(sid ?? '', onDone: () {
-                                  chatListController.updateSessionLastEdit(
-                                      chatListController.currentSession);
-                                  chatListController.update();
+                                  chatSessionController.updateSessionLastEdit(
+                                      chatSessionController.currentSession);
+                                  chatSessionController.update();
                                 }, onError: () {
-                                  chatListController.updateSessionLastEdit(
-                                      chatListController.currentSession);
-                                  chatListController.update();
+                                  chatSessionController.updateSessionLastEdit(
+                                      chatSessionController.currentSession);
+                                  chatSessionController.update();
                                 });
                                 // controller.update();
                                 tracker.trackEvent("chat",

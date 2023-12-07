@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:geek_chat/components/settings/bottom_sheet_switcher.dart';
 import 'package:geek_chat/components/settings/grouped_bottom_sheet_switcher.dart';
-import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
@@ -49,7 +49,7 @@ class ChatEditPage extends StatelessWidget {
         if (!providerModel.supportedModels.contains(model.modelName)) {
           disabled = true;
         } else if (isEdit) {
-          if (chatListController.currentSession.modelType !=
+          if (chatSessionController.currentSession.modelType !=
               model.modelType.name) {
             disabled = true;
           }
@@ -75,7 +75,8 @@ class ChatEditPage extends StatelessWidget {
 
   bool isEdit = false;
 
-  ChatListController chatListController = Get.find<ChatListController>();
+  ChatSessionController chatSessionController =
+      Get.find<ChatSessionController>();
 
   @override
   Widget build(BuildContext context) {
@@ -83,22 +84,22 @@ class ChatEditPage extends StatelessWidget {
     // var options = getModelOptions();
 
     if (data['opt'] == 'new') {
-      chatListController.createNewSession();
+      chatSessionController.createNewSession();
       tracker.trackEvent(
           "Page-newchat", {"uuid": settingsController.settings.uuid});
     } else {
       isEdit = true;
-      chatListController.getSessionBysid(data['sid']!);
+      chatSessionController.getSessionBysid(data['sid']!);
       tracker.trackEvent(
           "Page-editchat", {"uuid": settingsController.settings.uuid});
     }
     return Scaffold(
       appBar: AppBar(
-        title: GetBuilder<ChatListController>(builder: (controller) {
+        title: GetBuilder<ChatSessionController>(builder: (controller) {
           return Text(getTitle(data['opt']).tr);
         }),
       ),
-      body: GetBuilder<ChatListController>(builder: (controller) {
+      body: GetBuilder<ChatSessionController>(builder: (controller) {
         return ListView(
           padding: const EdgeInsets.only(
               left: 10.0, top: 0.0, right: 10.0, bottom: 0.0),
@@ -109,7 +110,7 @@ class ChatEditPage extends StatelessWidget {
   }
 
   List<Widget> buildFormList(
-      BuildContext context, ChatListController controller) {
+      BuildContext context, ChatSessionController controller) {
     List<Widget> widgets = [];
     widgets.add(const Divider());
     widgets.add(ListTile(
@@ -251,9 +252,9 @@ class ChatEditPage extends StatelessWidget {
           OutlinedButton(
             onPressed: () {
               controller.saveSession(controller.currentSession);
-              chatListController.update();
-              chatListController.reloadSessions();
-              chatListController.update();
+              chatSessionController.update();
+              chatSessionController.reloadSessions();
+              chatSessionController.update();
               Get.back();
               Get.snackbar(
                 "Saved successfully!".tr,

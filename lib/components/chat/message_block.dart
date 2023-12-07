@@ -34,14 +34,14 @@ class MessageContent extends StatelessWidget {
     required this.message,
     required this.deviceType,
     required this.session,
-    required this.onQuote,
+    this.onQuote,
     required this.onDelete,
     required this.moveTo,
   }) {
     //
   }
 
-  Function onQuote;
+  Function? onQuote;
   Function onDelete;
   Function moveTo;
 
@@ -340,48 +340,7 @@ class MessageContent extends StatelessWidget {
                             const BorderRadius.all(Radius.circular(3)),
                       ),
                       child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Clipboard.setData(
-                                  ClipboardData(text: message.content));
-                              showCustomToast(
-                                  title: "Copied!".tr, context: context);
-                            },
-                            icon: const Icon(Icons.copy_all_outlined),
-                            iconSize: iconButtonSize,
-                            tooltip: "Copy".tr,
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              onQuote(message);
-                            },
-                            icon: const Icon(Icons.format_quote_outlined),
-                            iconSize: iconButtonSize,
-                            tooltip: "Quote".tr,
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Get.defaultDialog(
-                                title: "Delete Message".tr,
-                                onCancel: () {
-                                  Get.back();
-                                },
-                                onConfirm: () {
-                                  onDelete(message);
-                                  Get.back();
-                                },
-                                textCancel: "Cancel".tr,
-                                textConfirm: "Confirm".tr,
-                                middleText: "Confirm delete message?".tr,
-                                radius: 5,
-                              );
-                            },
-                            icon: const Icon(Icons.delete_forever),
-                            iconSize: iconButtonSize,
-                            tooltip: "Delete".tr,
-                          ),
-                        ],
+                        children: getOptionButtons(context, message, session),
                       ),
                     ),
                   ),
@@ -392,6 +351,55 @@ class MessageContent extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<Widget> getOptionButtons(
+      BuildContext context, MessageModel message, SessionModel session) {
+    List<Widget> buttons = [];
+    buttons.add(IconButton(
+      onPressed: () {
+        Clipboard.setData(ClipboardData(text: message.content));
+        showCustomToast(title: "Copied!".tr, context: context);
+      },
+      icon: const Icon(Icons.copy_all_outlined),
+      iconSize: iconButtonSize,
+      tooltip: "Copy".tr,
+    ));
+    // logger.d("session model type: ${session.modelType}");
+    if (session.modelType != ModelType.image.name && onQuote != null) {
+      buttons.add(IconButton(
+        onPressed: () {
+          onQuote!(message);
+        },
+        icon: const Icon(Icons.format_quote_outlined),
+        iconSize: iconButtonSize,
+        tooltip: "Quote".tr,
+      ));
+    }
+
+    buttons.add(IconButton(
+      onPressed: () {
+        Get.defaultDialog(
+          title: "Delete Message".tr,
+          onCancel: () {
+            Get.back();
+          },
+          onConfirm: () {
+            onDelete(message);
+            Get.back();
+          },
+          textCancel: "Cancel".tr,
+          textConfirm: "Confirm".tr,
+          middleText: "Confirm delete message?".tr,
+          radius: 5,
+        );
+      },
+      icon: const Icon(Icons.delete_forever),
+      iconSize: iconButtonSize,
+      tooltip: "Delete".tr,
+    ));
+
+    return buttons;
   }
 
   Color getMessageBackgroundColor(BuildContext context,

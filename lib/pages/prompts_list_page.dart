@@ -2,7 +2,7 @@ import 'dart:async';
 
 // import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
@@ -28,7 +28,7 @@ class PromptsListPage extends StatelessWidget {
   }
 
   MainController mainController = Get.find();
-  ChatListController chatListController = Get.find();
+  ChatSessionController chatSessionController = Get.find();
   SettingsController settingsController = Get.find();
 
   double getFittedCardWidth(BuildContext context) {
@@ -71,17 +71,18 @@ class PromptsListPage extends StatelessWidget {
                         child: InkWell(
                           onTap: () {
                             SessionModel sessionModel =
-                                chatListController.createSession(
+                                chatSessionController.createSession(
                               name: promptModel.name,
                               prompt: promptModel.prompt,
                             );
                             // // chatListController.save();
-                            chatListController.saveSession(sessionModel);
+                            chatSessionController.saveSession(sessionModel);
                             // controller.navIndex = 0;
                             controller.update();
-                            chatListController.update();
+                            chatSessionController.update();
                             Get.back();
-                            chatListController.switchSession(sessionModel.sid);
+                            chatSessionController
+                                .switchSession(sessionModel.sid);
                             // Get.toNamed('/chat',
                             //     parameters: {'sid': sessionModel.sid});
                           },

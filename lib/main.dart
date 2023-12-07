@@ -8,10 +8,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 // import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
-import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
+import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
@@ -105,8 +106,9 @@ initServices() async {
 
   MainController mainController = Get.put(MainController());
   mainController.loadChangeLog();
-  Get.put(ChatListController());
+  Get.put(ChatSessionController());
   Get.put(ChatMessageController());
+  Get.put(QuestionInputController());
   //// migrate
   GeekChatMigration geekChatMigration = GeekChatMigration();
   geekChatMigration.migrate();
