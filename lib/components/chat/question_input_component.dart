@@ -6,6 +6,7 @@ import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
     super.key,
     required this.sid,
     required this.scrollToBottom,
-    required this.questionInputFocus,
+    // required this.questionInputFocus,
     required this.session,
     required this.questionInputController,
     required this.onSubmit,
@@ -27,8 +28,16 @@ class QuestionInputPanelCompoent extends StatelessWidget {
   SessionModel session;
   Function scrollToBottom;
   Function onSubmit;
-  FocusNode questionInputFocus;
+  // FocusNode questionInputFocus;
   QuestionInputController questionInputController;
+
+  bool isImageSession() {
+    bool isImage = false;
+    if (session.modelType == ModelType.image.name) {
+      isImage = true;
+    }
+    return isImage;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +49,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (isImageSession()) buildImageToolBar(context),
               Row(
                 children: [
                   Expanded(
@@ -58,7 +68,8 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                           QuestionInputComponent(
                             sid: sid,
                             scrollToBottom: scrollToBottom,
-                            questionInputFocus: questionInputFocus,
+                            questionInputFocus:
+                                questionInputController.inputFocus,
                             session: session,
                           ),
                           QuoteMessagesComponent(),
@@ -79,6 +90,81 @@ class QuestionInputPanelCompoent extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  Widget buildImageToolBar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 15),
+      child: Wrap(
+        children: [
+          ImageInputParametersComponent(
+              title: "Image Size",
+              dropDownlist: questionInputController.imageSizeList,
+              defaultValue: questionInputController.defaultImageSize),
+          const SizedBox(
+            width: 10,
+          ),
+          ImageInputParametersComponent(
+              title: "Image Quality",
+              dropDownlist: questionInputController.imageQualityList,
+              defaultValue: questionInputController.defaultImageQuality),
+          const SizedBox(
+            width: 10,
+          ),
+          ImageInputParametersComponent(
+              title: "Image Count",
+              dropDownlist: questionInputController.imageNList,
+              defaultValue: questionInputController.defaultImageN),
+        ],
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class ImageInputParametersComponent extends StatelessWidget {
+  ImageInputParametersComponent(
+      {super.key,
+      required this.title,
+      required this.dropDownlist,
+      required this.defaultValue});
+  String title;
+  List<String> dropDownlist;
+  String defaultValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.only(top: 2),
+          child: Text(title.tr),
+        ),
+        const SizedBox(width: 10),
+        // select widget
+        DropdownMenu<String>(
+          enableFilter: false,
+          width: 125,
+          textStyle: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
+          inputDecorationTheme: InputDecorationTheme(
+            // contentPadding: EdgeInsets.all(0),
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize),
+          ),
+          initialSelection: defaultValue,
+          dropdownMenuEntries:
+              dropDownlist.map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry<String>(value: value, label: value);
+          }).toList(),
+        ),
+      ],
     );
   }
 }

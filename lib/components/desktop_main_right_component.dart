@@ -24,7 +24,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
         scrollButtonListener();
       });
       scrollButtonListener();
-      questionInputFocus.requestFocus();
+      questionInputController.inputFocus.requestFocus();
     });
   }
 
@@ -103,8 +103,6 @@ class DeskTopMainRightComponent extends StatelessWidget {
   SettingsController settingsController = Get.find<SettingsController>();
 
   String sid;
-
-  FocusNode questionInputFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +208,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
                               controller.addQuoteMessage(message);
                               controller.update();
                             }
-                            questionInputFocus.requestFocus();
+                            questionInputController.inputFocus.requestFocus();
                           },
                           onDelete: (MessageModel message) {
                             //
@@ -233,7 +231,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
           QuestionInputPanelCompoent(
             sid: sid,
             scrollToBottom: scrollToBottom,
-            questionInputFocus: questionInputFocus,
+            // questionInputFocus: questionInputFocus,
             session: session,
             onSubmit: () {
               logger.d("onSubmit call");
