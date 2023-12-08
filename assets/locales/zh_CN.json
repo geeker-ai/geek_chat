@@ -62,5 +62,9 @@
     "Active": "激活",
     "Server Settings": "服务器设置",
     "Please Select a server": "请选择服务器",
-    "Save successful": "保存成功"
+    "Save successful": "保存成功",
+    "Image Size": "图片大小:",
+    "Image Quality": "图片质量:",
+    "Image Style": "图片风格:",
+    "Image Count": "生成数量:"
 }

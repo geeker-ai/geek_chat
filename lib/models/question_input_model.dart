@@ -12,4 +12,8 @@ class QuestionInputModel {
   String? imageParameterSize;
   String? imageParameterStyle;
   String inputText;
+
+  String toJson() {
+    return '{"inputText": "$inputText", "imageParameterN": $imageParameterN, "imageParameterQuality": "$imageParameterQuality", "imageParameterSize": "$imageParameterSize", "imageParameterStyle": "$imageParameterStyle"}';
+  }
 }

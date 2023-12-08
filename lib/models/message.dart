@@ -14,6 +14,7 @@ class MessageModel {
   bool? synced;
   int? status; // 1 = show, 2=delete
   List<String>? quotes;
+  String? questionParameters;
   StreamController<String>? contentStream;
 
   MessageModel({
@@ -28,6 +29,7 @@ class MessageModel {
     this.synced,
     this.status,
     this.quotes,
+    this.questionParameters,
   }) {
     if (generating == true) {
       // print("contentStream = StreamController<String>();");
@@ -51,6 +53,9 @@ class MessageModel {
     mm.status = mt.status;
     if (mt.quotes != null) {
       mm.quotes = mt.quotes;
+    }
+    if (mt.questionParameters != null) {
+      mm.questionParameters = mt.questionParameters;
     }
     return mm;
   }
@@ -81,6 +86,9 @@ class MessageModel {
     mt.status = status ?? 1;
     if (quotes != null) {
       mt.quotes = quotes;
+    }
+    if (questionParameters != null) {
+      mt.questionParameters = questionParameters;
     }
     return mt;
   }

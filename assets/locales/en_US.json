@@ -62,5 +62,9 @@
     "Active": "Active",
     "Server Settings": "Server Settings",
     "Please Select a server": "Please Select a server",
-    "Save successful": "Save successful"
+    "Save successful": "Save successful",
+    "Image Size": "Image Size:",
+    "Image Quality": "Image Quality:",
+    "Image Style": "Image Style:",
+    "Image Count": "Image Count:"
 }

@@ -21,15 +21,16 @@ class QuestionInputPanelCompoent extends StatelessWidget {
     // required this.questionInputFocus,
     required this.session,
     required this.questionInputController,
-    required this.onSubmit,
+    required this.onQuestionInputSubmit,
   });
 
   String sid;
   SessionModel session;
   Function scrollToBottom;
-  Function onSubmit;
+  Function onQuestionInputSubmit;
   // FocusNode questionInputFocus;
   QuestionInputController questionInputController;
+  Logger logger = Get.find<Logger>();
 
   bool isImageSession() {
     bool isImage = false;
@@ -68,9 +69,11 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                           QuestionInputComponent(
                             sid: sid,
                             scrollToBottom: scrollToBottom,
-                            questionInputFocus:
-                                questionInputController.inputFocus,
+                            // questionInputFocus:
+                            //     questionInputController.inputFocus,
                             session: session,
+                            onQuestionInputSubmit: onQuestionInputSubmit,
+                            questionInputController: questionInputController,
                           ),
                           QuoteMessagesComponent(),
                         ],
@@ -95,27 +98,65 @@ class QuestionInputPanelCompoent extends StatelessWidget {
 
   Widget buildImageToolBar(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 15),
+      padding: const EdgeInsets.only(left: 2, right: 0, top: 0, bottom: 15),
       child: Wrap(
         children: [
           ImageInputParametersComponent(
-              title: "Image Size",
-              dropDownlist: questionInputController.imageSizeList,
-              defaultValue: questionInputController.defaultImageSize),
+            title: "Image Size",
+            dropDownlist: questionInputController.imageSizeList,
+            defaultValue: questionInputController.defaultImageSize,
+            onChanged: (value) {
+              questionInputController.questionInputModel.imageParameterSize =
+                  value;
+              logger.d(
+                  "image size: ${questionInputController.questionInputModel.imageParameterSize}");
+            },
+          ),
           const SizedBox(
             width: 10,
           ),
           ImageInputParametersComponent(
-              title: "Image Quality",
-              dropDownlist: questionInputController.imageQualityList,
-              defaultValue: questionInputController.defaultImageQuality),
+            title: "Image Quality",
+            dropDownlist: questionInputController.imageQualityList,
+            defaultValue: questionInputController.defaultImageQuality,
+            onChanged: (value) {
+              questionInputController.questionInputModel.imageParameterQuality =
+                  value;
+              logger.d(
+                  "image size: ${questionInputController.questionInputModel.imageParameterQuality}");
+            },
+            width: 110,
+          ),
           const SizedBox(
             width: 10,
           ),
           ImageInputParametersComponent(
-              title: "Image Count",
-              dropDownlist: questionInputController.imageNList,
-              defaultValue: questionInputController.defaultImageN),
+            title: "Image Style",
+            dropDownlist: questionInputController.imageStyleList,
+            defaultValue: questionInputController.defaultImageStyle,
+            onChanged: (value) {
+              questionInputController.questionInputModel.imageParameterStyle =
+                  value;
+              logger.d(
+                  "image size: ${questionInputController.questionInputModel.imageParameterStyle}");
+            },
+            width: 110,
+          ),
+          // const SizedBox(
+          //   width: 10,
+          // ),
+          // ImageInputParametersComponent(
+          //   title: "Image Count",
+          //   dropDownlist: questionInputController.imageNList,
+          //   defaultValue: questionInputController.defaultImageN,
+          //   onChanged: (value) {
+          //     questionInputController.questionInputModel.imageParameterN =
+          //         int.parse(value);
+          //     logger.d(
+          //         "image count: ${questionInputController.questionInputModel.imageParameterN}");
+          //   },
+          //   width: 70,
+          // ),
         ],
       ),
     );
@@ -124,14 +165,19 @@ class QuestionInputPanelCompoent extends StatelessWidget {
 
 // ignore: must_be_immutable
 class ImageInputParametersComponent extends StatelessWidget {
-  ImageInputParametersComponent(
-      {super.key,
-      required this.title,
-      required this.dropDownlist,
-      required this.defaultValue});
+  ImageInputParametersComponent({
+    super.key,
+    required this.title,
+    required this.dropDownlist,
+    required this.defaultValue,
+    required this.onChanged,
+    this.width = 130,
+  });
   String title;
   List<String> dropDownlist;
   String defaultValue;
+  double width;
+  Function onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +194,7 @@ class ImageInputParametersComponent extends StatelessWidget {
         // select widget
         DropdownMenu<String>(
           enableFilter: false,
-          width: 125,
+          width: width,
           textStyle: TextStyle(
               fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
           inputDecorationTheme: InputDecorationTheme(
@@ -163,6 +209,9 @@ class ImageInputParametersComponent extends StatelessWidget {
               dropDownlist.map<DropdownMenuEntry<String>>((String value) {
             return DropdownMenuEntry<String>(value: value, label: value);
           }).toList(),
+          onSelected: (value) {
+            onChanged(value);
+          },
         ),
       ],
     );
@@ -175,14 +224,18 @@ class QuestionInputComponent extends StatelessWidget {
     super.key,
     required this.sid,
     required this.scrollToBottom,
-    required this.questionInputFocus,
+    // required this.questionInputFocus,
     required this.session,
+    required this.onQuestionInputSubmit,
+    required this.questionInputController,
   });
 
   String sid;
   Function scrollToBottom;
-  FocusNode questionInputFocus;
+  Function onQuestionInputSubmit;
+  // FocusNode questionInputFocus;
   SessionModel session;
+  QuestionInputController questionInputController;
 
   TextEditingController textEditingController = TextEditingController();
   ChatSessionController chatSessionController = Get.find();
@@ -210,6 +263,11 @@ class QuestionInputComponent extends StatelessWidget {
 
   submit(ChatMessageController controller) async {
     await scrollToBottom(animate: false);
+    if (session.modelType == ModelType.image.name) {
+      onQuestionInputSubmit();
+      return;
+    }
+    await scrollToBottom(animate: false);
     controller.submit(sid, onDone: () {
       chatSessionController
           .updateSessionLastEdit(chatSessionController.currentSession);
@@ -226,7 +284,7 @@ class QuestionInputComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     // questionInputFocus.
     // questionInputFocus.attach(context, onKey: onKey);
-    questionInputFocus.onKey = onKey;
+    questionInputController.inputFocus.onKey = onKey;
     // questionInputFocus.requestFocus();
     return GetBuilder<ChatMessageController>(
         id: 'inputQuestion',
@@ -234,7 +292,7 @@ class QuestionInputComponent extends StatelessWidget {
           textEditingController.text = controller.inputQuestion;
           return TextFormField(
             controller: textEditingController,
-            focusNode: questionInputFocus,
+            focusNode: questionInputController.inputFocus,
             minLines: 1,
             maxLines: 5,
             textInputAction: TextInputAction.newline,
@@ -257,6 +315,7 @@ class QuestionInputComponent extends StatelessWidget {
                     title: "Too many quote messages".tr, context: context);
               }
               controller.inputQuestion = value;
+              questionInputController.inputText = value;
               // controller.update(['inputQuestion']);
             },
             onTap: () {

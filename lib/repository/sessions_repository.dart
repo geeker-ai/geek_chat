@@ -53,6 +53,9 @@ class MessageTable {
   bool synced = false; //
   List<String>? quotes;
 
+  /// question parameters
+  String? questionParameters;
+
   @Index()
   int status = 1; // 1 = show, 0 = delete
 }

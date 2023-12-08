@@ -1,6 +1,8 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/models/question_input_model.dart';
+import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/models/session.dart';
 
 class GeekerAIUtils {
@@ -8,28 +10,38 @@ class GeekerAIUtils {
 
   static GeekerAIUtils get instance => _geekerAIUtils;
 
-  OpenAI getOpenaiInstance(SettingsServerController serverController) {
-    initOpenAI(serverController);
+  ServerModel? defaultServer;
+
+  OpenAI getOpenaiInstance(ServerModel defaultServer) {
+    defaultServer = defaultServer;
+    initOpenAI(defaultServer);
     return OpenAI.instance;
   }
 
-  OpenAI getGeekerChatInstance(SettingsServerController serverController) {
-    return getOpenaiInstance(serverController);
+  OpenAI getGeekerChatInstance(ServerModel defaultServer) {
+    return getOpenaiInstance(defaultServer);
   }
 
   /// TODO
-  List<MessageModel> getHistorySessions(
+  List<MessageModel> getHistoryMessages(
       List<MessageModel> messages, SessionModel session) {
     List<MessageModel> historyMessages = [];
     return historyMessages;
   }
 
   /// TODO
+  // OpenAIImageModel createImage(QuestionInputModel input) {
+  //   OpenAIImageModel image = getOpenaiInstance(serverController)
+  // }
+
+  /// TODO
 
   GeekerAIUtils._();
 
-  initOpenAI(SettingsServerController serverController) {
-    OpenAI.apiKey = serverController.defaultServer.apiKey;
-    OpenAI.baseUrl = serverController.defaultServer.apiHost;
+  initOpenAI(ServerModel defaultServer) {
+    OpenAI.apiKey = defaultServer.apiKey;
+    OpenAI.baseUrl = defaultServer.apiHost;
+    OpenAI.showLogs = true;
+    OpenAI.showResponsesLogs = true;
   }
 }

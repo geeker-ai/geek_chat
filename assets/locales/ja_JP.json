@@ -62,5 +62,9 @@
     "Active": "アクティブ",
     "Server Settings": "サーバー設定",
     "Please Select a server": "サーバーを選択してください",
-    "Save successful": "保存に成功しました"
+    "Save successful": "保存に成功しました",
+    "Image Size": "画像サイズ:",
+    "Image Quality": "画像品質:",
+    "Image Style": "画像スタイル:",
+    "Image Count": "画像の数:"
 }

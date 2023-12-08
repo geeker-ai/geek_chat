@@ -15,7 +15,10 @@ import 'package:logger/logger.dart';
 // ignore: must_be_immutable
 class DeskTopMainRightComponent extends StatelessWidget {
   DeskTopMainRightComponent(
-      {super.key, required this.sid, required this.questionInputController}) {
+      {super.key,
+      required this.sid,
+      required this.questionInputController,
+      required this.onQuestionSubmit}) {
     chatMessageController = Get.find<ChatMessageController>();
 
     /// init right scroll button
@@ -27,6 +30,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
       questionInputController.inputFocus.requestFocus();
     });
   }
+
+  Function onQuestionSubmit;
 
   QuestionInputController questionInputController;
 
@@ -233,9 +238,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
             scrollToBottom: scrollToBottom,
             // questionInputFocus: questionInputFocus,
             session: session,
-            onSubmit: () {
-              logger.d("onSubmit call");
-            },
+            onQuestionInputSubmit: onQuestionSubmit,
             questionInputController: questionInputController,
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/chat_list_menu_item.dart';
 import 'package:geek_chat/components/chat/menu_button.dart';
@@ -8,8 +9,13 @@ import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
+import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/app_constants.dart';
+import 'package:geek_chat/util/geeker_ai_utils.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
 class DesktopHomePage extends StatelessWidget {
@@ -27,6 +33,59 @@ class DesktopHomePage extends StatelessWidget {
       Get.find<ChatMessageController>();
   final TrackerController tracker = Get.find();
   final QuestionInputController questionInputController = Get.find();
+  final SettingsServerController settingsServerController = Get.find();
+
+  Logger logger = Get.find();
+
+  onQuestionInputSubmit() async {
+    logger.d("onQuestionInputSubmit called");
+    logger.d(
+        "question input: ${questionInputController.questionInputModel.toJson()}");
+    if (chatSessionController.currentSession.modelType ==
+        ModelType.image.name) {
+      /// create new message
+      MessageModel userMessage = chatMessageController.createNewMessage(
+          chatSessionController.currentSession.sid,
+          'user',
+          questionInputController.inputText,
+          false);
+      userMessage.model = chatSessionController.currentSession.model;
+
+      /// request openai
+      try {
+        chatMessageController.addMessage(userMessage);
+        chatMessageController.update();
+        OpenAI openAI = GeekerAIUtils.instance
+            .getOpenaiInstance(settingsServerController.defaultServer);
+        OpenAIImageModel images = await openAI.image.create(
+          model: chatSessionController.currentSession.model,
+          prompt: questionInputController.inputText,
+          n: int.parse(questionInputController.defaultImageN),
+          size: AppConstants.getGeekerAIImageSize(questionInputController
+                  .questionInputModel.imageParameterSize!)
+              .openAIImageSize,
+          quality: AppConstants.getGeekerAIImageQuality(questionInputController
+                  .questionInputModel.imageParameterQuality!)
+              .openAIImageQuality,
+          style: AppConstants.getGeekerAIImageStyle(questionInputController
+                  .questionInputModel.imageParameterStyle!)
+              .openAIImageStyle,
+        );
+        logger.d("image model: ${images.data.toString()}");
+        OpenAIImageData image = images.data.first;
+        logger.d("image url: ${image.url}");
+        logger.d("image revise: ${image.revisedPrompt}");
+      } catch (e) {
+        logger.e("getOpenAIInstance error: $e");
+      }
+    } else if (chatSessionController.currentSession.modelType ==
+        ModelType.chat.name) {
+      // TODO: process chat model
+    } else if (chatSessionController.currentSession.modelType ==
+        ModelType.text.name) {
+      // TODO process text model
+    }
+  }
 
   List<Widget> getLeftMenus(SettingsServerController controller) {
     List<Widget> leftMenus = [
@@ -152,6 +211,7 @@ class DesktopHomePage extends StatelessWidget {
                     : DeskTopMainRightComponent(
                         sid: chatSessionController.currentSession.sid,
                         questionInputController: questionInputController,
+                        onQuestionSubmit: onQuestionInputSubmit,
                       );
               }),
             )

@@ -62,5 +62,9 @@
     "Active": "Активировать",
     "Server Settings": "Настройки сервера",
     "Please Select a server": "Пожалуйста, выберите сервер",
-    "Save successful": "Сохранение успешно"
+    "Save successful": "Сохранение успешно",
+    "Image Size": "Размер изображения:",
+    "Image Quality": "Качество изображения:",
+    "Image Style": "Стиль изображения:",
+    "Image Count": "Количество изображений:"
 }

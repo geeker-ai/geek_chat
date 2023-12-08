@@ -1,4 +1,6 @@
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
+import 'package:geek_chat/models/geekerai/geekerai_models.dart';
 import 'package:geek_chat/models/locale_model.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/server.dart';
@@ -204,18 +206,70 @@ class AppConstants {
     GCThemeMode(name: 'Light', themeMode: ThemeMode.light),
   ];
 
-  static List<String> dalle3ImageSizes = [
-    '1024x1024',
-    '1792x1024',
-    '1024x1792'
+  // static List<String> dalle3ImageSizes = [
+  //   '1024x1024',
+  //   '1792x1024',
+  //   '1024x1792'
+  // ];
+  static List<GeekerAIImageSize> dalle3ImageSizes = [
+    GeekerAIImageSize(
+        id: '1024x1024',
+        name: '1024x1024',
+        openAIImageSize: OpenAIImageSize.size1024),
+    GeekerAIImageSize(
+        id: '1792x1024',
+        name: '1792x1024',
+        openAIImageSize: OpenAIImageSize.size1792Horizontal),
+    GeekerAIImageSize(
+        id: '1024x1792',
+        name: '1024x1792',
+        openAIImageSize: OpenAIImageSize.size1792Vertical),
   ];
-  static String defaultDall3ImageSize = dalle3ImageSizes[0];
+  static GeekerAIImageSize getGeekerAIImageSize(String sizeId) {
+    for (GeekerAIImageSize size in dalle3ImageSizes) {
+      if (size.id == sizeId) {
+        return size;
+      }
+    }
+    return defaultDall3ImageSize;
+  }
 
-  static List<String> dalle3ImageQualities = ['standard', 'hd'];
-  static String defaultDall3ImageQuality = dalle3ImageQualities[0];
+  static GeekerAIImageSize defaultDall3ImageSize = dalle3ImageSizes[0];
 
-  static List<String> dalle3ImageStyles = ['natural', 'vivid'];
-  static String defaultDall3ImageStyle = dalle3ImageStyles[0];
+  static List<GeekerAIImageQuality> dalle3ImageQualities = [
+    GeekerAIImageQuality(id: 'standard', name: 'standard'),
+    GeekerAIImageQuality(
+        id: 'hd', name: 'hd', openAIImageQuality: OpenAIImageQuality.hd),
+  ];
+  static GeekerAIImageQuality defaultDall3ImageQuality =
+      dalle3ImageQualities[0];
+  static GeekerAIImageQuality getGeekerAIImageQuality(String qualityId) {
+    for (GeekerAIImageQuality quality in dalle3ImageQualities) {
+      if (quality.id == qualityId) {
+        return quality;
+      }
+    }
+    return defaultDall3ImageQuality;
+  }
+
+  static List<GeekerAIImageStyle> dalle3ImageStyles = [
+    GeekerAIImageStyle(
+        id: 'natural',
+        name: 'natural',
+        openAIImageStyle: OpenAIImageStyle.natural),
+    GeekerAIImageStyle(
+        id: 'vivid', name: 'vivid', openAIImageStyle: OpenAIImageStyle.vivid),
+  ];
+  static GeekerAIImageStyle getGeekerAIImageStyle(String styleId) {
+    for (GeekerAIImageStyle style in dalle3ImageStyles) {
+      if (style.id == styleId) {
+        return style;
+      }
+    }
+    return defaultDall3ImageStyle;
+  }
+
+  static GeekerAIImageStyle defaultDall3ImageStyle = dalle3ImageStyles[0];
 
   static List<int> dalle3ImageN = [1, 2, 4];
   static int defaultDall3ImageN = dalle3ImageN[0];

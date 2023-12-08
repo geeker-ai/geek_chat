@@ -95,6 +95,10 @@ class ChatMessageController extends GetxController {
     replyFromOpenAIWithSSE(input, sid, onDone: onDone, onError: onError);
   }
 
+  void addMessage(MessageModel message) {
+    messages.insert(0, message);
+  }
+
   void saveMessage(MessageModel mm) {
     _sessionRepository.saveMessage(mm.toMessageTable());
   }
