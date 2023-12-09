@@ -51,6 +51,7 @@ class ChatMessageController extends GetxController {
     SessionModel? session = chatSessionController.getSessionBysid(sid);
     mm.model = session.model;
     mm.msgType = 1;
+    mm.sId = sid;
     // mm.generating = generating;
     mm.synced = false;
     // mm.updated = int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString());

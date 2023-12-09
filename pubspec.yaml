@@ -130,10 +130,20 @@ dependencies:
   # fluent_ui: ^4.7.6
 
   # https://pub.dev/packages/dart_openai
-  dart_openai: ^5.0.0
+  # dart_openai: ^5.0.0
+  dart_openai:
+    # path: ../dart_openai
+    git:
+      url: https://github.com/geeker-ai/dart_openai.git
+      ref: main
 
   # https://pub.dev/packages/openai_dart
   openai_dart: ^0.1.2
+  # openai_dart:
+  #   path: ../d
+
+  # https://pub.dev/packages/extended_image
+  extended_image: ^8.2.0
 
 dev_dependencies:
   flutter_test:
@@ -147,6 +157,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   isar_generator: ^3.1.0+1
   build_runner: ^2.4.6
+  analyzer: ^5.13.0
 
   # flutter_distributor: ^0.3.4
   # googleapis: ^8.1.0

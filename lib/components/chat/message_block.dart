@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geek_chat/components/chat/image_message_component.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/message_block_controller.dart';
@@ -45,7 +46,7 @@ class MessageContent extends StatelessWidget {
   Function onDelete;
   Function moveTo;
 
-  MessageBlockController controller = Get.put(MessageBlockController());
+  // MessageBlockController controller = Get.put(MessageBlockController());
   Logger logger = Get.find();
 
   CustomPopupMenuController customPopupMenuController =
@@ -255,7 +256,7 @@ class MessageContent extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 10, bottom: 3),
                       alignment: Alignment.centerLeft,
                       margin: const EdgeInsets.only(right: 8),
-                      child: markDownWidgetWithStream(message, isDark),
+                      child: messageContentAdaptor(message, controller, isDark),
                     ),
                   )
                 ],
@@ -266,6 +267,15 @@ class MessageContent extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget messageContentAdaptor(
+      MessageModel message, MessageBlockController controller, bool isDark) {
+    AiModel aiModel = controller.getAiModelbyName(message.model!);
+    if (aiModel.modelType.name == ModelType.image.name) {
+      return ImageMessageComponent(message: message);
+    }
+    return markDownWidgetWithStream(message, isDark);
   }
 
   double iconButtonSize = 20.0;
@@ -293,7 +303,7 @@ class MessageContent extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  "model: ${message.model}",
+                  "MODEL: ${message.model?.toUpperCase()}",
                   style: TextStyle(color: messsageTipsColor, fontSize: 12),
                 ),
               ],
@@ -356,17 +366,18 @@ class MessageContent extends StatelessWidget {
   List<Widget> getOptionButtons(
       BuildContext context, MessageModel message, SessionModel session) {
     List<Widget> buttons = [];
-    buttons.add(IconButton(
-      onPressed: () {
-        Clipboard.setData(ClipboardData(text: message.content));
-        showCustomToast(title: "Copied!".tr, context: context);
-      },
-      icon: const Icon(Icons.copy_all_outlined),
-      iconSize: iconButtonSize,
-      tooltip: "Copy".tr,
-    ));
     // logger.d("session model type: ${session.modelType}");
     if (session.modelType != ModelType.image.name && onQuote != null) {
+      buttons.add(IconButton(
+        onPressed: () {
+          Clipboard.setData(ClipboardData(text: message.content));
+          showCustomToast(title: "Copied!".tr, context: context);
+        },
+        icon: const Icon(Icons.copy_all_outlined),
+        iconSize: iconButtonSize,
+        tooltip: "Copy".tr,
+      ));
+
       buttons.add(IconButton(
         onPressed: () {
           onQuote!(message);
@@ -465,97 +476,97 @@ class QuoteMessageComponent extends StatelessWidget {
   }
 }
 
-@Deprecated("message")
-// ignore: must_be_immutable
-class MessageBlock extends StatelessWidget {
-  MessageModel message;
-  MessageBlock({super.key, required this.message});
+// @Deprecated("message")
+// // ignore: must_be_immutable
+// class MessageBlock extends StatelessWidget {
+//   MessageModel message;
+//   MessageBlock({super.key, required this.message});
 
-  MainAxisAlignment getMainAxisAligment() {
-    if (message.role == SettingsController.to.chatGPTRoles.assistant) {
-      return MainAxisAlignment.start;
-    } else {
-      return MainAxisAlignment.end;
-    }
-  }
+//   MainAxisAlignment getMainAxisAligment() {
+//     if (message.role == SettingsController.to.chatGPTRoles.assistant) {
+//       return MainAxisAlignment.start;
+//     } else {
+//       return MainAxisAlignment.end;
+//     }
+//   }
 
-  BorderRadiusGeometry getBorderRadius() {
-    double radius = 10;
-    if (message.role == SettingsController.to.chatGPTRoles.assistant) {
-      return BorderRadius.only(
-        topRight: Radius.circular(radius),
-        topLeft: Radius.circular(radius),
-        // bottomLeft: Radius.circular(radius),
-        bottomRight: Radius.circular(radius),
-      );
-    } else {
-      return BorderRadius.only(
-        topLeft: Radius.circular(radius),
-        topRight: Radius.circular(radius),
-        bottomLeft: Radius.circular(radius),
-        // bottomRight: Radius.circular(radius),
-      );
-    }
-  }
+//   BorderRadiusGeometry getBorderRadius() {
+//     double radius = 10;
+//     if (message.role == SettingsController.to.chatGPTRoles.assistant) {
+//       return BorderRadius.only(
+//         topRight: Radius.circular(radius),
+//         topLeft: Radius.circular(radius),
+//         // bottomLeft: Radius.circular(radius),
+//         bottomRight: Radius.circular(radius),
+//       );
+//     } else {
+//       return BorderRadius.only(
+//         topLeft: Radius.circular(radius),
+//         topRight: Radius.circular(radius),
+//         bottomLeft: Radius.circular(radius),
+//         // bottomRight: Radius.circular(radius),
+//       );
+//     }
+//   }
 
-  final messageGap = 15.0;
-  double getMessageLeftSizedBoxWidth() {
-    if (message.role == SettingsController.to.chatGPTRoles.user) {
-      return messageGap;
-    }
-    return 0;
-  }
+//   final messageGap = 15.0;
+//   double getMessageLeftSizedBoxWidth() {
+//     if (message.role == SettingsController.to.chatGPTRoles.user) {
+//       return messageGap;
+//     }
+//     return 0;
+//   }
 
-  double getMessageRightSizedBoxWidth() {
-    if (message.role == SettingsController.to.chatGPTRoles.user) {
-      return 0;
-    }
-    return messageGap;
-  }
+//   double getMessageRightSizedBoxWidth() {
+//     if (message.role == SettingsController.to.chatGPTRoles.user) {
+//       return 0;
+//     }
+//     return messageGap;
+//   }
 
-  Color getMessageBackgroundColor(BuildContext context) {
-    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return Colors.grey[900]!;
-    } else {
-      return Colors.black12;
-    }
-  }
+//   Color getMessageBackgroundColor(BuildContext context) {
+//     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+//     if (isDark) {
+//       return Colors.grey[900]!;
+//     } else {
+//       return Colors.black12;
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-      child: Row(
-        mainAxisAlignment: getMainAxisAligment(),
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: getMessageLeftSizedBoxWidth(),
-          ),
-          Expanded(
-            child: Container(
-              // width: double.infinity,
-              padding:
-                  const EdgeInsets.only(right: 5, left: 5, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                color: getMessageBackgroundColor(context),
-                borderRadius: getBorderRadius(),
-              ),
-              // constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
-              child: markDownWidgetWithStream(message, isDark),
-            ),
-          ),
-          SizedBox(
-            width: getMessageRightSizedBoxWidth(),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+//     return Padding(
+//       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+//       child: Row(
+//         mainAxisAlignment: getMainAxisAligment(),
+//         mainAxisSize: MainAxisSize.min,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           SizedBox(
+//             width: getMessageLeftSizedBoxWidth(),
+//           ),
+//           Expanded(
+//             child: Container(
+//               // width: double.infinity,
+//               padding:
+//                   const EdgeInsets.only(right: 5, left: 5, top: 10, bottom: 10),
+//               decoration: BoxDecoration(
+//                 color: getMessageBackgroundColor(context),
+//                 borderRadius: getBorderRadius(),
+//               ),
+//               // constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
+//               child: markDownWidgetWithStream(message, isDark),
+//             ),
+//           ),
+//           SizedBox(
+//             width: getMessageRightSizedBoxWidth(),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 Widget markDownWidgetWithStream(MessageModel message, bool isDark) {
   if (message.generating == false) {

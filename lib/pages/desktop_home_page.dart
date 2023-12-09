@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/chat_list_menu_item.dart';
@@ -38,7 +40,8 @@ class DesktopHomePage extends StatelessWidget {
   Logger logger = Get.find();
 
   onQuestionInputSubmit() async {
-    logger.d("onQuestionInputSubmit called");
+    logger.d(
+        "onQuestionInputSubmit called: ${chatSessionController.currentSession.sid}");
     logger.d(
         "question input: ${questionInputController.questionInputModel.toJson()}");
     if (chatSessionController.currentSession.modelType ==
@@ -50,6 +53,7 @@ class DesktopHomePage extends StatelessWidget {
           questionInputController.inputText,
           false);
       userMessage.model = chatSessionController.currentSession.model;
+      userMessage.status = 1;
 
       /// request openai
       try {
@@ -71,10 +75,24 @@ class DesktopHomePage extends StatelessWidget {
                   .questionInputModel.imageParameterStyle!)
               .openAIImageStyle,
         );
-        logger.d("image model: ${images.data.toString()}");
+        logger.d("image model: ${images.json.toString()}");
         OpenAIImageData image = images.data.first;
         logger.d("image url: ${image.url}");
         logger.d("image revise: ${image.revisedPrompt}");
+        // logger.d("image json: ${image}");
+        if (images.haveData) {
+          MessageModel targetMessage = chatMessageController.createNewMessage(
+              chatSessionController.currentSession.sid, 'assistant', '', false);
+          targetMessage.responseJson = jsonEncode(images.json);
+          targetMessage.status = 1;
+          chatMessageController.addMessage(targetMessage);
+          chatMessageController.update();
+          chatMessageController.saveMessage(userMessage);
+          chatMessageController.saveMessage(targetMessage);
+          chatSessionController
+              .saveSession(chatSessionController.currentSession);
+          chatSessionController.update();
+        }
       } catch (e) {
         logger.e("getOpenAIInstance error: $e");
       }

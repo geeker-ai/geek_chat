@@ -53,8 +53,11 @@ class MessageTable {
   bool synced = false; //
   List<String>? quotes;
 
-  /// question parameters
-  String? questionParameters;
+  /// post json
+  String? postJson;
+
+  /// response json
+  String? responseJson;
 
   @Index()
   int status = 1; // 1 = show, 0 = delete

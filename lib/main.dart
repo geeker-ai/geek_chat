@@ -12,6 +12,7 @@ import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
+import 'package:geek_chat/controller/message_block_controller.dart';
 import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
@@ -109,6 +110,7 @@ initServices() async {
   Get.put(ChatSessionController());
   Get.put(ChatMessageController());
   Get.put(QuestionInputController());
+  Get.put(MessageBlockController());
   //// migrate
   GeekChatMigration geekChatMigration = GeekChatMigration();
   geekChatMigration.migrate();

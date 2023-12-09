@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:dart_openai/dart_openai.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
 
 class MessageModel {
@@ -14,8 +16,10 @@ class MessageModel {
   bool? synced;
   int? status; // 1 = show, 2=delete
   List<String>? quotes;
-  String? questionParameters;
   StreamController<String>? contentStream;
+
+  String? postJson;
+  String? responseJson;
 
   MessageModel({
     required this.msgId,
@@ -29,7 +33,8 @@ class MessageModel {
     this.synced,
     this.status,
     this.quotes,
-    this.questionParameters,
+    this.postJson,
+    this.responseJson,
   }) {
     if (generating == true) {
       // print("contentStream = StreamController<String>();");
@@ -38,6 +43,18 @@ class MessageModel {
     }
   }
   //: this.updated = int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString())
+
+  OpenAIImageModel? get openAIImageModel {
+    if (role == "user") {
+      return null;
+    }
+    if (responseJson == null) {
+      return null;
+    }
+    // print("openai response json: $responseJson");
+    return OpenAIImageModel.fromMap(
+        jsonDecode(responseJson!) as Map<String, dynamic>);
+  }
 
   factory MessageModel.fromMessageTable(MessageTable mt) {
     MessageModel mm = MessageModel(
@@ -54,8 +71,11 @@ class MessageModel {
     if (mt.quotes != null) {
       mm.quotes = mt.quotes;
     }
-    if (mt.questionParameters != null) {
-      mm.questionParameters = mt.questionParameters;
+    if (mt.postJson != null) {
+      mm.postJson = mt.postJson;
+    }
+    if (mt.responseJson != null) {
+      mm.responseJson = mt.responseJson;
     }
     return mm;
   }
@@ -87,8 +107,11 @@ class MessageModel {
     if (quotes != null) {
       mt.quotes = quotes;
     }
-    if (questionParameters != null) {
-      mt.questionParameters = questionParameters;
+    if (postJson != null) {
+      mt.postJson = postJson;
+    }
+    if (responseJson != null) {
+      mt.responseJson = responseJson;
     }
     return mt;
   }
