@@ -5,7 +5,6 @@ import 'package:geek_chat/components/chat/image_message_component.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/message_block_controller.dart';
-import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
@@ -367,7 +366,8 @@ class MessageContent extends StatelessWidget {
       BuildContext context, MessageModel message, SessionModel session) {
     List<Widget> buttons = [];
     // logger.d("session model type: ${session.modelType}");
-    if (message.role == "user") {
+    if ((message.role == "user" && session.modelType == ModelType.image.name) ||
+        session.modelType != ModelType.image.name) {
       buttons.add(IconButton(
         onPressed: () {
           Clipboard.setData(ClipboardData(text: message.content));

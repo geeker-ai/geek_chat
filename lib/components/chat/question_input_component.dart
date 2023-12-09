@@ -8,6 +8,7 @@ import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/app_loading_dialog.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -252,7 +253,14 @@ class QuestionInputComponent extends StatelessWidget {
       logger.d("Enter key is pressed!");
       // process submit
       // focusNode.context
-      submit(chatMessageController, focusNode.context);
+      if (focusNode.context != null) {
+        AppLoadingProgress.start(focusNode.context!);
+      }
+      submit(chatMessageController).then((value) {
+        if (focusNode.context != null) {
+          AppLoadingProgress.stop(focusNode.context!);
+        }
+      });
       return KeyEventResult.handled;
     } else if (event.isKeyPressed(LogicalKeyboardKey.enter) &&
         event.isShiftPressed) {
@@ -262,10 +270,10 @@ class QuestionInputComponent extends StatelessWidget {
     return KeyEventResult.ignored;
   }
 
-  submit(ChatMessageController controller, BuildContext? context) async {
+  Future<void> submit(ChatMessageController controller) async {
     await scrollToBottom(animate: false);
     if (session.modelType == ModelType.image.name) {
-      await onQuestionInputSubmit(context);
+      await onQuestionInputSubmit();
       return;
     }
     await scrollToBottom(animate: false);
@@ -305,7 +313,9 @@ class QuestionInputComponent extends StatelessWidget {
               filled: false,
               suffixIcon: IconButton(
                   onPressed: () async {
-                    submit(controller, context);
+                    AppLoadingProgress.start(context);
+                    await submit(controller);
+                    AppLoadingProgress.stop(context);
                   },
                   icon: const Icon(Icons.send)),
             ),

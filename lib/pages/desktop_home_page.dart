@@ -17,7 +17,6 @@ import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/geeker_ai_utils.dart';
 import 'package:get/get.dart';
-import 'package:loading_progress/loading_progress.dart';
 import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
@@ -40,14 +39,14 @@ class DesktopHomePage extends StatelessWidget {
 
   Logger logger = Get.find();
 
-  onQuestionInputSubmit(BuildContext? context) async {
+  onQuestionInputSubmit() async {
     logger.d(
         "onQuestionInputSubmit called: ${chatSessionController.currentSession.sid}");
     logger.d(
         "question input: ${questionInputController.questionInputModel.toJson()}");
-    if (context != null) {
-      LoadingProgress.start(context);
-    }
+    // if (context != null) {
+    //   LoadingProgress.start(context);
+    // }
     if (chatSessionController.currentSession.modelType ==
         ModelType.image.name) {
       /// create new message
@@ -97,8 +96,21 @@ class DesktopHomePage extends StatelessWidget {
               .saveSession(chatSessionController.currentSession);
           chatSessionController.update();
         }
-      } catch (e) {
-        logger.e("getOpenAIInstance error: $e");
+      } on RequestFailedException catch (e) {
+        logger.e("getOpenAIInstance error: ${e.message}");
+        MessageModel targetMessage = chatMessageController.createNewMessage(
+            chatSessionController.currentSession.sid, 'assistant', '', false);
+        // targetMessage.responseJson = jsonEncode(images.json);
+        targetMessage.content = e.message;
+        targetMessage.status = 1;
+        chatMessageController.addMessage(targetMessage);
+        chatMessageController.update();
+        chatMessageController.saveMessage(userMessage);
+        chatMessageController.saveMessage(targetMessage);
+        chatSessionController.saveSession(chatSessionController.currentSession);
+        chatSessionController.update();
+      } on Exception catch (e) {
+        logger.e("getOpenAIInstance error: ${e}");
       }
     } else if (chatSessionController.currentSession.modelType ==
         ModelType.chat.name) {
@@ -107,9 +119,9 @@ class DesktopHomePage extends StatelessWidget {
         ModelType.text.name) {
       // TODO process text model
     }
-    if (context != null) {
-      LoadingProgress.stop(context);
-    }
+    // if (context != null) {
+    //   LoadingProgress.stop(context);
+    // }
   }
 
   List<Widget> getLeftMenus(SettingsServerController controller) {

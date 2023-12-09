@@ -34,5 +34,10 @@ final routers = [
   GetPage(name: '/chat', page: () => ChatMessagePage()),
   GetPage(name: '/about', page: () => AboutPage()),
   GetPage(name: '/prompts', page: () => PromptsListPage()),
-  GetPage(name: "/image/view", page: () => const GeekChatImageViewerPage())
+  GetPage(
+    name: "/image/view",
+    page: () => GeekChatImageViewerPage(),
+    transition: Transition.zoom,
+    // transitionDuration: Duration(milliseconds: 1000),
+  )
 ];

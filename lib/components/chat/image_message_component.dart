@@ -21,7 +21,7 @@ class ImageMessageComponent extends StatelessWidget {
     OpenAIImageModel? openAIImageModel = message.openAIImageModel;
     // int currentIndex = 0;
     if (openAIImageModel == null) {
-      return const Text("Wrong Data");
+      return Text(message.content);
     }
     String imageUrl = message.openAIImageModel!.data.first.url!;
     return Column(
@@ -64,7 +64,8 @@ class ImageMessageComponent extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  Get.toNamed("/image/view", parameters: {"url": imageUrl});
+                  Get.toNamed("/image/view",
+                      parameters: {"url": imageUrl, "id": message.msgId});
                 },
               ),
             ),
