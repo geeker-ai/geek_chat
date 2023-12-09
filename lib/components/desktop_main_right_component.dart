@@ -136,7 +136,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
                         parameters: {'opt': 'edit', 'sid': session.sid});
                   },
                   icon: const Icon(Icons.tune),
-                  label: Text(session.model),
+                  label: Text(session.model.toUpperCase()),
                 ),
                 const Expanded(
                   child: Text(''),

@@ -1,7 +1,5 @@
 import 'package:dart_openai/dart_openai.dart';
-import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/message.dart';
-import 'package:geek_chat/models/question_input_model.dart';
 import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/models/session.dart';
 
