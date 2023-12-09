@@ -367,7 +367,7 @@ class MessageContent extends StatelessWidget {
       BuildContext context, MessageModel message, SessionModel session) {
     List<Widget> buttons = [];
     // logger.d("session model type: ${session.modelType}");
-    if (session.modelType != ModelType.image.name && onQuote != null) {
+    if (message.role == "user") {
       buttons.add(IconButton(
         onPressed: () {
           Clipboard.setData(ClipboardData(text: message.content));
@@ -377,7 +377,8 @@ class MessageContent extends StatelessWidget {
         iconSize: iconButtonSize,
         tooltip: "Copy".tr,
       ));
-
+    }
+    if (session.modelType != ModelType.image.name && onQuote != null) {
       buttons.add(IconButton(
         onPressed: () {
           onQuote!(message);

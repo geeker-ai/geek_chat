@@ -41,7 +41,7 @@ class GeekerAIUtils {
   initOpenAI(ServerModel defaultServer) {
     OpenAI.apiKey = defaultServer.apiKey;
     OpenAI.baseUrl = defaultServer.apiHost;
-    OpenAI.showLogs = true;
-    OpenAI.showResponsesLogs = true;
+    // OpenAI.showLogs = true;
+    // OpenAI.showResponsesLogs = true;
   }
 }

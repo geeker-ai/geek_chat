@@ -5,6 +5,7 @@ import 'package:geek_chat/pages/about_page.dart';
 import 'package:geek_chat/pages/chat_edit.dart';
 import 'package:geek_chat/pages/chat_message_page.dart';
 import 'package:geek_chat/pages/desktop_home_page.dart';
+import 'package:geek_chat/pages/message/image_viewer_page.dart';
 import 'package:geek_chat/pages/mobile_home_page.dart';
 import 'package:geek_chat/pages/prompts_list_page.dart';
 import 'package:geek_chat/pages/settings/desktop_settings_page.dart';
@@ -32,5 +33,6 @@ final routers = [
   GetPage(name: '/editchat', page: () => ChatEditPage()),
   GetPage(name: '/chat', page: () => ChatMessagePage()),
   GetPage(name: '/about', page: () => AboutPage()),
-  GetPage(name: '/prompts', page: () => PromptsListPage())
+  GetPage(name: '/prompts', page: () => PromptsListPage()),
+  GetPage(name: "/image/view", page: () => const GeekChatImageViewerPage())
 ];

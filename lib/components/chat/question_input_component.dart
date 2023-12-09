@@ -251,7 +251,8 @@ class QuestionInputComponent extends StatelessWidget {
         !event.isAltPressed) {
       logger.d("Enter key is pressed!");
       // process submit
-      submit(chatMessageController);
+      // focusNode.context
+      submit(chatMessageController, focusNode.context);
       return KeyEventResult.handled;
     } else if (event.isKeyPressed(LogicalKeyboardKey.enter) &&
         event.isShiftPressed) {
@@ -261,10 +262,10 @@ class QuestionInputComponent extends StatelessWidget {
     return KeyEventResult.ignored;
   }
 
-  submit(ChatMessageController controller) async {
+  submit(ChatMessageController controller, BuildContext? context) async {
     await scrollToBottom(animate: false);
     if (session.modelType == ModelType.image.name) {
-      onQuestionInputSubmit();
+      await onQuestionInputSubmit(context);
       return;
     }
     await scrollToBottom(animate: false);
@@ -304,7 +305,7 @@ class QuestionInputComponent extends StatelessWidget {
               filled: false,
               suffixIcon: IconButton(
                   onPressed: () async {
-                    submit(controller);
+                    submit(controller, context);
                   },
                   icon: const Icon(Icons.send)),
             ),

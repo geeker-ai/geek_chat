@@ -17,6 +17,7 @@ import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/geeker_ai_utils.dart';
 import 'package:get/get.dart';
+import 'package:loading_progress/loading_progress.dart';
 import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
@@ -39,11 +40,14 @@ class DesktopHomePage extends StatelessWidget {
 
   Logger logger = Get.find();
 
-  onQuestionInputSubmit() async {
+  onQuestionInputSubmit(BuildContext? context) async {
     logger.d(
         "onQuestionInputSubmit called: ${chatSessionController.currentSession.sid}");
     logger.d(
         "question input: ${questionInputController.questionInputModel.toJson()}");
+    if (context != null) {
+      LoadingProgress.start(context);
+    }
     if (chatSessionController.currentSession.modelType ==
         ModelType.image.name) {
       /// create new message
@@ -102,6 +106,9 @@ class DesktopHomePage extends StatelessWidget {
     } else if (chatSessionController.currentSession.modelType ==
         ModelType.text.name) {
       // TODO process text model
+    }
+    if (context != null) {
+      LoadingProgress.stop(context);
     }
   }
 

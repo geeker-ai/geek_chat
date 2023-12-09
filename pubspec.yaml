@@ -144,6 +144,9 @@ dependencies:
 
   # https://pub.dev/packages/extended_image
   extended_image: ^8.2.0
+  # https://pub.dev/packages/loading_progress
+  loading_progress: ^1.0.2
+
 
 dev_dependencies:
   flutter_test:
