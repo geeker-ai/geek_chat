@@ -68,17 +68,23 @@ class ChatMessagePage extends StatelessWidget {
           chatSessionController,
           questionInputController,
           settingsServerController);
-      return;
+      // return;
+    } else if (session.modelType == ModelType.chat.name) {
+      await InputSubmitUtil.instance.submitChatModel(
+          chatMessageController,
+          chatSessionController,
+          questionInputController,
+          settingsServerController);
     }
-    controller.submit(sid ?? '', onDone: () {
-      chatSessionController
-          .updateSessionLastEdit(chatSessionController.currentSession);
-      chatSessionController.update();
-    }, onError: () {
-      chatSessionController
-          .updateSessionLastEdit(chatSessionController.currentSession);
-      chatSessionController.update();
-    });
+    // controller.submit(sid ?? '', onDone: () {
+    //   chatSessionController
+    //       .updateSessionLastEdit(chatSessionController.currentSession);
+    //   chatSessionController.update();
+    // }, onError: () {
+    //   chatSessionController
+    //       .updateSessionLastEdit(chatSessionController.currentSession);
+    //   chatSessionController.update();
+    // });
     // controller.update();
     tracker.trackEvent("chat", {"uuid": settingsController.settings.uuid});
   }

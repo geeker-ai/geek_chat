@@ -294,22 +294,23 @@ class QuestionInputComponent extends StatelessWidget {
     await scrollToBottom(animate: false);
     if (settingsController.deviceType.name == DeviceType.small.name) {
       await onQuestionInputSubmit();
-      return;
-    }
-    if (session.modelType == ModelType.image.name) {
+      // return;
+    } else if (session.modelType == ModelType.image.name) {
       await onQuestionInputSubmit();
-      return;
+      // return;
+    } else if (session.modelType == ModelType.chat.name) {
+      await onQuestionInputSubmit();
     }
     // await scrollToBottom(animate: false);
-    controller.submit(sid, onDone: () {
-      chatSessionController
-          .updateSessionLastEdit(chatSessionController.currentSession);
-      chatSessionController.update();
-    }, onError: () {
-      chatSessionController
-          .updateSessionLastEdit(chatSessionController.currentSession);
-      chatSessionController.update();
-    });
+    // controller.submit(sid, onDone: () {
+    //   chatSessionController
+    //       .updateSessionLastEdit(chatSessionController.currentSession);
+    //   chatSessionController.update();
+    // }, onError: () {
+    //   chatSessionController
+    //       .updateSessionLastEdit(chatSessionController.currentSession);
+    //   chatSessionController.update();
+    // });
     tracker.trackEvent("chat", {"uuid": settingsController.settings.uuid});
   }
 
@@ -322,9 +323,10 @@ class QuestionInputComponent extends StatelessWidget {
     return GetBuilder<ChatMessageController>(
         id: 'inputQuestion',
         builder: (controller) {
-          textEditingController.text = controller.inputQuestion;
+          // textEditingController.text = controller.inputQuestion;
           return TextFormField(
             controller: textEditingController,
+            // initialValue: textEditingController.text,
             focusNode: questionInputController.inputFocus,
             minLines: 1,
             maxLines: 5,
@@ -336,10 +338,11 @@ class QuestionInputComponent extends StatelessWidget {
               focusedBorder: InputBorder.none,
               filled: false,
               suffixIcon: IconButton(
-                  onPressed: () async {
+                  onPressed: () {
                     AppLoadingProgress.start(context);
-                    await submit(controller);
-                    AppLoadingProgress.stop(context);
+                    submit(controller).then((value) {
+                      AppLoadingProgress.stop(context);
+                    });
                   },
                   icon: const Icon(Icons.send)),
             ),
@@ -349,7 +352,7 @@ class QuestionInputComponent extends StatelessWidget {
                 showCustomToast(
                     title: "Too many quote messages".tr, context: context);
               }
-              controller.inputQuestion = value;
+              // controller.inputQuestion = value;
               questionInputController.inputText = value;
               // controller.update(['inputQuestion']);
             },
