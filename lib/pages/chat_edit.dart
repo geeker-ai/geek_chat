@@ -20,6 +20,8 @@ class ChatEditPage extends StatelessWidget {
   SettingsServerController settingsServerController = Get.find();
   TrackerController tracker = Get.find();
   Logger logger = Get.find();
+  TextEditingController titleEditingController = TextEditingController();
+  TextEditingController promptEditingController = TextEditingController();
 
   List<Map<String, String>> getModelOptions() {
     List<Map<String, String>> options = [];
@@ -93,6 +95,10 @@ class ChatEditPage extends StatelessWidget {
       tracker.trackEvent(
           "Page-editchat", {"uuid": settingsController.settings.uuid});
     }
+    titleEditingController.text = chatSessionController.currentSession.name;
+    promptEditingController.text =
+        chatSessionController.currentSession.promptContent;
+
     return Scaffold(
       appBar: AppBar(
         title: GetBuilder<ChatSessionController>(builder: (controller) {
@@ -123,7 +129,8 @@ class ChatEditPage extends StatelessWidget {
     widgets.add(Padding(
       padding: const EdgeInsets.only(left: 20, top: 0, bottom: 10, right: 10),
       child: TextFormField(
-        initialValue: controller.currentSession.name,
+        // initialValue: titleEditingController.text,
+        controller: titleEditingController,
         decoration: InputDecoration(
           labelText: 'Session Name'.tr,
           filled: false,
@@ -131,7 +138,7 @@ class ChatEditPage extends StatelessWidget {
         onChanged: (value) {
           // controller.settings.apiKey = value;
           controller.currentSession.name = value;
-          controller.update();
+          // controller.update();
         },
       ),
     ));
@@ -146,7 +153,8 @@ class ChatEditPage extends StatelessWidget {
       widgets.add(Padding(
         padding: const EdgeInsets.only(left: 20, top: 0, bottom: 10, right: 10),
         child: TextFormField(
-          initialValue: controller.currentSession.promptContent,
+          // initialValue: controller.currentSession.promptContent,
+          controller: promptEditingController,
           decoration: const InputDecoration(
             // labelText: 'Prompt'.tr,
             filled: false,
@@ -155,7 +163,7 @@ class ChatEditPage extends StatelessWidget {
           maxLines: 4,
           onChanged: (value) {
             controller.currentSession.promptContent = value;
-            controller.update();
+            // controller.update();
           },
         ),
       ));
