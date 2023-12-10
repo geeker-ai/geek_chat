@@ -95,7 +95,9 @@ class InputSubmitUtil {
         targetMessage.contentStream!.close();
       });
     } on RequestFailedException catch (e) {
-      //
+      logger.e("error: $e");
+    } on Exception catch (e) {
+      logger.e("getOpenAIInstance error: $e");
     }
   }
 
@@ -183,7 +185,7 @@ class InputSubmitUtil {
       chatSessionController.saveSession(chatSessionController.currentSession);
       chatSessionController.update();
     } on Exception catch (e) {
-      logger.e("getOpenAIInstance error: ${e}");
+      logger.e("getOpenAIInstance error: $e");
     }
   }
 }
