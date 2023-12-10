@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geek_chat/components/chat/image_message_component.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/message_block_controller.dart';
-import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/app_constants.dart';
 // import 'package:geek_chat/repository/sessions_repository.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
@@ -33,76 +34,76 @@ class MessageContent extends StatelessWidget {
     required this.message,
     required this.deviceType,
     required this.session,
-    required this.onQuote,
+    this.onQuote,
     required this.onDelete,
     required this.moveTo,
   }) {
     //
   }
 
-  Function onQuote;
+  Function? onQuote;
   Function onDelete;
   Function moveTo;
 
-  MessageBlockController controller = Get.put(MessageBlockController());
+  // MessageBlockController controller = Get.put(MessageBlockController());
   Logger logger = Get.find();
 
   CustomPopupMenuController customPopupMenuController =
       CustomPopupMenuController();
 
-  Widget _buildLongPressMenu() {
-    List<ItemModel> menuItems = [
-      ItemModel("Copy", Icons.content_copy, (MessageModel msg) {
-        Clipboard.setData(ClipboardData(text: msg.content));
-      }),
-      ItemModel("Delete", Icons.delete, (MessageModel msg) {
-        onDelete(msg);
-      }),
-    ];
+  // Widget _buildLongPressMenu() {
+  //   List<ItemModel> menuItems = [
+  //     ItemModel("Copy", Icons.content_copy, (MessageModel msg) {
+  //       Clipboard.setData(ClipboardData(text: msg.content));
+  //     }),
+  //     ItemModel("Delete", Icons.delete, (MessageModel msg) {
+  //       onDelete(msg);
+  //     }),
+  //   ];
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: Container(
-        width: 90,
-        color: const Color(0xFF4C4C4C),
-        child: GridView.count(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-          crossAxisCount: menuItems.length,
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 10,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: menuItems
-              .map((item) => GestureDetector(
-                    onTap: () {
-                      logger.d("gesture detector ${message.msgId}");
-                      item.onTap(message);
-                      customPopupMenuController.hideMenu();
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(
-                          item.icon,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            item.title.tr,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 12),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ))
-              .toList(),
-        ),
-      ),
-    );
-  }
+  //   return ClipRRect(
+  //     borderRadius: BorderRadius.circular(5),
+  //     child: Container(
+  //       width: 90,
+  //       color: const Color(0xFF4C4C4C),
+  //       child: GridView.count(
+  //         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+  //         crossAxisCount: menuItems.length,
+  //         crossAxisSpacing: 0,
+  //         mainAxisSpacing: 10,
+  //         shrinkWrap: true,
+  //         physics: const NeverScrollableScrollPhysics(),
+  //         children: menuItems
+  //             .map((item) => GestureDetector(
+  //                   onTap: () {
+  //                     logger.d("gesture detector ${message.msgId}");
+  //                     item.onTap(message);
+  //                     customPopupMenuController.hideMenu();
+  //                   },
+  //                   child: Column(
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: <Widget>[
+  //                       Icon(
+  //                         item.icon,
+  //                         size: 20,
+  //                         color: Colors.white,
+  //                       ),
+  //                       Container(
+  //                         margin: const EdgeInsets.only(top: 2),
+  //                         child: Text(
+  //                           item.title.tr,
+  //                           style: const TextStyle(
+  //                               color: Colors.white, fontSize: 12),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ))
+  //             .toList(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   double getAvataSize() {
     if (deviceType == DeviceType.small) {
@@ -119,8 +120,10 @@ class MessageContent extends StatelessWidget {
       );
     }
 
+    AiModel model = AppConstants.getAiModel(message.model!);
+
     String svgPic = 'assets/chatgpt-grey.svg';
-    if (session.type == AiType.bard.name) {
+    if (model.aiType.name == AiType.bard.name) {
       svgPic = 'assets/google-grey.svg';
     }
     return SvgPicture.asset(
@@ -183,7 +186,8 @@ class MessageContent extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: markDownWidgetWithStream(message, isDark),
+              // child: markDownWidgetWithStream(message, isDark),
+              child: messageContentAdaptor(message, controller, isDark),
               // child: CustomPopupMenu(
               //   menuBuilder: _buildLongPressMenu,
               //   barrierColor: Colors.transparent,
@@ -252,7 +256,7 @@ class MessageContent extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 10, bottom: 3),
                       alignment: Alignment.centerLeft,
                       margin: const EdgeInsets.only(right: 8),
-                      child: markDownWidgetWithStream(message, isDark),
+                      child: messageContentAdaptor(message, controller, isDark),
                     ),
                   )
                 ],
@@ -263,6 +267,15 @@ class MessageContent extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget messageContentAdaptor(
+      MessageModel message, MessageBlockController controller, bool isDark) {
+    AiModel aiModel = controller.getAiModelbyName(message.model!);
+    if (aiModel.modelType.name == ModelType.image.name) {
+      return ImageMessageComponent(message: message);
+    }
+    return markDownWidgetWithStream(message, isDark);
   }
 
   double iconButtonSize = 20.0;
@@ -290,7 +303,7 @@ class MessageContent extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  "model: ${message.model}",
+                  "MODEL: ${message.model?.toUpperCase()}",
                   style: TextStyle(color: messsageTipsColor, fontSize: 12),
                 ),
               ],
@@ -337,48 +350,7 @@ class MessageContent extends StatelessWidget {
                             const BorderRadius.all(Radius.circular(3)),
                       ),
                       child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Clipboard.setData(
-                                  ClipboardData(text: message.content));
-                              showCustomToast(
-                                  title: "Copied!".tr, context: context);
-                            },
-                            icon: const Icon(Icons.copy_all_outlined),
-                            iconSize: iconButtonSize,
-                            tooltip: "Copy".tr,
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              onQuote(message);
-                            },
-                            icon: const Icon(Icons.format_quote_outlined),
-                            iconSize: iconButtonSize,
-                            tooltip: "Quote".tr,
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Get.defaultDialog(
-                                title: "Delete Message".tr,
-                                onCancel: () {
-                                  Get.back();
-                                },
-                                onConfirm: () {
-                                  onDelete(message);
-                                  Get.back();
-                                },
-                                textCancel: "Cancel".tr,
-                                textConfirm: "Confirm".tr,
-                                middleText: "Confirm delete message?".tr,
-                                radius: 5,
-                              );
-                            },
-                            icon: const Icon(Icons.delete_forever),
-                            iconSize: iconButtonSize,
-                            tooltip: "Delete".tr,
-                          ),
-                        ],
+                        children: getOptionButtons(context, message, session),
                       ),
                     ),
                   ),
@@ -389,6 +361,58 @@ class MessageContent extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<Widget> getOptionButtons(
+      BuildContext context, MessageModel message, SessionModel session) {
+    List<Widget> buttons = [];
+    // logger.d("session model type: ${session.modelType}");
+    if ((message.role == "user" && session.modelType == ModelType.image.name) ||
+        session.modelType != ModelType.image.name) {
+      buttons.add(IconButton(
+        onPressed: () {
+          Clipboard.setData(ClipboardData(text: message.content));
+          showCustomToast(title: "Copied!".tr, context: context);
+        },
+        icon: const Icon(Icons.copy_all_outlined),
+        iconSize: iconButtonSize,
+        tooltip: "Copy".tr,
+      ));
+    }
+    if (session.modelType != ModelType.image.name && onQuote != null) {
+      buttons.add(IconButton(
+        onPressed: () {
+          onQuote!(message);
+        },
+        icon: const Icon(Icons.format_quote_outlined),
+        iconSize: iconButtonSize,
+        tooltip: "Quote".tr,
+      ));
+    }
+
+    buttons.add(IconButton(
+      onPressed: () {
+        Get.defaultDialog(
+          title: "Delete Message".tr,
+          onCancel: () {
+            Get.back();
+          },
+          onConfirm: () {
+            onDelete(message);
+            Get.back();
+          },
+          textCancel: "Cancel".tr,
+          textConfirm: "Confirm".tr,
+          middleText: "Confirm delete message?".tr,
+          radius: 5,
+        );
+      },
+      icon: const Icon(Icons.delete_forever),
+      iconSize: iconButtonSize,
+      tooltip: "Delete".tr,
+    ));
+
+    return buttons;
   }
 
   Color getMessageBackgroundColor(BuildContext context,
@@ -454,97 +478,97 @@ class QuoteMessageComponent extends StatelessWidget {
   }
 }
 
-@Deprecated("message")
-// ignore: must_be_immutable
-class MessageBlock extends StatelessWidget {
-  MessageModel message;
-  MessageBlock({super.key, required this.message});
+// @Deprecated("message")
+// // ignore: must_be_immutable
+// class MessageBlock extends StatelessWidget {
+//   MessageModel message;
+//   MessageBlock({super.key, required this.message});
 
-  MainAxisAlignment getMainAxisAligment() {
-    if (message.role == SettingsController.to.chatGPTRoles.assistant) {
-      return MainAxisAlignment.start;
-    } else {
-      return MainAxisAlignment.end;
-    }
-  }
+//   MainAxisAlignment getMainAxisAligment() {
+//     if (message.role == SettingsController.to.chatGPTRoles.assistant) {
+//       return MainAxisAlignment.start;
+//     } else {
+//       return MainAxisAlignment.end;
+//     }
+//   }
 
-  BorderRadiusGeometry getBorderRadius() {
-    double radius = 10;
-    if (message.role == SettingsController.to.chatGPTRoles.assistant) {
-      return BorderRadius.only(
-        topRight: Radius.circular(radius),
-        topLeft: Radius.circular(radius),
-        // bottomLeft: Radius.circular(radius),
-        bottomRight: Radius.circular(radius),
-      );
-    } else {
-      return BorderRadius.only(
-        topLeft: Radius.circular(radius),
-        topRight: Radius.circular(radius),
-        bottomLeft: Radius.circular(radius),
-        // bottomRight: Radius.circular(radius),
-      );
-    }
-  }
+//   BorderRadiusGeometry getBorderRadius() {
+//     double radius = 10;
+//     if (message.role == SettingsController.to.chatGPTRoles.assistant) {
+//       return BorderRadius.only(
+//         topRight: Radius.circular(radius),
+//         topLeft: Radius.circular(radius),
+//         // bottomLeft: Radius.circular(radius),
+//         bottomRight: Radius.circular(radius),
+//       );
+//     } else {
+//       return BorderRadius.only(
+//         topLeft: Radius.circular(radius),
+//         topRight: Radius.circular(radius),
+//         bottomLeft: Radius.circular(radius),
+//         // bottomRight: Radius.circular(radius),
+//       );
+//     }
+//   }
 
-  final messageGap = 15.0;
-  double getMessageLeftSizedBoxWidth() {
-    if (message.role == SettingsController.to.chatGPTRoles.user) {
-      return messageGap;
-    }
-    return 0;
-  }
+//   final messageGap = 15.0;
+//   double getMessageLeftSizedBoxWidth() {
+//     if (message.role == SettingsController.to.chatGPTRoles.user) {
+//       return messageGap;
+//     }
+//     return 0;
+//   }
 
-  double getMessageRightSizedBoxWidth() {
-    if (message.role == SettingsController.to.chatGPTRoles.user) {
-      return 0;
-    }
-    return messageGap;
-  }
+//   double getMessageRightSizedBoxWidth() {
+//     if (message.role == SettingsController.to.chatGPTRoles.user) {
+//       return 0;
+//     }
+//     return messageGap;
+//   }
 
-  Color getMessageBackgroundColor(BuildContext context) {
-    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return Colors.grey[900]!;
-    } else {
-      return Colors.black12;
-    }
-  }
+//   Color getMessageBackgroundColor(BuildContext context) {
+//     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+//     if (isDark) {
+//       return Colors.grey[900]!;
+//     } else {
+//       return Colors.black12;
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-      child: Row(
-        mainAxisAlignment: getMainAxisAligment(),
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: getMessageLeftSizedBoxWidth(),
-          ),
-          Expanded(
-            child: Container(
-              // width: double.infinity,
-              padding:
-                  const EdgeInsets.only(right: 5, left: 5, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                color: getMessageBackgroundColor(context),
-                borderRadius: getBorderRadius(),
-              ),
-              // constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
-              child: markDownWidgetWithStream(message, isDark),
-            ),
-          ),
-          SizedBox(
-            width: getMessageRightSizedBoxWidth(),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
+//     return Padding(
+//       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+//       child: Row(
+//         mainAxisAlignment: getMainAxisAligment(),
+//         mainAxisSize: MainAxisSize.min,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           SizedBox(
+//             width: getMessageLeftSizedBoxWidth(),
+//           ),
+//           Expanded(
+//             child: Container(
+//               // width: double.infinity,
+//               padding:
+//                   const EdgeInsets.only(right: 5, left: 5, top: 10, bottom: 10),
+//               decoration: BoxDecoration(
+//                 color: getMessageBackgroundColor(context),
+//                 borderRadius: getBorderRadius(),
+//               ),
+//               // constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
+//               child: markDownWidgetWithStream(message, isDark),
+//             ),
+//           ),
+//           SizedBox(
+//             width: getMessageRightSizedBoxWidth(),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 Widget markDownWidgetWithStream(MessageModel message, bool isDark) {
   if (message.generating == false) {

@@ -1,7 +1,13 @@
+
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
+import 'package:geek_chat/models/geekerai/geekerai_models.dart';
 import 'package:geek_chat/models/locale_model.dart';
 import 'package:geek_chat/models/model.dart';
+import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/models/theme.dart';
+
+enum ImageModelType { create, edit, variation }
 
 class AppConstants {
   static LocaleModel defaultLocale = locales[0];
@@ -118,30 +124,156 @@ class AppConstants {
         maxContextSize: 5000,
         modelMaxContextSize: 6144,
         maxTokens: 0),
+    AiModel(
+        modelName: 'dall-e-3',
+        alias: 'dall-e-3',
+        aiType: AiType.chatgpt,
+        modelType: ModelType.image,
+        temperature: 1,
+        maxContextSize: 0,
+        modelMaxContextSize: 0,
+        maxTokens: 0),
   ];
 
-  //// Server List
-  static List<Map<String, String>> serverList = [
-    {
-      'id': 'openai',
-      'name': 'OpenAI',
-      'url': 'https://api.openai.com',
-    },
-    {
-      'id': 'geekerchat',
-      'name': 'Geeker Chat',
-      'url': 'https://capi.fucklina.com',
-    },
-    {
-      'id': 'azure',
-      'name': 'Azure API',
-      'url': 'https://geek.azure.com',
+  static AiModel getAiModel(String modelName) {
+    for (AiModel model in AppConstants.aiModels) {
+      if (modelName == model.modelName) {
+        return model;
+      }
     }
+    return AppConstants.aiModels[0];
+  }
+
+  static List<String> get allModelNameList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      list.add(model.modelName);
+    }
+    return list;
+  }
+
+  static List<String> get openaiModelNameList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      if (model.aiType == AiType.chatgpt) {
+        list.add(model.modelName);
+      }
+    }
+    return list;
+  }
+
+  static List<String> get azureModelNameList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      if (model.aiType == AiType.chatgpt && model.modelType == ModelType.chat) {
+        list.add(model.modelName);
+      }
+    }
+    return list;
+  }
+
+  static List<ProviderModel> servers = [
+    ProviderModel(
+      id: "openai",
+      name: "OpenAI",
+      baseUrl: "https://api.openai.com",
+      supportedModels: openaiModelNameList,
+    ),
+    ProviderModel(
+      id: "geekerchat",
+      name: "Geeker Chat",
+      baseUrl: "https://capi.fucklina.com",
+      supportedModels: allModelNameList,
+    ),
+    ProviderModel(
+      id: "azure",
+      name: "Azure API",
+      baseUrl: "",
+      supportedModels: azureModelNameList,
+    )
   ];
+  static ProviderModel getProvider(String providerId) {
+    for (ProviderModel provider in servers) {
+      if (provider.id == providerId) {
+        return provider;
+      }
+    }
+    return servers[0];
+  }
+
 
   static List<GCThemeMode> themeModes = [
     GCThemeMode(name: 'System', themeMode: ThemeMode.system),
     GCThemeMode(name: 'Dark', themeMode: ThemeMode.dark),
     GCThemeMode(name: 'Light', themeMode: ThemeMode.light),
   ];
+
+  // static List<String> dalle3ImageSizes = [
+  //   '1024x1024',
+  //   '1792x1024',
+  //   '1024x1792'
+  // ];
+  static List<GeekerAIImageSize> dalle3ImageSizes = [
+    GeekerAIImageSize(
+        id: '1024x1024',
+        name: '1024x1024',
+        openAIImageSize: OpenAIImageSize.size1024),
+    GeekerAIImageSize(
+        id: '1792x1024',
+        name: '1792x1024',
+        openAIImageSize: OpenAIImageSize.size1792Horizontal),
+    GeekerAIImageSize(
+        id: '1024x1792',
+        name: '1024x1792',
+        openAIImageSize: OpenAIImageSize.size1792Vertical),
+  ];
+  static GeekerAIImageSize getGeekerAIImageSize(String sizeId) {
+    for (GeekerAIImageSize size in dalle3ImageSizes) {
+      if (size.id == sizeId) {
+        return size;
+      }
+    }
+    return defaultDall3ImageSize;
+  }
+
+  static GeekerAIImageSize defaultDall3ImageSize = dalle3ImageSizes[0];
+
+  static List<GeekerAIImageQuality> dalle3ImageQualities = [
+    GeekerAIImageQuality(id: 'standard', name: 'standard'),
+    GeekerAIImageQuality(
+        id: 'hd', name: 'hd', openAIImageQuality: OpenAIImageQuality.hd),
+  ];
+  static GeekerAIImageQuality defaultDall3ImageQuality =
+      dalle3ImageQualities[0];
+  static GeekerAIImageQuality getGeekerAIImageQuality(String qualityId) {
+    for (GeekerAIImageQuality quality in dalle3ImageQualities) {
+      if (quality.id == qualityId) {
+        return quality;
+      }
+    }
+    return defaultDall3ImageQuality;
+  }
+
+  static List<GeekerAIImageStyle> dalle3ImageStyles = [
+    GeekerAIImageStyle(
+        id: 'natural',
+        name: 'natural',
+        openAIImageStyle: OpenAIImageStyle.natural),
+    GeekerAIImageStyle(
+        id: 'vivid', name: 'vivid', openAIImageStyle: OpenAIImageStyle.vivid),
+  ];
+  static GeekerAIImageStyle getGeekerAIImageStyle(String styleId) {
+    for (GeekerAIImageStyle style in dalle3ImageStyles) {
+      if (style.id == styleId) {
+        return style;
+      }
+    }
+    return defaultDall3ImageStyle;
+  }
+
+  static GeekerAIImageStyle defaultDall3ImageStyle = dalle3ImageStyles[0];
+
+  static List<int> dalle3ImageN = [1, 2, 4];
+  static int defaultDall3ImageN = dalle3ImageN[0];
+
 }

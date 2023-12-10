@@ -5,6 +5,7 @@ import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/repository/sessions_repository.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:moment_dart/moment_dart.dart';
@@ -15,7 +16,7 @@ class ChatListScrollToolController extends GetxController {
   late double dx, dy;
 }
 
-class ChatListController extends GetxController {
+class ChatSessionController extends GetxController {
   List<SessionModel> sessions = [];
 
   late SessionModel currentSession;
@@ -23,7 +24,7 @@ class ChatListController extends GetxController {
 
   final SessionRepository _sessionRepository = Get.find<SessionRepository>();
 
-  ChatListController() {
+  ChatSessionController() {
     // _sessionRepository = SessionRepository.getInstance();
     // Directory dir = SettingsController.to.dataDir;
     // _sessionRepository = SessionRepository(dir);
@@ -45,6 +46,14 @@ class ChatListController extends GetxController {
       currentSession = sessions.first;
       currentSessionId = currentSession.sid;
     }
+  }
+
+  set currentModelName(String modelName) {
+    AiModel model = AppConstants.getAiModel(modelName);
+    currentSession.model = model.modelName;
+    currentSession.modelType = model.modelType.name;
+    currentSession.maxContextSize = model.maxContextSize;
+    currentSession.maxTokens = model.maxTokens;
   }
 
   SessionModel createNewSession() {

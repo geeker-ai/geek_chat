@@ -55,7 +55,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flex_color_scheme: ^7.1.2
   flutter_easyloading: ^3.0.5
-  uuid: ^4.0.0
+  uuid: ^4.2.1
   path_provider: ^2.1.1
   flutter_slidable: ^3.0.0
   moment_dart: ^1.0.1
@@ -116,7 +116,7 @@ dependencies:
   # https://pub.dev/packages/markdown_widget
   markdown_widget: ^2.3.1
   # https://pub.dev/packages/flutter_math_fork
-  flutter_math_fork: ^0.7.1
+  flutter_math_fork: ^0.7.2
 
   # https://pub.dev/packages/rich_text_view
   # rich_text_view: ^1.3.0
@@ -130,7 +130,34 @@ dependencies:
   # fluent_ui: ^4.7.6
 
   # https://pub.dev/packages/dart_openai
-  dart_openai: ^5.0.0
+  # dart_openai: ^5.0.0
+  dart_openai:
+    # path: ../dart_openai
+    git:
+      url: https://github.com/geeker-ai/dart_openai.git
+      ref: main
+
+  # https://pub.dev/packages/openai_dart
+  openai_dart: ^0.1.2
+  # openai_dart:
+  #   path: ../d
+
+  # https://pub.dev/packages/extended_image
+  extended_image: ^8.2.0
+  # https://pub.dev/packages/loading_progress
+  loading_progress: ^1.0.2
+  # https://pub.dev/packages/saver_gallery
+  # saver_gallery: ^3.0.1
+
+  # https://pub.dev/packages/flutter_file_dialog
+  # https://pub.dev/packages/file_selector
+  file_selector: ^1.0.1
+  # https://pub.dev/packages/network_to_file_image
+  # network_to_file_image: ^6.0.0
+
+  # https://pub.dev/packages/image_gallery_saver
+  image_gallery_saver: '^2.0.3'
+
 
 dev_dependencies:
   flutter_test:
@@ -144,6 +171,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   isar_generator: ^3.1.0+1
   build_runner: ^2.4.6
+  analyzer: ^5.13.0
 
   # flutter_distributor: ^0.3.4
   # googleapis: ^8.1.0

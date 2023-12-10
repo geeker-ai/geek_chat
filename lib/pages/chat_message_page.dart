@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
-import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/components/chat/question_input_component.dart';
+import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
+import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/input_submit_util.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
@@ -20,7 +25,7 @@ class ChatMessagePage extends StatelessWidget {
     sid = data['sid'];
     logger.d("ChatMessageController: $sid ");
     chatMessageController = Get.find<ChatMessageController>();
-    session = chatListController.getSessionBysid(sid!);
+    session = chatSessionController.getSessionBysid(sid!);
     chatMessageController.findBySessionId(sid);
   }
 
@@ -29,7 +34,8 @@ class ChatMessagePage extends StatelessWidget {
   // late SessionModel session;
   late String? sid;
 
-  ChatListController chatListController = Get.find<ChatListController>();
+  ChatSessionController chatSessionController =
+      Get.find<ChatSessionController>();
   TextEditingController textEditingController = TextEditingController();
 
   scrollToBottom({animate = true}) async {
@@ -42,8 +48,33 @@ class ChatMessagePage extends StatelessWidget {
   }
 
   ScrollController scrollController = ScrollController();
+  QuestionInputController questionInputController = Get.find();
+  SettingsServerController settingsServerController = Get.find();
 
   final double radius = 14;
+
+  Future<void> onSubmit(ChatMessageController controller) async {
+    await scrollToBottom(animate: false);
+    if (session.modelType == ModelType.image.name) {
+      InputSubmitUtil.instance.submitImageModel(
+          chatMessageController,
+          chatSessionController,
+          questionInputController,
+          settingsServerController);
+      return;
+    }
+    controller.submit(sid ?? '', onDone: () {
+      chatSessionController
+          .updateSessionLastEdit(chatSessionController.currentSession);
+      chatSessionController.update();
+    }, onError: () {
+      chatSessionController
+          .updateSessionLastEdit(chatSessionController.currentSession);
+      chatSessionController.update();
+    });
+    // controller.update();
+    tracker.trackEvent("chat", {"uuid": settingsController.settings.uuid});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +82,7 @@ class ChatMessagePage extends StatelessWidget {
     // SessionModel session = chatListController.getSessionBysid(sid);
     return Scaffold(
       appBar: AppBar(
-        title: GetBuilder<ChatListController>(builder: (controller) {
+        title: GetBuilder<ChatSessionController>(builder: (controller) {
           return Text(session.name);
         }),
       ),
@@ -82,86 +113,78 @@ class ChatMessagePage extends StatelessWidget {
               }),
             ),
             Container(
-              // width: MediaQuery.of(context).size.width,
-              // padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
-              padding:
-                  const EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    width: 0,
-                    color: Colors.transparent,
-                  ),
-                ),
+              child: QuestionInputPanelCompoent(
+                sid: sid!,
+                scrollToBottom: scrollToBottom,
+                questionInputController: questionInputController,
+                session: chatSessionController.currentSession,
+                onQuestionInputSubmit: () {
+                  logger.d("onSubumit");
+                  if (session.modelType == ModelType.image.name) {
+                    // onSubmit(controller);
+                    logger.d("image model submited");
+                    onSubmit(chatMessageController);
+                  } else {
+                    onSubmit(chatMessageController);
+                  }
+                },
               ),
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                Expanded(
-                  child:
-                      GetBuilder<ChatMessageController>(builder: (controller) {
-                    textEditingController.text = controller.inputQuestion;
-                    return Container(
-                      padding: const EdgeInsets.only(top: 1),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: textEditingController,
-                              minLines: 1,
-                              maxLines: 3,
-                              textInputAction: TextInputAction.go,
-                              decoration: InputDecoration(
-                                  filled: false,
-                                  suffixIcon: IconButton(
-                                      onPressed: () async {
-                                        await scrollToBottom(animate: false);
-                                        controller.submit(sid ?? '',
-                                            onDone: () {
-                                          chatListController
-                                              .updateSessionLastEdit(
-                                                  chatListController
-                                                      .currentSession);
-                                          chatListController.update();
-                                        }, onError: () {
-                                          chatListController
-                                              .updateSessionLastEdit(
-                                                  chatListController
-                                                      .currentSession);
-                                          chatListController.update();
-                                        });
-                                      },
-                                      icon: const Icon(Icons.send))),
-                              onChanged: (value) {
-                                controller.inputQuestion = value;
-                              },
-                              onSubmitted: (String value) async {
-                                // onSubmit();
-                                await scrollToBottom(animate: false);
-                                controller.submit(sid ?? '', onDone: () {
-                                  chatListController.updateSessionLastEdit(
-                                      chatListController.currentSession);
-                                  chatListController.update();
-                                }, onError: () {
-                                  chatListController.updateSessionLastEdit(
-                                      chatListController.currentSession);
-                                  chatListController.update();
-                                });
-                                // controller.update();
-                                tracker.trackEvent("chat",
-                                    {"uuid": settingsController.settings.uuid});
-                              },
-                              onTap: () {
-                                //
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ),
-              ]),
             ),
+            // Container(
+            //   // width: MediaQuery.of(context).size.width,
+            //   // padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
+            //   padding:
+            //       const EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
+            //   decoration: const BoxDecoration(
+            //     border: Border(
+            //       top: BorderSide(
+            //         width: 0,
+            //         color: Colors.transparent,
+            //       ),
+            //     ),
+            //   ),
+            //   child:
+            //       Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            //     Expanded(
+            //       child:
+            //           GetBuilder<ChatMessageController>(builder: (controller) {
+            //         textEditingController.text = controller.inputQuestion;
+            //         return Container(
+            //           padding: const EdgeInsets.only(top: 1),
+            //           child: Row(
+            //             children: [
+            //               Expanded(
+            //                 child: TextField(
+            //                   controller: textEditingController,
+            //                   minLines: 1,
+            //                   maxLines: 3,
+            //                   textInputAction: TextInputAction.go,
+            //                   decoration: InputDecoration(
+            //                       filled: false,
+            //                       suffixIcon: IconButton(
+            //                           onPressed: () async {
+            //                             onSubmit(controller);
+            //                           },
+            //                           icon: const Icon(Icons.send))),
+            //                   onChanged: (value) {
+            //                     controller.inputQuestion = value;
+            //                   },
+            //                   onSubmitted: (String value) async {
+            //                     // onSubmit();
+            //                     onSubmit(controller);
+            //                   },
+            //                   onTap: () {
+            //                     //
+            //                   },
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         );
+            //       }),
+            //     ),
+            //   ]),
+            // ),
           ],
         ),
       ),

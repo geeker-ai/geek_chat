@@ -3124,33 +3124,43 @@ const MessageTableSchema = CollectionSchema(
       name: r'model',
       type: IsarType.string,
     ),
-    r'quotes': PropertySchema(
+    r'postJson': PropertySchema(
       id: 3,
+      name: r'postJson',
+      type: IsarType.string,
+    ),
+    r'quotes': PropertySchema(
+      id: 4,
       name: r'quotes',
       type: IsarType.stringList,
     ),
+    r'responseJson': PropertySchema(
+      id: 5,
+      name: r'responseJson',
+      type: IsarType.string,
+    ),
     r'role': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'role',
       type: IsarType.string,
     ),
     r'sid': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'sid',
       type: IsarType.string,
     ),
     r'status': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'status',
       type: IsarType.long,
     ),
     r'synced': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'synced',
       type: IsarType.bool,
     ),
     r'updated': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'updated',
       type: IsarType.long,
     )
@@ -3239,6 +3249,12 @@ int _messageTableEstimateSize(
     }
   }
   {
+    final value = object.postJson;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final list = object.quotes;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -3248,6 +3264,12 @@ int _messageTableEstimateSize(
           bytesCount += value.length * 3;
         }
       }
+    }
+  }
+  {
+    final value = object.responseJson;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
     }
   }
   {
@@ -3274,12 +3296,14 @@ void _messageTableSerialize(
   writer.writeString(offsets[0], object.content);
   writer.writeString(offsets[1], object.mid);
   writer.writeString(offsets[2], object.model);
-  writer.writeStringList(offsets[3], object.quotes);
-  writer.writeString(offsets[4], object.role);
-  writer.writeString(offsets[5], object.sid);
-  writer.writeLong(offsets[6], object.status);
-  writer.writeBool(offsets[7], object.synced);
-  writer.writeLong(offsets[8], object.updated);
+  writer.writeString(offsets[3], object.postJson);
+  writer.writeStringList(offsets[4], object.quotes);
+  writer.writeString(offsets[5], object.responseJson);
+  writer.writeString(offsets[6], object.role);
+  writer.writeString(offsets[7], object.sid);
+  writer.writeLong(offsets[8], object.status);
+  writer.writeBool(offsets[9], object.synced);
+  writer.writeLong(offsets[10], object.updated);
 }
 
 MessageTable _messageTableDeserialize(
@@ -3293,12 +3317,14 @@ MessageTable _messageTableDeserialize(
   object.id = id;
   object.mid = reader.readStringOrNull(offsets[1]);
   object.model = reader.readStringOrNull(offsets[2]);
-  object.quotes = reader.readStringList(offsets[3]);
-  object.role = reader.readStringOrNull(offsets[4]);
-  object.sid = reader.readStringOrNull(offsets[5]);
-  object.status = reader.readLong(offsets[6]);
-  object.synced = reader.readBool(offsets[7]);
-  object.updated = reader.readLongOrNull(offsets[8]);
+  object.postJson = reader.readStringOrNull(offsets[3]);
+  object.quotes = reader.readStringList(offsets[4]);
+  object.responseJson = reader.readStringOrNull(offsets[5]);
+  object.role = reader.readStringOrNull(offsets[6]);
+  object.sid = reader.readStringOrNull(offsets[7]);
+  object.status = reader.readLong(offsets[8]);
+  object.synced = reader.readBool(offsets[9]);
+  object.updated = reader.readLongOrNull(offsets[10]);
   return object;
 }
 
@@ -3316,16 +3342,20 @@ P _messageTableDeserializeProp<P>(
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readStringList(offset)) as P;
-    case 4:
       return (reader.readStringOrNull(offset)) as P;
+    case 4:
+      return (reader.readStringList(offset)) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader.readBool(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 8:
+      return (reader.readLong(offset)) as P;
+    case 9:
+      return (reader.readBool(offset)) as P;
+    case 10:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -4316,6 +4346,160 @@ extension MessageTableQueryFilter
   }
 
   QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'postJson',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'postJson',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'postJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'postJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'postJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'postJson',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'postJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'postJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'postJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'postJson',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'postJson',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      postJsonIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'postJson',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
       quotesIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -4555,6 +4739,160 @@ extension MessageTableQueryFilter
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'responseJson',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'responseJson',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'responseJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'responseJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'responseJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'responseJson',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'responseJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'responseJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'responseJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'responseJson',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'responseJson',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      responseJsonIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'responseJson',
+        value: '',
+      ));
     });
   }
 
@@ -5042,6 +5380,31 @@ extension MessageTableQuerySortBy
     });
   }
 
+  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> sortByPostJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'postJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> sortByPostJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'postJson', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> sortByResponseJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'responseJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterSortBy>
+      sortByResponseJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'responseJson', Sort.desc);
+    });
+  }
+
   QueryBuilder<MessageTable, MessageTable, QAfterSortBy> sortByRole() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'role', Sort.asc);
@@ -5153,6 +5516,31 @@ extension MessageTableQuerySortThenBy
     });
   }
 
+  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> thenByPostJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'postJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> thenByPostJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'postJson', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterSortBy> thenByResponseJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'responseJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterSortBy>
+      thenByResponseJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'responseJson', Sort.desc);
+    });
+  }
+
   QueryBuilder<MessageTable, MessageTable, QAfterSortBy> thenByRole() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'role', Sort.asc);
@@ -5237,9 +5625,23 @@ extension MessageTableQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByPostJson(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'postJson', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByQuotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'quotes');
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByResponseJson(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'responseJson', caseSensitive: caseSensitive);
     });
   }
 
@@ -5302,9 +5704,21 @@ extension MessageTableQueryProperty
     });
   }
 
+  QueryBuilder<MessageTable, String?, QQueryOperations> postJsonProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'postJson');
+    });
+  }
+
   QueryBuilder<MessageTable, List<String>?, QQueryOperations> quotesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'quotes');
+    });
+  }
+
+  QueryBuilder<MessageTable, String?, QQueryOperations> responseJsonProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'responseJson');
     });
   }
 

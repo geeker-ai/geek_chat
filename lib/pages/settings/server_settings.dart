@@ -5,6 +5,8 @@ import 'package:geek_chat/components/settings/geekerchat_active.dart';
 import 'package:geek_chat/components/settings/standard_server.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
+import 'package:geek_chat/models/server.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:get/get.dart';
 
 // ignore: must_be_immutable
@@ -21,8 +23,8 @@ class ServerSettingsPage extends StatelessWidget {
 
   List<Map<String, String>> getOptions() {
     List<Map<String, String>> options = [];
-    for (Map<String, String> item in settingsController.serverList) {
-      options.add({'name': item['id']!, 'title': item['name']!});
+    for (ProviderModel item in AppConstants.servers) {
+      options.add({'name': item.id, 'title': item.name});
     }
     return options;
   }

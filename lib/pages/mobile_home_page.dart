@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geek_chat/components/chat_list_component.dart';
+import 'package:geek_chat/components/chat_sessions_component.dart';
 import 'package:geek_chat/components/main_settings_component.dart';
 import 'package:geek_chat/components/prompt/prompt_list_component.dart';
 import 'package:geek_chat/controller/main_controller.dart';
@@ -15,7 +15,7 @@ class MobileHomePage extends StatelessWidget {
   MobileHomePage({super.key}) {
     Get.put(PromptListComponent());
     Get.put(SettingsComponent());
-    Get.put(ChatListComponent());
+    Get.put(ChatSessionsComponent());
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (settingsController.needSettings) {
@@ -46,7 +46,7 @@ class MobileHomePage extends StatelessWidget {
     switch (index) {
       case 0:
         // widget = Text("data $index");
-        widget = Get.find<ChatListComponent>();
+        widget = Get.find<ChatSessionsComponent>();
         tracker.trackEvent(
             "Page-Home", {"uuid": settingsController.settings.uuid});
         break;

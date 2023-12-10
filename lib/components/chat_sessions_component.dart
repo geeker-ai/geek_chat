@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:geek_chat/controller/chat_list_controller.dart';
+import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
 // ignore: must_be_immutable
-class ChatListComponent extends StatelessWidget {
-  ChatListComponent({super.key});
+class ChatSessionsComponent extends StatelessWidget {
+  ChatSessionsComponent({super.key});
 
   ChatMessageController chatMessageController =
       Get.find<ChatMessageController>();
   TrackerController tracker = Get.find();
   SettingsController settingsController = Get.find();
 
+  // TODO: 重复代码
+  Widget leadingIcon(BuildContext context, SessionModel session) {
+    if (session.modelType == ModelType.image.name) {
+      return const Icon(Icons.image_outlined);
+    }
+    return const Icon(Icons.chat_bubble_outline);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChatListController>(builder: ((controller) {
+    return GetBuilder<ChatSessionController>(builder: ((controller) {
       return ListView(
         padding: const EdgeInsets.only(
             left: 10.0, top: 0.0, right: 10.0, bottom: 0.0),
@@ -43,7 +52,7 @@ class ChatListComponent extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
-                  leading: const Icon(Icons.chat_bubble_outline_outlined),
+                  leading: leadingIcon(context, sm),
                   trailing: const Icon(Icons.chevron_right_outlined),
                   onTap: () {
                     Get.toNamed('/chat', parameters: {'sid': sm.sid});

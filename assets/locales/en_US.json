@@ -54,7 +54,7 @@
     "Price": "Subscription",
     "buytips": "GeekChat is a client that supports the currently popular large language models. It currently supports the OpenAI official API and the OpenAI models deployed on Azure. Users can choose to configure their own API access points or use GeekChat's default services. GeekChat aims to make it easy for everyone to use, and the model usage pricing is consistent with the official pricing. Learn more at: https://github.com/geeker-ai/geek_chat ",
     "History Message": "History Message count",
-    "Model name deployed on Azure": "The Deployment name which is the GPT model deployed on Azure",
+    "Model name deployed on Azure": "Deployment name and URL for the model deployed on Azure correspond to the EndPoint of the Azure resource.",
     "input tips": "[Enter] send, [Shift+Enter] line break",
     "model intro": "Only when activated using the GeekChat service can the chat-bison and codechat-bison models be used normally.",
     "Supported Models: ": "Supported Models: ",
@@ -62,5 +62,9 @@
     "Active": "Active",
     "Server Settings": "Server Settings",
     "Please Select a server": "Please Select a server",
-    "Save successful": "Save successful"
+    "Save successful": "Save successful",
+    "Image Size": "Image Size:",
+    "Image Quality": "Image Quality:",
+    "Image Style": "Image Style:",
+    "Image Count": "Image Count:"
 }

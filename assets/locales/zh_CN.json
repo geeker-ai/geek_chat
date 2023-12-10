@@ -54,7 +54,7 @@
     "Price": "订阅",
     "buytips": "GeekChat是一款支持当前比较热门的大语言模型的客户端, 目前支持 OpenAI 官方API 和 Azure 上部署的 OpenAI 模型. 用户可以自行选择配置自己的API接入点, 也可以选择使用GeekChat的默认服务. GeekChat 旨在方便大家使用, 模型使用价格和官方保持一致. 了解详情： https://github.com/geeker-ai/geek_chat",
     "History Message": "历史消息数量",
-    "Model name deployed on Azure": "在 Azure 上部署的模型对应的 Deployment name",
+    "Model name deployed on Azure": "在 Azure 上部署的模型对应的 Deployment name, URL 为 Azure 资源上的 EndPoint",
     "input tips": "[回车键] 发送，[Shift+回车键] 换行",
     "model intro": "只有在使用 GeekChat 服务激活的情况下，才可以正常使用 chat-bison 和 codechat-bison 模型",
     "Supported Models: ": "支持的模型: ",
@@ -62,5 +62,9 @@
     "Active": "激活",
     "Server Settings": "服务器设置",
     "Please Select a server": "请选择服务器",
-    "Save successful": "保存成功"
+    "Save successful": "保存成功",
+    "Image Size": "图片大小:",
+    "Image Quality": "图片质量:",
+    "Image Style": "图片风格:",
+    "Image Count": "生成数量:"
 }
