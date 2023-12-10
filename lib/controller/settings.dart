@@ -62,7 +62,6 @@ class SettingsController extends GetxController {
 
   final List<AiModel> _aiModels = AppConstants.aiModels;
 
-  // final List<Map<String, String>> serverList = AppConstants.serverList;
   final List<ProviderModel> servers = AppConstants.servers;
 
   final themeModes = AppConstants.themeModes;

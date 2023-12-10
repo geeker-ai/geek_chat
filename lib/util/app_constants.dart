@@ -1,3 +1,4 @@
+
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/models/geekerai/geekerai_models.dart';
@@ -200,6 +201,7 @@ class AppConstants {
     return servers[0];
   }
 
+
   static List<GCThemeMode> themeModes = [
     GCThemeMode(name: 'System', themeMode: ThemeMode.system),
     GCThemeMode(name: 'Dark', themeMode: ThemeMode.dark),
@@ -273,4 +275,5 @@ class AppConstants {
 
   static List<int> dalle3ImageN = [1, 2, 4];
   static int defaultDall3ImageN = dalle3ImageN[0];
+
 }
