@@ -271,12 +271,17 @@ class QuestionInputComponent extends StatelessWidget {
   }
 
   Future<void> submit(ChatMessageController controller) async {
+    logger.d("on submit: ${settingsController.deviceType}");
     await scrollToBottom(animate: false);
+    if (settingsController.deviceType.name == DeviceType.small.name) {
+      await onQuestionInputSubmit();
+      return;
+    }
     if (session.modelType == ModelType.image.name) {
       await onQuestionInputSubmit();
       return;
     }
-    await scrollToBottom(animate: false);
+    // await scrollToBottom(animate: false);
     controller.submit(sid, onDone: () {
       chatSessionController
           .updateSessionLastEdit(chatSessionController.currentSession);

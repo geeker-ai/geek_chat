@@ -5,6 +5,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -48,8 +49,14 @@ class GeekChatImageViewerPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          String fileName = "$id.png";
           if (Platform.isAndroid) {
             // downloadDir = await getExternalStorageDirectory();
+            Uint8List? data =
+                await getNetworkImageData(imageUrl, useCache: true);
+            if (data != null) {
+              await ImageGallerySaver.saveImage(data);
+            }
           } else if (Platform.isMacOS ||
               Platform.isLinux ||
               Platform.isWindows) {
@@ -57,7 +64,7 @@ class GeekChatImageViewerPage extends StatelessWidget {
             if (downloadDir != null) {
               // print("download dir: $downloadDir");
               logger.d("download dir: $downloadDir");
-              String fileName = "$id.png";
+
               FileSaveLocation? result =
                   await getSaveLocation(suggestedName: fileName);
               if (result != null) {

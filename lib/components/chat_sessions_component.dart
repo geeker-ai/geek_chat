@@ -4,6 +4,7 @@ import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +16,14 @@ class ChatSessionsComponent extends StatelessWidget {
       Get.find<ChatMessageController>();
   TrackerController tracker = Get.find();
   SettingsController settingsController = Get.find();
+
+  // TODO: 重复代码
+  Widget leadingIcon(BuildContext context, SessionModel session) {
+    if (session.modelType == ModelType.image.name) {
+      return const Icon(Icons.image_outlined);
+    }
+    return const Icon(Icons.chat_bubble_outline);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +52,7 @@ class ChatSessionsComponent extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
-                  leading: const Icon(Icons.chat_bubble_outline_outlined),
+                  leading: leadingIcon(context, sm),
                   trailing: const Icon(Icons.chevron_right_outlined),
                   onTap: () {
                     Get.toNamed('/chat', parameters: {'sid': sm.sid});

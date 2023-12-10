@@ -186,7 +186,8 @@ class MessageContent extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: markDownWidgetWithStream(message, isDark),
+              // child: markDownWidgetWithStream(message, isDark),
+              child: messageContentAdaptor(message, controller, isDark),
               // child: CustomPopupMenu(
               //   menuBuilder: _buildLongPressMenu,
               //   barrierColor: Colors.transparent,
