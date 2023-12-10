@@ -270,7 +270,9 @@ class QuestionInputComponent extends StatelessWidget {
       logger.d("Enter key is pressed!");
       // process submit
       // focusNode.context
+      // logger.d("focusNoe.context: ${focusNode.context}");
       if (focusNode.context != null) {
+        logger.d("focusNoe.context: ${focusNode.context}");
         AppLoadingProgress.start(focusNode.context!);
       }
       submit(chatMessageController).then((value) {

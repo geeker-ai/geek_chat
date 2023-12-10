@@ -27,6 +27,13 @@ class ChatMessagePage extends StatelessWidget {
     chatMessageController = Get.find<ChatMessageController>();
     session = chatSessionController.getSessionBysid(sid!);
     chatMessageController.findBySessionId(sid);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // scrollController.addListener(() {
+      //   scrollButtonListener();
+      // });
+      // scrollButtonListener();
+      questionInputController.inputFocus.requestFocus();
+    });
   }
 
   late SessionModel session;
@@ -56,7 +63,7 @@ class ChatMessagePage extends StatelessWidget {
   Future<void> onSubmit(ChatMessageController controller) async {
     await scrollToBottom(animate: false);
     if (session.modelType == ModelType.image.name) {
-      InputSubmitUtil.instance.submitImageModel(
+      await InputSubmitUtil.instance.submitImageModel(
           chatMessageController,
           chatSessionController,
           questionInputController,
@@ -118,14 +125,14 @@ class ChatMessagePage extends StatelessWidget {
                 scrollToBottom: scrollToBottom,
                 questionInputController: questionInputController,
                 session: chatSessionController.currentSession,
-                onQuestionInputSubmit: () {
+                onQuestionInputSubmit: () async {
                   logger.d("onSubumit");
                   if (session.modelType == ModelType.image.name) {
                     // onSubmit(controller);
                     logger.d("image model submited");
-                    onSubmit(chatMessageController);
+                    await onSubmit(chatMessageController);
                   } else {
-                    onSubmit(chatMessageController);
+                    await onSubmit(chatMessageController);
                   }
                 },
                 settingsController: settingsController,
