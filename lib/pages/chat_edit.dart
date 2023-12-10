@@ -138,6 +138,7 @@ class ChatEditPage extends StatelessWidget {
         onChanged: (value) {
           // controller.settings.apiKey = value;
           controller.currentSession.name = value;
+          titleEditingController.text = value;
           // controller.update();
         },
       ),
@@ -163,6 +164,7 @@ class ChatEditPage extends StatelessWidget {
           maxLines: 4,
           onChanged: (value) {
             controller.currentSession.promptContent = value;
+            promptEditingController.text = value;
             // controller.update();
           },
         ),
