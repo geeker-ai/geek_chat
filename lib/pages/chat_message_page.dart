@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:geek_chat/components/chat/message_block.dart';
 import 'package:geek_chat/components/chat/question_input_component.dart';
