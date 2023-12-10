@@ -23,6 +23,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
     required this.session,
     required this.questionInputController,
     required this.onQuestionInputSubmit,
+    required this.settingsController,
   });
 
   String sid;
@@ -31,6 +32,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
   Function onQuestionInputSubmit;
   // FocusNode questionInputFocus;
   QuestionInputController questionInputController;
+  SettingsController settingsController;
   Logger logger = Get.find<Logger>();
 
   bool isImageSession() {
@@ -47,7 +49,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
       child: GetBuilder<ChatMessageController>(builder: (controller) {
         return Container(
-          padding: const EdgeInsets.only(top: 1),
+          padding: const EdgeInsets.only(top: 1, bottom: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -83,13 +85,14 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 5, bottom: 3),
-                child: Text(
-                  "input tips".tr,
-                  style: TextStyle(color: Colors.grey[600]),
+              if (settingsController.deviceType.name != DeviceType.small.name)
+                Container(
+                  padding: const EdgeInsets.only(top: 3, bottom: 3),
+                  child: Text(
+                    "input tips".tr,
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
                 ),
-              ),
             ],
           ),
         );
@@ -101,6 +104,8 @@ class QuestionInputPanelCompoent extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 2, right: 0, top: 0, bottom: 15),
       child: Wrap(
+        runSpacing: 0.5,
+        spacing: 0.5,
         children: [
           ImageInputParametersComponent(
             title: "Image Size",
@@ -182,39 +187,51 @@ class ImageInputParametersComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.only(top: 2),
-          child: Text(title.tr),
-        ),
-        const SizedBox(width: 10),
-        // select widget
-        DropdownMenu<String>(
-          enableFilter: false,
-          width: width,
-          textStyle: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
-          inputDecorationTheme: InputDecorationTheme(
-            // contentPadding: EdgeInsets.all(0),
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize),
+    return Container(
+      // decoration: BoxDecoration(
+      // border: Border.all(color: Theme.of(context).colorScheme.primary),
+      // borderRadius: const BorderRadius.all(Radius.circular(3)),
+      // ),
+      padding: const EdgeInsets.all(0),
+      margin: const EdgeInsets.all(0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(top: 2),
+            child: Text(title.tr),
           ),
-          initialSelection: defaultValue,
-          dropdownMenuEntries:
-              dropDownlist.map<DropdownMenuEntry<String>>((String value) {
-            return DropdownMenuEntry<String>(value: value, label: value);
-          }).toList(),
-          onSelected: (value) {
-            onChanged(value);
-          },
-        ),
-      ],
+          const SizedBox(width: 10),
+          // select widget
+          DropdownMenu<String>(
+            enableFilter: false,
+            width: width,
+            textStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
+            inputDecorationTheme: InputDecorationTheme(
+              isDense: true,
+              isCollapsed: true,
+              // contentPadding: EdgeInsets.all(0),
+              contentPadding: const EdgeInsets.all(0),
+              // constraints: BoxConstraints.tight(const Size.fromHeight(30)),
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              labelStyle: TextStyle(
+                  fontSize: Theme.of(context).textTheme.bodySmall!.fontSize),
+            ),
+            initialSelection: defaultValue,
+            dropdownMenuEntries:
+                dropDownlist.map<DropdownMenuEntry<String>>((String value) {
+              return DropdownMenuEntry<String>(value: value, label: value);
+            }).toList(),
+            onSelected: (value) {
+              onChanged(value);
+            },
+          ),
+        ],
+      ),
     );
   }
 }

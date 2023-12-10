@@ -66,5 +66,6 @@
     "Image Size": "Размер изображения:",
     "Image Quality": "Качество изображения:",
     "Image Style": "Стиль изображения:",
-    "Image Count": "Количество изображений:"
+    "Image Count": "Количество изображений:",
+    "This is an image model. You can enter the prompt words yourself.": "Это модель изображения. Вы можете сами ввести подсказки."
 }

@@ -66,5 +66,6 @@
     "Image Size": "图片大小:",
     "Image Quality": "图片质量:",
     "Image Style": "图片风格:",
-    "Image Count": "生成数量:"
+    "Image Count": "生成数量:",
+    "This is an image model. You can enter the prompt words yourself.": "这是一个图象模型，提示词由你自行输入"
 }

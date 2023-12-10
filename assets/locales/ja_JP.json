@@ -66,5 +66,6 @@
     "Image Size": "画像サイズ:",
     "Image Quality": "画像品質:",
     "Image Style": "画像スタイル:",
-    "Image Count": "画像の数:"
+    "Image Count": "画像の数:",
+    "This is an image model. You can enter the prompt words yourself.": "これは画像モデルです。プロンプトの単語を自分で入力できます。"
 }

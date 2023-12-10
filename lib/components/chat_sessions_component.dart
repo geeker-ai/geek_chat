@@ -25,6 +25,15 @@ class ChatSessionsComponent extends StatelessWidget {
     return const Icon(Icons.chat_bubble_outline);
   }
 
+  String getSessionSubtitle(SessionModel session) {
+    String subTitle = session.prompt.content;
+    if (session.modelType == ModelType.image.name) {
+      subTitle =
+          "This is an image model. You can enter the prompt words yourself.".tr;
+    }
+    return subTitle;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatSessionController>(builder: ((controller) {
@@ -48,7 +57,7 @@ class ChatSessionsComponent extends StatelessWidget {
                     style: const TextStyle(fontSize: 16),
                   ),
                   subtitle: Text(
-                    sm.promptContent,
+                    getSessionSubtitle(sm),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),

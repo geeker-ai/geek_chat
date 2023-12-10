@@ -66,5 +66,6 @@
     "Image Size": "Image Size:",
     "Image Quality": "Image Quality:",
     "Image Style": "Image Style:",
-    "Image Count": "Image Count:"
+    "Image Count": "Image Count:",
+    "This is an image model. You can enter the prompt words yourself.": "This is an image model. You can enter the prompt words yourself."
 }

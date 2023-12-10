@@ -128,6 +128,7 @@ class ChatMessagePage extends StatelessWidget {
                     onSubmit(chatMessageController);
                   }
                 },
+                settingsController: settingsController,
               ),
             ),
             // Container(

@@ -240,6 +240,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
             session: session,
             onQuestionInputSubmit: onQuestionSubmit,
             questionInputController: questionInputController,
+            settingsController: settingsController,
           ),
         ],
       ),
