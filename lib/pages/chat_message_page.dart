@@ -32,7 +32,7 @@ class ChatMessagePage extends StatelessWidget {
       //   scrollButtonListener();
       // });
       // scrollButtonListener();
-      questionInputController.inputFocus.requestFocus();
+      // questionInputController.inputFocus.requestFocus();
     });
   }
 
