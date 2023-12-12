@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dart_openai/dart_openai.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/question_input_controller.dart';
@@ -12,6 +13,7 @@ import 'package:geek_chat/util/functions.dart';
 import 'package:geek_chat/util/geeker_ai_utils.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:openai_dart/openai_dart.dart';
 import 'package:uuid/uuid.dart';
 
 class InputSubmitUtil {
@@ -21,6 +23,111 @@ class InputSubmitUtil {
   static InputSubmitUtil get instance => _instance;
 
   final Logger logger = Get.find();
+
+  Future<void> submitAzureChatModel(
+    ChatMessageController chatMessageController,
+    ChatSessionController chatSessionController,
+    QuestionInputController questionInputController,
+    SettingsServerController settingsServerController,
+  ) async {
+    logger.d("submitAzureChatModel");
+    MessageModel userMessage = MessageModel(
+      msgId: const Uuid().v4(),
+      role: MessageRole.user.name,
+      content: questionInputController.inputText,
+      sId: chatSessionController.currentSession.sid,
+      model: chatSessionController.currentSession.model,
+      msgType: 1,
+      synced: false,
+      generating: false,
+      updated: getCurrentDateTime(),
+    );
+
+    final client = OpenAIClient(
+        baseUrl: settingsServerController.defaultServer
+            .getRequestUrlForOpenaiDart(
+                chatSessionController.currentSession.model),
+        headers: {
+          'api-key': settingsServerController.defaultServer
+              .getApiKeyByModel(chatSessionController.currentSession.model)
+        },
+        queryParams: {
+          'api-version': settingsServerController.defaultServer
+              .getApiVersion(chatSessionController.currentSession.model)
+        });
+    final stream = client.createChatCompletionStream(
+      request: CreateChatCompletionRequest(
+        model: ChatCompletionModel.modelId(
+            chatSessionController.currentSession.model),
+        // messages: getAzureRequestMessages(
+        //     chatMessageController.messages,
+        //     chatSessionController.currentSession,
+        //     userMessage,
+        //     questionInputController.questionInputModel.quotedMessages),
+        messages: [
+          ChatCompletionMessage.system(
+            content:
+                'You are a helpful assistant that replies only with numbers in order without any spaces or commas',
+          ),
+          ChatCompletionMessage.user(
+            content: ChatCompletionUserMessageContent.string(
+              'List the numbers from 1 to 9',
+            ),
+          ),
+        ],
+      ),
+    );
+    await for (final res in stream) {
+      print(res.choices.first.delta.content);
+    }
+  }
+
+  List<ChatCompletionMessage> getAzureRequestMessages(
+      List<MessageModel> historyMessages,
+      SessionModel currentSession,
+      MessageModel userMessage,
+      [List<MessageModel>? quotedMessages]) {
+    List<ChatCompletionMessage> messages = [];
+    //// prompt
+    List<OpenAIChatCompletionChoiceMessageModel> openaiRequestMessages =
+        getChatRequestMessages(historyMessages, currentSession, userMessage);
+    OpenAIChatCompletionChoiceMessageModel promptMessage =
+        openaiRequestMessages.first;
+    messages.add(ChatCompletionMessage.system(
+        content: getMessageContentText(promptMessage.content)));
+    openaiRequestMessages.removeAt(0);
+    for (OpenAIChatCompletionChoiceMessageModel item in openaiRequestMessages) {
+      // messages.add(value)
+      if (item.role == OpenAIChatMessageRole.user) {
+        messages.add(ChatCompletionMessage.user(
+            content: ChatCompletionUserMessageContent.string(
+                getMessageContentText(item.content))));
+      } else if (item.role == OpenAIChatMessageRole.assistant) {
+        messages.add(ChatCompletionMessage.assistant(
+            content: getMessageContentText(item.content)));
+      } else if (item.role == OpenAIChatMessageRole.function) {
+        //
+      } else if (item.role == OpenAIChatMessageRole.tool) {
+        ///
+      }
+    }
+    return messages;
+  }
+
+  String getMessageContentText(
+      List<OpenAIChatCompletionChoiceMessageContentItemModel>? msgs) {
+    String text = "";
+    if (msgs != null) {
+      for (OpenAIChatCompletionChoiceMessageContentItemModel item in msgs) {
+        if (item.type == "text") {
+          text = item.text!;
+          break;
+        }
+      }
+    }
+
+    return text;
+  }
 
   Future<void> submitChatModel(
     ChatMessageController chatMessageController,

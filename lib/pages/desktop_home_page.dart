@@ -42,91 +42,39 @@ class DesktopHomePage extends StatelessWidget {
     // if (context != null) {
     //   LoadingProgress.start(context);
     // }
-    if (chatSessionController.currentSession.modelType ==
-        ModelType.image.name) {
-      await InputSubmitUtil.instance.submitImageModel(
-          chatMessageController,
-          chatSessionController,
-          questionInputController,
-          settingsServerController);
-
-      /// create new message
-      // MessageModel userMessage = chatMessageController.createNewMessage(
-      //     chatSessionController.currentSession.sid,
-      //     'user',
-      //     questionInputController.inputText,
-      //     false);
-      // userMessage.model = chatSessionController.currentSession.model;
-      // userMessage.status = 1;
-
-      // /// request openai
-      // try {
-      //   chatMessageController.addMessage(userMessage);
-      //   chatMessageController.update();
-      //   OpenAI openAI = GeekerAIUtils.instance
-      //       .getOpenaiInstance(settingsServerController.defaultServer);
-      //   OpenAIImageModel images = await openAI.image.create(
-      //     model: chatSessionController.currentSession.model,
-      //     prompt: questionInputController.inputText,
-      //     n: int.parse(questionInputController.defaultImageN),
-      //     size: AppConstants.getGeekerAIImageSize(questionInputController
-      //             .questionInputModel.imageParameterSize!)
-      //         .openAIImageSize,
-      //     quality: AppConstants.getGeekerAIImageQuality(questionInputController
-      //             .questionInputModel.imageParameterQuality!)
-      //         .openAIImageQuality,
-      //     style: AppConstants.getGeekerAIImageStyle(questionInputController
-      //             .questionInputModel.imageParameterStyle!)
-      //         .openAIImageStyle,
-      //   );
-      //   logger.d("image model: ${images.json.toString()}");
-      //   OpenAIImageData image = images.data.first;
-      //   logger.d("image url: ${image.url}");
-      //   logger.d("image revise: ${image.revisedPrompt}");
-      //   // logger.d("image json: ${image}");
-      //   if (images.haveData) {
-      //     MessageModel targetMessage = chatMessageController.createNewMessage(
-      //         chatSessionController.currentSession.sid, 'assistant', '', false);
-      //     targetMessage.responseJson = jsonEncode(images.json);
-      //     targetMessage.status = 1;
-      //     chatMessageController.addMessage(targetMessage);
-      //     chatMessageController.update();
-      //     chatMessageController.saveMessage(userMessage);
-      //     chatMessageController.saveMessage(targetMessage);
-      //     chatSessionController
-      //         .saveSession(chatSessionController.currentSession);
-      //     chatSessionController.update();
-      //   }
-      // } on RequestFailedException catch (e) {
-      //   logger.e("getOpenAIInstance error: ${e.message}");
-      //   MessageModel targetMessage = chatMessageController.createNewMessage(
-      //       chatSessionController.currentSession.sid, 'assistant', '', false);
-      //   // targetMessage.responseJson = jsonEncode(images.json);
-      //   targetMessage.content = e.message;
-      //   targetMessage.status = 1;
-      //   chatMessageController.addMessage(targetMessage);
-      //   chatMessageController.update();
-      //   chatMessageController.saveMessage(userMessage);
-      //   chatMessageController.saveMessage(targetMessage);
-      //   chatSessionController.saveSession(chatSessionController.currentSession);
-      //   chatSessionController.update();
-      // } on Exception catch (e) {
-      //   logger.e("getOpenAIInstance error: ${e}");
-      // }
-    } else if (chatSessionController.currentSession.modelType ==
-        ModelType.chat.name) {
-      await InputSubmitUtil.instance.submitChatModel(
-          chatMessageController,
-          chatSessionController,
-          questionInputController,
-          settingsServerController);
-      // TODO: process chat model
-    } else if (chatSessionController.currentSession.modelType ==
-        ModelType.text.name) {
-      // TODO process text model
+    if (settingsServerController.defaultServer.provider == "openai" ||
+        settingsServerController.defaultServer.provider == "geekerchat") {
+      if (chatSessionController.currentSession.modelType ==
+          ModelType.image.name) {
+        await InputSubmitUtil.instance.submitImageModel(
+            chatMessageController,
+            chatSessionController,
+            questionInputController,
+            settingsServerController);
+      } else if (chatSessionController.currentSession.modelType ==
+          ModelType.chat.name) {
+        await InputSubmitUtil.instance.submitChatModel(
+            chatMessageController,
+            chatSessionController,
+            questionInputController,
+            settingsServerController);
+      } else if (chatSessionController.currentSession.modelType ==
+          ModelType.text.name) {
+        // TODO process text model
+      }
+      questionInputController.clear();
+      questionInputController.update();
+    } else if (settingsServerController.defaultServer.provider == "azure") {
+      if (chatSessionController.currentSession.modelType ==
+          ModelType.chat.name) {
+        await InputSubmitUtil.instance.submitAzureChatModel(
+            chatMessageController,
+            chatSessionController,
+            questionInputController,
+            settingsServerController);
+      }
     }
-    questionInputController.clear();
-    questionInputController.update();
+
     // if (context != null) {
     //   LoadingProgress.stop(context);
     // }
