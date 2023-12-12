@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/models/geekerai/geekerai_models.dart';
+import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/question_input_model.dart';
 import 'package:geek_chat/util/app_constants.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,22 @@ class QuestionInputController extends GetxController {
   set inputText(String value) {
     textEditingController.text = value.trim();
     questionInputModel.inputText = textEditingController.text;
+  }
+
+  bool isQuotedMessagesTooLong() {
+    return false;
+  }
+
+  void addQuotedMessage(MessageModel message) {
+    if (!questionInputModel.quotedMessages.contains(message)) {
+      questionInputModel.quotedMessages.add(message);
+    }
+  }
+
+  void removeQuotedMessage(MessageModel message) {
+    if (questionInputModel.quotedMessages.contains(message)) {
+      questionInputModel.quotedMessages.remove(message);
+    }
   }
 
   List<String> get imageSizeList {

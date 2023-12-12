@@ -41,23 +41,27 @@ class InputSubmitUtil {
       updated: getCurrentDateTime(),
     );
 
-    ///  将 Message 放到列表里
-    chatMessageController.addMessage(userMessage);
-    chatMessageController.update();
     try {
       OpenAI openai = GeekerAIUtils.instance
           .getOpenaiInstance(settingsServerController.defaultServer);
       Stream<OpenAIStreamChatCompletionModel> chatCompletionStream =
           openai.chat.createStream(
         model: userMessage.model!,
-        messages: getChatHistoryMessages(chatMessageController.messages,
-            chatSessionController.currentSession, userMessage),
+        messages: getChatRequestMessages(
+            chatMessageController.messages,
+            chatSessionController.currentSession,
+            userMessage,
+            questionInputController.questionInputModel.quotedMessages),
         // toolChoice: "auto",
         temperature: chatSessionController.currentSession.temperature,
         // responseFormat: {"type": "json_object"},
         // user:
         // seed: 6, //https://platform.openai.com/docs/api-reference/chat/create
       );
+
+      ///  将 Message 放到列表里, 这里要先计算 history messages再将 userMessage 加到sessions列表里
+      chatMessageController.addMessage(userMessage);
+      chatMessageController.update();
 
       /// create Assistant Message
       MessageModel targetMessage = MessageModel(
@@ -92,7 +96,9 @@ class InputSubmitUtil {
       }, onDone: () {
         logger.d("stream message is done");
         targetMessage.generating = false;
-        targetMessage.contentStream!.close();
+        targetMessage.closeStream();
+        chatMessageController.saveMessage(userMessage);
+        chatMessageController.saveMessage(targetMessage);
       });
     } on RequestFailedException catch (e) {
       logger.e("error: $e");
@@ -101,10 +107,11 @@ class InputSubmitUtil {
     }
   }
 
-  List<OpenAIChatCompletionChoiceMessageModel> getChatHistoryMessages(
-      List<MessageModel> messages,
+  List<OpenAIChatCompletionChoiceMessageModel> getChatRequestMessages(
+      List<MessageModel> historyMessages,
       SessionModel currentSession,
-      MessageModel userMessage) {
+      MessageModel userMessage,
+      [List<MessageModel>? quotedMessages]) {
     List<OpenAIChatCompletionChoiceMessageModel> messages = [];
     messages.add(OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.system,
@@ -118,6 +125,58 @@ class InputSubmitUtil {
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
               userMessage.content)
         ]));
+
+    /// 计算tokens
+    int totalTokens = currentSession.maxContextSize -
+        numTokenCounter(currentSession.model, currentSession.prompt.content);
+    totalTokens = totalTokens -
+        numTokenCounter(currentSession.model, userMessage.content);
+
+    /// 最大历史消息数
+    int totalMessageCount = currentSession.maxContextMsgCount;
+    //TODO: 处理 quoted messsages
+    if (quotedMessages != null && quotedMessages.isNotEmpty) {
+      for (int i = 0; i < quotedMessages.length; i++) {
+        MessageModel quoteMessage = quotedMessages[i];
+        // for (MessageModel quoteMessage in quotedMessages) {
+        messages.insert(
+            1,
+            OpenAIChatCompletionChoiceMessageModel(
+                role: OpenAIChatMessageRole.values
+                    .firstWhere((e) => e.name == quoteMessage.role),
+                content: [
+                  OpenAIChatCompletionChoiceMessageContentItemModel.text(
+                      quoteMessage.content)
+                ]));
+      }
+      return messages;
+    }
+
+    for (MessageModel message in historyMessages) {
+      totalTokens =
+          totalTokens - numTokenCounter(currentSession.model, message.content);
+      totalMessageCount -= 1;
+      if (totalTokens < 0) {
+        break;
+      } else if (totalMessageCount <= 0 &&
+          currentSession.maxContextMsgCount != 22) {
+        /// 22 is unlimited count
+        break;
+      } else {
+        // logger.d(OpenAIChatMessageRole.values
+        //     .firstWhere((e) => e.name == message.role));
+        messages.insert(
+            1,
+            OpenAIChatCompletionChoiceMessageModel(
+                role: OpenAIChatMessageRole.values
+                    .firstWhere((e) => e.name == message.role),
+                content: [
+                  OpenAIChatCompletionChoiceMessageContentItemModel.text(
+                      message.content)
+                ]));
+      }
+    }
+
     return messages;
   }
 

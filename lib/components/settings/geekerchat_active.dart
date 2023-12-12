@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/model.dart';
+import 'package:geek_chat/models/server.dart';
+import 'package:geek_chat/util/app_loading_dialog.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -100,7 +104,32 @@ class GeekerChatSettingsComponent extends StatelessWidget {
             children: [
               OutlinedButton(
                   onPressed: () {
-                    submitActive(controller, context);
+                    if (controller.defaultServer.license.trim().isEmpty) {
+                      showCustomToast(
+                          title: "License is empty!".tr, context: context);
+                      return;
+                    }
+                    if (!controller.needReactive) {
+                      settingsController.settings.provider =
+                          settingsServerController.provider;
+                      settingsController.saveSettings();
+                      showCustomToast(
+                          title: "Save successful".tr, context: context);
+                      return;
+                    }
+                    AppLoadingProgress.start(context);
+                    submitActive(controller, context).then((value) {
+                      // if (value != null) {
+                      if (value.isActived) {
+                        showCustomToast(
+                            title: "Active Success".tr, context: context);
+                      } else {
+                        showCustomToast(
+                            title: "Active Faild!".tr, context: context);
+                      }
+                      // }
+                      AppLoadingProgress.stop(context);
+                    });
                   },
                   child: Text("Save".tr)),
               const SizedBox(width: 10),
@@ -123,49 +152,76 @@ class GeekerChatSettingsComponent extends StatelessWidget {
     });
   }
 
-  submitActive(SettingsServerController controller, BuildContext context) {
+  Future<ServerModel> submitActive(
+      SettingsServerController controller, BuildContext context) async {
     logger.d(
         "default server provider: ${settingsServerController.defaultServer.provider}");
     logger.d("settings server provider: ${settingsServerController.provider}");
-    if (controller.defaultServer.license.isNotEmpty) {
-      if (controller.needReactive) {
-        controller
-            .activeLicense(controller.defaultServer.license,
-                settingsController.settings.uuid, localeController.locale.lang)
-            .then((value) {
-          if (value.isActived) {
-            logger.d("actie: ${value.toJson()}");
-            // controller.defaultServer = value;
-            controller.saveSettings(value);
-            controller.needReactive = false;
-            settingsController.settings.provider = value.provider;
-            settingsController.saveSettings();
-            showCustomToast(title: "Active Success".tr, context: context);
-            controller.activeError = false;
-            controller.errorMessage = '';
-            controller.update();
-          } else {
-            logger.d("active: $value");
-            showCustomToast(title: "Active Faild!".tr, context: context);
-            // controller.defaultServer.message = value.message;
-            // controller.defaultServer.error = true;
-            controller.activeError = true;
-            controller.errorMessage = value.message;
-            controller.update();
-          }
-        });
-      } else {
-        if (settingsServerController.defaultServer.isActived) {
-          // settingsController.settings.provider = value.provider;
-          settingsController.settings.provider =
-              settingsServerController.provider;
-          settingsController.saveSettings();
-          showCustomToast(title: "Save successful".tr, context: context);
-        }
-      }
+    // if (controller.defaultServer.license.isNotEmpty) {
+    // if (controller.needReactive) {
+    // controller
+    //     .activeLicense(controller.defaultServer.license,
+    //         settingsController.settings.uuid, localeController.locale.lang)
+    //     .then((value) {
+    //   if (value.isActived) {
+    //     logger.d("actie: ${value.toJson()}");
+    //     // controller.defaultServer = value;
+    //     controller.saveSettings(value);
+    //     controller.needReactive = false;
+    //     settingsController.settings.provider = value.provider;
+    //     settingsController.saveSettings();
+    //     showCustomToast(title: "Active Success".tr, context: context);
+    //     controller.activeError = false;
+    //     controller.errorMessage = '';
+    //     controller.update();
+    //   } else {
+    //     logger.d("active: $value");
+    //     showCustomToast(title: "Active Faild!".tr, context: context);
+    //     // controller.defaultServer.message = value.message;
+    //     // controller.defaultServer.error = true;
+    //     controller.activeError = true;
+    //     controller.errorMessage = value.message;
+    //     controller.update();
+    //   }
+    // });
+    ServerModel serverModel = await controller.activeLicense(
+        controller.defaultServer.license,
+        settingsController.settings.uuid,
+        localeController.locale.lang);
+    if (serverModel.isActived) {
+      logger.d("actie: ${serverModel.toJson()}");
+      // controller.defaultServer = value;
+      controller.saveSettings(serverModel);
+      controller.needReactive = false;
+      settingsController.settings.provider = serverModel.provider;
+      settingsController.saveSettings();
+      // showCustomToast(title: "Active Success".tr, context: context);
+      controller.activeError = false;
+      controller.errorMessage = '';
+      controller.update();
     } else {
-      showCustomToast(title: "Save successful".tr, context: context);
+      logger.d("active: $serverModel");
+      // showCustomToast(title: "Active Faild!".tr, context: context);
+      // controller.defaultServer.message = value.message;
+      // controller.defaultServer.error = true;
+      controller.activeError = true;
+      controller.errorMessage = serverModel.message;
+      controller.update();
     }
+    return serverModel;
+    //   } else {
+    //     if (settingsServerController.defaultServer.isActived) {
+    //       // settingsController.settings.provider = value.provider;
+    //       settingsController.settings.provider =
+    //           settingsServerController.provider;
+    //       settingsController.saveSettings();
+    //       // showCustomToast(title: "Save successful".tr, context: context);
+    //     }
+    //   }
+    // }
+    // else {
+    //   // showCustomToast(title: "Save successful".tr, context: context);
+    // }
     // mainController.update();
     // settingsController.update(['subscription']);
   }

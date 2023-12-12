@@ -21,11 +21,11 @@ class GeekerAIUtils {
   }
 
   /// TODO
-  List<MessageModel> getHistoryMessages(
-      List<MessageModel> messages, SessionModel session) {
-    List<MessageModel> historyMessages = [];
-    return historyMessages;
-  }
+  // List<MessageModel> getHistoryMessages(
+  //     List<MessageModel> messages, SessionModel session) {
+  //   List<MessageModel> historyMessages = [];
+  //   return historyMessages;
+  // }
 
   /// TODO
   // OpenAIImageModel createImage(QuestionInputModel input) {
