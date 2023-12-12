@@ -59,6 +59,16 @@ class InputSubmitUtil {
         // seed: 6, //https://platform.openai.com/docs/api-reference/chat/create
       );
 
+      /// add quotes in the user message
+      if (questionInputController
+          .questionInputModel.quotedMessages.isNotEmpty) {
+        userMessage.quotes = [];
+        for (MessageModel msg
+            in questionInputController.questionInputModel.quotedMessages) {
+          userMessage.quotes!.add(msg.msgId);
+        }
+      }
+
       ///  将 Message 放到列表里, 这里要先计算 history messages再将 userMessage 加到sessions列表里
       chatMessageController.addMessage(userMessage);
       chatMessageController.update();
@@ -99,6 +109,9 @@ class InputSubmitUtil {
         targetMessage.closeStream();
         chatMessageController.saveMessage(userMessage);
         chatMessageController.saveMessage(targetMessage);
+        chatSessionController
+            .updateSessionLastEdit(chatSessionController.currentSession);
+        chatSessionController.update();
       });
     } on RequestFailedException catch (e) {
       logger.e("error: $e");
@@ -142,8 +155,7 @@ class InputSubmitUtil {
         messages.insert(
             1,
             OpenAIChatCompletionChoiceMessageModel(
-                role: OpenAIChatMessageRole.values
-                    .firstWhere((e) => e.name == quoteMessage.role),
+                role: OpenAIChatMessageRole.user,
                 content: [
                   OpenAIChatCompletionChoiceMessageContentItemModel.text(
                       quoteMessage.content)

@@ -125,6 +125,8 @@ class DesktopHomePage extends StatelessWidget {
         ModelType.text.name) {
       // TODO process text model
     }
+    questionInputController.clear();
+    questionInputController.update();
     // if (context != null) {
     //   LoadingProgress.stop(context);
     // }

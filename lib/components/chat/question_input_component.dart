@@ -47,7 +47,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-      child: GetBuilder<ChatMessageController>(builder: (controller) {
+      child: GetBuilder<QuestionInputController>(builder: (controller) {
         return Container(
           padding: const EdgeInsets.only(top: 1, bottom: 5),
           child: Column(
@@ -78,7 +78,9 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                             onQuestionInputSubmit: onQuestionInputSubmit,
                             questionInputController: questionInputController,
                           ),
-                          QuoteMessagesComponent(),
+                          QuoteMessagesComponent(
+                            questionInputController: questionInputController,
+                          ),
                         ],
                       ),
                     ),
@@ -366,14 +368,14 @@ class QuestionInputComponent extends StatelessWidget {
 
 // ignore: must_be_immutable
 class QuoteMessagesComponent extends StatelessWidget {
-  QuoteMessagesComponent({super.key});
+  QuoteMessagesComponent({super.key, required this.questionInputController});
 
   // ChatSessionController chatSessionController = Get.find();
   ChatMessageController chatMessageController = Get.find();
-
+  QuestionInputController questionInputController;
   @override
   Widget build(BuildContext context) {
-    if (chatMessageController.quoteMessages.isEmpty) {
+    if (questionInputController.questionInputModel.quotedMessages.isEmpty) {
       return const SizedBox();
     }
     return Padding(
@@ -384,7 +386,8 @@ class QuoteMessagesComponent extends StatelessWidget {
         direction: Axis.horizontal,
         textDirection: TextDirection.ltr,
         children: [
-          for (MessageModel message in chatMessageController.quoteMessages)
+          for (MessageModel message
+              in questionInputController.questionInputModel.quotedMessages)
             InputChip(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               label: SizedBox(
@@ -398,8 +401,10 @@ class QuoteMessagesComponent extends StatelessWidget {
               deleteButtonTooltipMessage: "Delete".tr,
               padding: const EdgeInsets.all(0),
               onDeleted: () {
-                chatMessageController.removeQuoteMessage(message);
-                chatMessageController.update();
+                // chatMessageController.removeQuoteMessage(message);
+                questionInputController.removeQuotedMessage(message);
+                // chatMessageController.update();
+                questionInputController.update();
               },
             ),
         ],

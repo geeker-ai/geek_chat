@@ -204,14 +204,25 @@ class DeskTopMainRightComponent extends StatelessWidget {
                           deviceType: settingsController.deviceType,
                           session: chatSessionController.currentSession,
                           onQuote: (MessageModel message) {
-                            if (controller
-                                .isMessagesTooLong(controller.quoteMessages)) {
+                            // if (controller
+                            //     .isMessagesTooLong(controller.quoteMessages)) {
+                            //   showCustomToast(
+                            //       title: "Too many quote messages".tr,
+                            //       context: context);
+                            // } else {
+                            //   controller.addQuoteMessage(message);
+                            //   controller.update();
+                            // }
+                            if (questionInputController.isQuotedMessagesTooLong(
+                                chatSessionController.currentSession)) {
                               showCustomToast(
                                   title: "Too many quote messages".tr,
                                   context: context);
+                              // questionInputController.addQuotedMessage(message);
                             } else {
-                              controller.addQuoteMessage(message);
-                              controller.update();
+                              questionInputController.addQuotedMessage(message);
+                              questionInputController.update();
+                              // questionInputController.update();
                             }
                             questionInputController.inputFocus.requestFocus();
                           },
