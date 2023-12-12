@@ -139,6 +139,9 @@ dependencies:
 
   # https://pub.dev/packages/openai_dart
   openai_dart: ^0.1.2
+
+  # https://pub.dev/packages/vertex_ai
+  vertex_ai: ^0.0.7+2
   # openai_dart:
   #   path: ../d
 
