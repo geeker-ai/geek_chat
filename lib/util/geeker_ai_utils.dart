@@ -1,7 +1,7 @@
 import 'package:dart_openai/dart_openai.dart';
-import 'package:geek_chat/models/message.dart';
+// import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/server.dart';
-import 'package:geek_chat/models/session.dart';
+// import 'package:geek_chat/models/session.dart';
 
 class GeekerAIUtils {
   static final GeekerAIUtils _geekerAIUtils = GeekerAIUtils._();
@@ -13,6 +13,8 @@ class GeekerAIUtils {
   OpenAI getOpenaiInstance(ServerModel defaultServer) {
     defaultServer = defaultServer;
     initOpenAI(defaultServer);
+    // OpenAI.requestsTimeOut(Duration(seconds: 60));
+    OpenAI.requestsTimeOut = const Duration(seconds: 60);
     return OpenAI.instance;
   }
 
