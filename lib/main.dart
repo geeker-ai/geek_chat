@@ -102,7 +102,7 @@ initServices() async {
   logger.d("locale: ${localeController.locale.toJson()}");
 
   ///SettingsServerController settingsServerController = ;
-  Get.put(
+  SettingsServerController settingsServerController = Get.put(
       SettingsServerController(provider: settingsController.settings.provider));
 
   MainController mainController = Get.put(MainController());
@@ -127,19 +127,31 @@ initServices() async {
   if (settingsController.channelName == "site") {
     mainController.checkUpdate(settingsController.packageInfo.version,
         (ReleaseModel releaseModel) {
-      String tip = "Found a new version".tr;
-      Get.defaultDialog(
-          title: "Update!".tr,
-          textConfirm: "Download".tr,
-          textCancel: "Cancel".tr,
-          onCancel: () => Get.back(),
-          onConfirm: () {
-            logger.d("confirm click");
-            launchUrl(
-                Uri.parse("https://github.com/geeker-ai/geek_chat/releases"));
-          },
-          radius: 5,
-          middleText: "$tip : ${releaseModel.version}");
+      if (releaseModel.needUpdate && releaseModel.notice) {
+        String tip = "Found a new version".tr;
+        Get.defaultDialog(
+            title: "Update!".tr,
+            textConfirm: "Download".tr,
+            textCancel: "Cancel".tr,
+            onCancel: () => Get.back(),
+            onConfirm: () {
+              logger.d("confirm click");
+              launchUrl(
+                  Uri.parse("https://github.com/geeker-ai/geek_chat/releases"));
+            },
+            radius: 5,
+            middleText: "$tip : ${releaseModel.version}");
+        settingsController.hasNewVersion = true;
+        settingsController.newVersion = releaseModel.version;
+        settingsServerController.update(['subscription']);
+        // settingsController.update();
+      } else if (releaseModel.needUpdate && !releaseModel.notice) {
+        logger.d("releaseModel.needUpdate && !releaseModel.notice");
+        settingsController.hasNewVersion = true;
+        settingsController.newVersion = releaseModel.version;
+        settingsServerController.update(['subscription']);
+        // settt.update();
+      }
     });
   }
 

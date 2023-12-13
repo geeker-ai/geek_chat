@@ -6,6 +6,7 @@ import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:get/get.dart';
+import 'package:badges/badges.dart' as badges;
 
 // ignore: must_be_immutable
 class MobileHomePage extends StatelessWidget {
@@ -98,7 +99,7 @@ class MobileHomePage extends StatelessWidget {
               label: 'Prompts'.tr,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.settings),
+              icon: getSettingsIcon(),
               label: 'Settings'.tr,
             )
           ],
@@ -108,5 +109,17 @@ class MobileHomePage extends StatelessWidget {
         return navigationRoute(controller.navIndex);
       }),
     );
+  }
+
+  Widget getSettingsIcon() {
+    Widget widget = const Icon(Icons.settings);
+    if (settingsController.hasNewVersion) {
+      return badges.Badge(
+        position: badges.BadgePosition.topEnd(top: 0, end: -12),
+        showBadge: true,
+        child: widget,
+      );
+    }
+    return widget;
   }
 }

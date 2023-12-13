@@ -7,6 +7,7 @@ import 'package:geek_chat/models/locale_model.dart';
 import 'package:geek_chat/models/theme.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:badges/badges.dart' as badges;
 
 // ignore: must_be_immutable
 class SettingsComponent extends StatelessWidget {
@@ -140,10 +141,7 @@ class SettingsComponent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("About".tr),
-            Text(
-              "${'Version'.tr}, v${controller.packageInfo.version} ",
-              style: const TextStyle(fontSize: 12),
-            )
+            getVersionWidget(controller),
           ],
         ),
         leading: const Icon(Icons.info_outline),
@@ -155,5 +153,20 @@ class SettingsComponent extends StatelessWidget {
       ),
     ];
     return menus;
+  }
+
+  Widget getVersionWidget(SettingsController controller) {
+    Widget widget = Text(
+      "${'Version'.tr}, v${controller.packageInfo.version} ",
+      style: const TextStyle(fontSize: 12),
+    );
+    if (controller.hasNewVersion) {
+      return badges.Badge(
+        position: badges.BadgePosition.topEnd(top: 0, end: -12),
+        showBadge: true,
+        child: widget,
+      );
+    }
+    return widget;
   }
 }

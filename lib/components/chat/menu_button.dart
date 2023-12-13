@@ -1,19 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
+// import 'package:get/get.dart';
+// import 'package:logger/logger.dart';
 // import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class LeftMenuButtonComponent extends StatelessWidget {
-  LeftMenuButtonComponent(
-      {super.key,
-      required this.title,
-      // required this.routeName,
-      required this.onPressed,
-      required this.icon});
+  LeftMenuButtonComponent({
+    super.key,
+    required this.title,
+    // required this.routeName,
+    required this.onPressed,
+    required this.icon,
+    this.needNotice,
+  });
 
   String title;
   Function onPressed;
   IconData icon;
+  bool? needNotice;
   // String routeName;
+  // Logger logger = Get.find();
+
+  Widget getLabelTitle() {
+    // logger.d("getLabelTitle $needNotice");
+    if (needNotice != null && needNotice == true) {
+      // return Row(
+      //   children: [Text(title), Text("*")],
+      // );
+      return badges.Badge(
+        position: badges.BadgePosition.topEnd(top: 0, end: -12),
+        showBadge: true,
+        child: Text(title),
+      );
+    }
+    return Text(title);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +53,7 @@ class LeftMenuButtonComponent extends StatelessWidget {
           onPressed();
         },
         icon: Icon(icon),
-        label: Text(title),
+        label: getLabelTitle(),
       ),
     );
   }

@@ -7,6 +7,7 @@ class ReleaseModel {
   String version = '0.0.1';
   String currentVersion = '0.0.1';
   String currentChangeLog = '';
+  bool notice = true;
   late Map<String, String> changeLogs;
 
   ReleaseModel();
@@ -16,10 +17,13 @@ class ReleaseModel {
     releaseModel.currentVersion = currentVersion;
     if (jsonString.isNotEmpty) {
       try {
-        var jsonObject = jsonDecode(jsonString);
+        Map<String, dynamic> jsonObject = jsonDecode(jsonString);
         releaseModel.needUpdate =
             checkVersion(currentVersion, jsonObject['version']);
         releaseModel.version = jsonObject['version'];
+        if (jsonObject.containsKey("notice")) {
+          releaseModel.notice = jsonObject['notice'];
+        }
       } catch (e) {
         //
       }
