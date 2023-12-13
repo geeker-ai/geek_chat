@@ -73,6 +73,8 @@ class DesktopHomePage extends StatelessWidget {
             questionInputController,
             settingsServerController);
       }
+      questionInputController.clear();
+      questionInputController.update();
     }
 
     // if (context != null) {

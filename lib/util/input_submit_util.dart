@@ -43,6 +43,15 @@ class InputSubmitUtil {
       updated: getCurrentDateTime(),
     );
 
+    /// add quotes in the user message
+    if (questionInputController.questionInputModel.quotedMessages.isNotEmpty) {
+      userMessage.quotes = [];
+      for (MessageModel msg
+          in questionInputController.questionInputModel.quotedMessages) {
+        userMessage.quotes!.add(msg.msgId);
+      }
+    }
+
     final client = OpenAIClient(
         baseUrl: settingsServerController.defaultServer
             .getRequestUrlForOpenaiDart(
@@ -64,17 +73,6 @@ class InputSubmitUtil {
               chatSessionController.currentSession,
               userMessage,
               questionInputController.questionInputModel.quotedMessages),
-          // messages: [
-          //   ChatCompletionMessage.system(
-          //     content:
-          //         'You are a helpful assistant that replies only with numbers in order without any spaces or commas',
-          //   ),
-          //   ChatCompletionMessage.user(
-          //     content: ChatCompletionUserMessageContent.string(
-          //       'List the numbers from 1 to 9',
-          //     ),
-          //   ),
-          // ],
         ),
       );
       chatMessageController.addMessage(userMessage);
@@ -114,7 +112,10 @@ class InputSubmitUtil {
       // await for (final res in stream) {
       //   print(res.choices.first.delta.content);
       // }
-    } catch (e) {}
+    } catch (e) {
+      logger.e("e");
+      // TODO process exception
+    }
   }
 
   List<ChatCompletionMessage> getAzureRequestMessages(
@@ -125,7 +126,8 @@ class InputSubmitUtil {
     List<ChatCompletionMessage> messages = [];
     //// prompt
     List<OpenAIChatCompletionChoiceMessageModel> openaiRequestMessages =
-        getChatRequestMessages(historyMessages, currentSession, userMessage);
+        getChatRequestMessages(
+            historyMessages, currentSession, userMessage, quotedMessages);
     OpenAIChatCompletionChoiceMessageModel promptMessage =
         openaiRequestMessages.first;
     messages.add(ChatCompletionMessage.system(
@@ -259,6 +261,7 @@ class InputSubmitUtil {
       });
     } on RequestFailedException catch (e) {
       logger.e("error: $e");
+      // TODO process exception
     } on Exception catch (e) {
       logger.e("getOpenAIInstance error: $e");
     }
