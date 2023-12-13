@@ -1,3 +1,5 @@
+import 'package:geek_chat/models/message.dart';
+
 class QuestionInputModel {
   QuestionInputModel({
     required this.inputText,
@@ -12,6 +14,7 @@ class QuestionInputModel {
   String? imageParameterSize;
   String? imageParameterStyle;
   String inputText;
+  List<MessageModel> quotedMessages = [];
 
   String toJson() {
     return '{"inputText": "$inputText", "imageParameterN": $imageParameterN, "imageParameterQuality": "$imageParameterQuality", "imageParameterSize": "$imageParameterSize", "imageParameterStyle": "$imageParameterStyle"}';

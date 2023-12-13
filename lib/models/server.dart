@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:geek_chat/models/model.dart';
+import 'package:geek_chat/util/app_constants.dart';
 
 class ProviderModel {
   ProviderModel(
@@ -45,28 +46,28 @@ class ServerModel {
           "apiKey": "",
           "deploymentId": "",
           "url": "",
-          "apiVersion": "",
+          // "apiVersion": "",
         },
         "gpt-3.5-turbo-16k": {
           "name": "gpt-3.5-turbo-16k",
           "apiKey": "",
           "deploymentId": "",
           "url": "",
-          "apiVersion": "",
+          // "apiVersion": "",
         },
         "gpt-4": {
           "name": "gpt-4",
           "apiKey": "",
           "deploymentId": "",
           "url": "",
-          "apiVersion": "",
+          // "apiVersion": "",
         },
         "gpt-4-32k": {
           "name": "gpt-4-32k",
           "apiKey": "",
           "deploymentId": "",
           "url": "",
-          "apiVersion": "",
+          // "apiVersion": "",
         }
       };
     }
@@ -89,6 +90,19 @@ class ServerModel {
     }
   }
 
+  String getRequestUrlForOpenaiDart(String modelName) {
+    if (provider == 'azure') {
+      Map<String, String> modelSettings = getAzureModelSettings(modelName);
+      String url = modelSettings['url']!;
+      if (url.substring(url.length - 1) == '/') {
+        url = url.substring(0, url.length - 1);
+      }
+      return "${modelSettings['url']}/openai/deployments/${modelSettings['deploymentId']}";
+    } else {
+      return "$apiHost/v1/chat/completions";
+    }
+  }
+
   String getApiKey(AiModel model) {
     if (provider == 'azure') {
       Map<String, String> modelSettings =
@@ -98,6 +112,27 @@ class ServerModel {
       }
     }
     return apiKey;
+  }
+
+  String getApiKeyByModel(String modelName) {
+    if (provider == 'azure') {
+      Map<String, String> modelSettings = getAzureModelSettings(modelName);
+      if (modelSettings.containsKey("apiKey")) {
+        return "${modelSettings['apiKey']}";
+      }
+    }
+    return apiKey;
+  }
+
+  String getApiVersion(String modelName) {
+    if (provider == 'azure') {
+      return AppConstants.azureAPIVersion;
+      // Map<String, String> modelSettings = getAzureModelSettings(modelName);
+      // if (modelSettings.containsKey('apiVersion')) {
+      //   return "${modelSettings['apiVersion']}";
+      // }
+    }
+    return AppConstants.azureAPIVersion;
   }
 
   String getRequestURLByModel(AiModel model) {
@@ -173,17 +208,17 @@ class ServerModel {
         } else {
           tmpKey = apiKey;
         }
-        if (azconfig[key]!.containsKey("apiVersion")) {
-          tmpVersion = azconfig[key]!['apiVersion'];
-        } else {
-          tmpVersion = serverModel.azureApiVersion;
-        }
+        // if (azconfig[key]!.containsKey("apiVersion")) {
+        //   tmpVersion = azconfig[key]!['apiVersion'];
+        // } else {
+        //   tmpVersion = serverModel.azureApiVersion;
+        // }
         serverModel.azureConfig[key] = {
           "name": azconfig[key]!['name'],
           "deploymentId": azconfig[key]!['deploymentId'],
           "apiKey": tmpKey,
           "url": azconfig[key]!['url'],
-          "apiVersion": tmpVersion
+          // "apiVersion": tmpVersion
         };
       }
     }

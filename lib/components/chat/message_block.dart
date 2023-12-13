@@ -34,9 +34,10 @@ class MessageContent extends StatelessWidget {
     required this.message,
     required this.deviceType,
     required this.session,
-    this.onQuote,
     required this.onDelete,
     required this.moveTo,
+    required this.aiModel,
+    this.onQuote,
   }) {
     //
   }
@@ -44,6 +45,7 @@ class MessageContent extends StatelessWidget {
   Function? onQuote;
   Function onDelete;
   Function moveTo;
+  AiModel aiModel;
 
   // MessageBlockController controller = Get.put(MessageBlockController());
   Logger logger = Get.find();
@@ -379,7 +381,9 @@ class MessageContent extends StatelessWidget {
         tooltip: "Copy".tr,
       ));
     }
-    if (session.modelType != ModelType.image.name && onQuote != null) {
+    if (!(session.modelType == ModelType.image.name ||
+            aiModel.aiType == AiType.bard) &&
+        onQuote != null) {
       buttons.add(IconButton(
         onPressed: () {
           onQuote!(message);

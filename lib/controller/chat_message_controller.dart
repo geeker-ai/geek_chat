@@ -31,6 +31,10 @@ class ChatMessageController extends GetxController {
     return _quoteMessages;
   }
 
+  set quoteMessages(List<MessageModel> messages) {
+    _quoteMessages.addAll(messages);
+  }
+
   void addQuoteMessage(MessageModel message) {
     if (!_quoteMessages.contains(message)) {
       _quoteMessages.add(message);

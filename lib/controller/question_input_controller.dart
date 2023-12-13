@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/models/geekerai/geekerai_models.dart';
+import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/question_input_model.dart';
+import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/util/app_constants.dart';
+import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 class QuestionInputController extends GetxController {
   TextEditingController textEditingController = TextEditingController();
   FocusNode inputFocus = FocusNode();
+  Logger logger = Get.find();
 
   QuestionInputModel questionInputModel = QuestionInputModel(
       inputText: '',
@@ -19,6 +24,35 @@ class QuestionInputController extends GetxController {
   set inputText(String value) {
     textEditingController.text = value.trim();
     questionInputModel.inputText = textEditingController.text;
+  }
+
+  bool isQuotedMessagesTooLong(SessionModel currentSession) {
+    int totalTokens = currentSession.maxContextSize -
+        numTokenCounter(currentSession.model, inputText);
+    totalTokens -=
+        numTokenCounter(currentSession.model, currentSession.prompt.content);
+
+    for (MessageModel message in questionInputModel.quotedMessages) {
+      totalTokens -= numTokenCounter(currentSession.model, message.content);
+    }
+    if (totalTokens < 1) {
+      return true;
+    }
+    return false;
+  }
+
+  void addQuotedMessage(MessageModel message) {
+    logger.d("addQuotedMessage ${message.msgId}");
+    if (!questionInputModel.quotedMessages.contains(message)) {
+      questionInputModel.quotedMessages.add(message);
+    }
+  }
+
+  void removeQuotedMessage(MessageModel message) {
+    logger.d("removeQuotedMessage ${message.msgId}");
+    if (questionInputModel.quotedMessages.contains(message)) {
+      questionInputModel.quotedMessages.remove(message);
+    }
   }
 
   List<String> get imageSizeList {
@@ -63,5 +97,10 @@ class QuestionInputController extends GetxController {
 
   String get defaultImageN {
     return AppConstants.defaultDall3ImageN.toString();
+  }
+
+  void clear() {
+    inputText = "";
+    questionInputModel.quotedMessages.clear();
   }
 }

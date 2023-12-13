@@ -1,4 +1,3 @@
-
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/models/geekerai/geekerai_models.dart';
@@ -11,6 +10,9 @@ enum ImageModelType { create, edit, variation }
 
 class AppConstants {
   static LocaleModel defaultLocale = locales[0];
+
+  /// https://github.com/Azure/azure-rest-api-specs/tree/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference
+  static String azureAPIVersion = "2023-05-15";
 
   // https://emojipedia.org/flags/
   static List<LocaleModel> locales = [
@@ -201,7 +203,6 @@ class AppConstants {
     return servers[0];
   }
 
-
   static List<GCThemeMode> themeModes = [
     GCThemeMode(name: 'System', themeMode: ThemeMode.system),
     GCThemeMode(name: 'Dark', themeMode: ThemeMode.dark),
@@ -275,5 +276,4 @@ class AppConstants {
 
   static List<int> dalle3ImageN = [1, 2, 4];
   static int defaultDall3ImageN = dalle3ImageN[0];
-
 }
