@@ -510,12 +510,22 @@ class InputSubmitUtil {
         questionInputController.update();
       } else if (aiModel.aiType == AiType.bard) {
         logger.d("bard type");
+        if (settingsServerController.defaultServer.provider == "geekerchat") {
+          oldChatFunction(chatSessionController, chatMessageController,
+              settingsServerController, questionInputController);
+          questionInputController.clear();
+          questionInputController.update();
+        } else {
+          errorHander(
+              chatSessionController,
+              chatMessageController,
+              settingsServerController,
+              questionInputController,
+              "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
+                  .tr);
+        }
 
         /// add old bard supported
-        oldChatFunction(chatSessionController, chatMessageController,
-            settingsServerController, questionInputController);
-        questionInputController.clear();
-        questionInputController.update();
       } else {
         /// process error
         errorHander(
