@@ -10,6 +10,7 @@ import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/input_submit_util.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -42,40 +43,53 @@ class DesktopHomePage extends StatelessWidget {
     // if (context != null) {
     //   LoadingProgress.start(context);
     // }
-    if (settingsServerController.defaultServer.provider == "openai" ||
-        settingsServerController.defaultServer.provider == "geekerchat") {
-      if (chatSessionController.currentSession.modelType ==
-          ModelType.image.name) {
-        await InputSubmitUtil.instance.submitImageModel(
-            chatMessageController,
-            chatSessionController,
-            questionInputController,
-            settingsServerController);
-      } else if (chatSessionController.currentSession.modelType ==
-          ModelType.chat.name) {
-        await InputSubmitUtil.instance.submitChatModel(
-            chatMessageController,
-            chatSessionController,
-            questionInputController,
-            settingsServerController);
-      } else if (chatSessionController.currentSession.modelType ==
-          ModelType.text.name) {
-        // TODO process text model
-      }
-      questionInputController.clear();
-      questionInputController.update();
-    } else if (settingsServerController.defaultServer.provider == "azure") {
-      if (chatSessionController.currentSession.modelType ==
-          ModelType.chat.name) {
-        await InputSubmitUtil.instance.submitAzureChatModel(
-            chatMessageController,
-            chatSessionController,
-            questionInputController,
-            settingsServerController);
-      }
-      questionInputController.clear();
-      questionInputController.update();
-    }
+    await InputSubmitUtil.instance.submitInput(
+        chatSessionController,
+        chatMessageController,
+        settingsServerController,
+        questionInputController);
+    // AiModel aiModel =
+    //     AppConstants.getAiModel(chatSessionController.currentSession.model);
+    // if (settingsServerController.defaultServer.provider == "openai" ||
+    //     settingsServerController.defaultServer.provider == "geekerchat") {
+    //   if (aiModel.aiType == AiType.chatgpt) {
+    //     if (chatSessionController.currentSession.modelType ==
+    //         ModelType.image.name) {
+    //       await InputSubmitUtil.instance.submitImageModel(
+    //           chatMessageController,
+    //           chatSessionController,
+    //           questionInputController,
+    //           settingsServerController);
+    //     } else if (chatSessionController.currentSession.modelType ==
+    //         ModelType.chat.name) {
+    //       await InputSubmitUtil.instance.submitChatModel(
+    //           chatMessageController,
+    //           chatSessionController,
+    //           questionInputController,
+    //           settingsServerController);
+    //     } else if (chatSessionController.currentSession.modelType ==
+    //         ModelType.text.name) {
+    //       // TODO process text model
+    //     }
+    //     questionInputController.clear();
+    //     questionInputController.update();
+    //   } else if (aiModel.aiType == AiType.bard) {
+    //     logger.d("bard type");
+    //   }
+    // } else if (settingsServerController.defaultServer.provider == "azure") {
+    //   if (aiModel.aiType == AiType.chatgpt) {
+    //     if (chatSessionController.currentSession.modelType ==
+    //         ModelType.chat.name) {
+    //       await InputSubmitUtil.instance.submitAzureChatModel(
+    //           chatMessageController,
+    //           chatSessionController,
+    //           questionInputController,
+    //           settingsServerController);
+    //     }
+    //     questionInputController.clear();
+    //     questionInputController.update();
+    //   }
+    // }
 
     // if (context != null) {
     //   LoadingProgress.stop(context);

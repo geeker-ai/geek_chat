@@ -61,21 +61,26 @@ class ChatMessagePage extends StatelessWidget {
   final double radius = 14;
 
   Future<void> onSubmit(ChatMessageController controller) async {
-    await scrollToBottom(animate: false);
-    if (session.modelType == ModelType.image.name) {
-      await InputSubmitUtil.instance.submitImageModel(
-          chatMessageController,
-          chatSessionController,
-          questionInputController,
-          settingsServerController);
-      // return;
-    } else if (session.modelType == ModelType.chat.name) {
-      await InputSubmitUtil.instance.submitChatModel(
-          chatMessageController,
-          chatSessionController,
-          questionInputController,
-          settingsServerController);
-    }
+    await InputSubmitUtil.instance.submitInput(
+        chatSessionController,
+        chatMessageController,
+        settingsServerController,
+        questionInputController);
+    // await scrollToBottom(animate: false);
+    // if (session.modelType == ModelType.image.name) {
+    //   await InputSubmitUtil.instance.submitImageModel(
+    //       chatMessageController,
+    //       chatSessionController,
+    //       questionInputController,
+    //       settingsServerController);
+    //   // return;
+    // } else if (session.modelType == ModelType.chat.name) {
+    //   await InputSubmitUtil.instance.submitChatModel(
+    //       chatMessageController,
+    //       chatSessionController,
+    //       questionInputController,
+    //       settingsServerController);
+    // }
     // controller.submit(sid ?? '', onDone: () {
     //   chatSessionController
     //       .updateSessionLastEdit(chatSessionController.currentSession);

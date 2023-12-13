@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:dart_openai/dart_openai.dart';
-import 'package:extended_image/extended_image.dart';
+// import 'package:extended_image/extended_image.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
@@ -257,12 +258,14 @@ class InputSubmitUtil {
             .updateSessionLastEdit(chatSessionController.currentSession);
         chatSessionController.update();
       }, onError: (error) {
+        logger.e("stream error: $error");
+        targetMessage.content = error.message;
         // TODO process error.
       });
     } on RequestFailedException catch (e) {
       logger.e("error: $e");
       // TODO process exception
-    } on Exception catch (e) {
+    } catch (e) {
       logger.e("getOpenAIInstance error: $e");
     }
   }
@@ -404,6 +407,55 @@ class InputSubmitUtil {
       chatSessionController.update();
     } on Exception catch (e) {
       logger.e("getOpenAIInstance error: $e");
+    }
+  }
+
+  Future<void> submitInput(
+      ChatSessionController chatSessionController,
+      ChatMessageController chatMessageController,
+      SettingsServerController settingsServerController,
+      QuestionInputController questionInputController) async {
+    AiModel aiModel =
+        AppConstants.getAiModel(chatSessionController.currentSession.model);
+    if (settingsServerController.defaultServer.provider == "openai" ||
+        settingsServerController.defaultServer.provider == "geekerchat") {
+      if (aiModel.aiType == AiType.chatgpt) {
+        if (chatSessionController.currentSession.modelType ==
+            ModelType.image.name) {
+          await InputSubmitUtil.instance.submitImageModel(
+              chatMessageController,
+              chatSessionController,
+              questionInputController,
+              settingsServerController);
+        } else if (chatSessionController.currentSession.modelType ==
+            ModelType.chat.name) {
+          await InputSubmitUtil.instance.submitChatModel(
+              chatMessageController,
+              chatSessionController,
+              questionInputController,
+              settingsServerController);
+        } else if (chatSessionController.currentSession.modelType ==
+            ModelType.text.name) {
+          // TODO process text model
+        }
+        questionInputController.clear();
+        questionInputController.update();
+      } else if (aiModel.aiType == AiType.bard) {
+        logger.d("bard type");
+      }
+    } else if (settingsServerController.defaultServer.provider == "azure") {
+      if (aiModel.aiType == AiType.chatgpt) {
+        if (chatSessionController.currentSession.modelType ==
+            ModelType.chat.name) {
+          await InputSubmitUtil.instance.submitAzureChatModel(
+              chatMessageController,
+              chatSessionController,
+              questionInputController,
+              settingsServerController);
+        }
+        questionInputController.clear();
+        questionInputController.update();
+      }
     }
   }
 }
