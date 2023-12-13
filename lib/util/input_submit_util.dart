@@ -86,7 +86,7 @@ class InputSubmitUtil {
         model: chatSessionController.currentSession.model,
         msgType: 1,
         synced: false,
-        updated: getCurrentDateTime(),
+        updated: getCurrentDateTime() + 1,
         generating: true,
       );
       chatMessageController.addMessage(targetMessage);
@@ -105,6 +105,7 @@ class InputSubmitUtil {
         targetMessage.generating = false;
         targetMessage.closeStream();
         chatMessageController.saveMessage(userMessage);
+        targetMessage.updated = getCurrentDateTime() + 1;
         chatMessageController.saveMessage(targetMessage);
         chatSessionController
             .updateSessionLastEdit(chatSessionController.currentSession);
@@ -229,7 +230,7 @@ class InputSubmitUtil {
         model: chatSessionController.currentSession.model,
         msgType: 1,
         synced: false,
-        updated: getCurrentDateTime(),
+        updated: getCurrentDateTime() + 1,
         generating: true,
       );
       chatMessageController.addMessage(targetMessage);
@@ -255,6 +256,7 @@ class InputSubmitUtil {
         targetMessage.generating = false;
         targetMessage.closeStream();
         chatMessageController.saveMessage(userMessage);
+        targetMessage.updated = getCurrentDateTime() + 1;
         chatMessageController.saveMessage(targetMessage);
         chatSessionController
             .updateSessionLastEdit(chatSessionController.currentSession);
@@ -387,6 +389,7 @@ class InputSubmitUtil {
             chatSessionController.currentSession.sid, 'assistant', '', false);
         targetMessage.responseJson = jsonEncode(images.json);
         targetMessage.status = 1;
+        targetMessage.updated = getCurrentDateTime() + 1;
         chatMessageController.addMessage(targetMessage);
         chatMessageController.update();
         chatMessageController.saveMessage(userMessage);
@@ -442,7 +445,7 @@ class InputSubmitUtil {
       msgType: 1,
       synced: false,
       generating: false,
-      updated: getCurrentDateTime() + 1,
+      updated: getCurrentDateTime() + 5,
     );
 
     chatMessageController.addMessage(targetMessage);
