@@ -7,7 +7,9 @@ import 'package:geek_chat/controller/chat_message_scroll_controller.dart';
 import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/models/message.dart';
+import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -95,6 +97,10 @@ class DeskTopMainRightComponent extends StatelessWidget {
     );
   }
 
+  AiModel getAiModel(modelName) {
+    return AppConstants.getAiModel(modelName);
+  }
+
   Logger logger = Get.find<Logger>();
 
   late ChatMessageController chatMessageController;
@@ -113,6 +119,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     SessionModel session = chatSessionController.currentSession;
     chatMessageController.findBySessionId(sid);
+    AiModel aiModel = getAiModel(session.model);
+    logger.d("ai model ${aiModel.aiType.name}");
 
     return Container(
       alignment: Alignment.centerLeft,
@@ -203,16 +211,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
                           message: controller.messages.elementAt(index),
                           deviceType: settingsController.deviceType,
                           session: chatSessionController.currentSession,
+                          aiModel: aiModel,
                           onQuote: (MessageModel message) {
-                            // if (controller
-                            //     .isMessagesTooLong(controller.quoteMessages)) {
-                            //   showCustomToast(
-                            //       title: "Too many quote messages".tr,
-                            //       context: context);
-                            // } else {
-                            //   controller.addQuoteMessage(message);
-                            //   controller.update();
-                            // }
                             if (questionInputController.isQuotedMessagesTooLong(
                                 chatSessionController.currentSession)) {
                               showCustomToast(

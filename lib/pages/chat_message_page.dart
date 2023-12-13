@@ -10,6 +10,7 @@ import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/input_submit_util.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -98,6 +99,7 @@ class ChatMessagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // print("messages.length: ${messages.length}");
     // SessionModel session = chatListController.getSessionBysid(sid);
+    AiModel aiModel = AppConstants.getAiModel(session.model);
     return Scaffold(
       appBar: AppBar(
         title: GetBuilder<ChatSessionController>(builder: (controller) {
@@ -123,6 +125,7 @@ class ChatMessagePage extends StatelessWidget {
                         message: controller.messages.elementAt(index),
                         deviceType: settingsController.deviceType,
                         session: session,
+                        aiModel: aiModel,
                         onQuote: (MessageModel message) {},
                         onDelete: (MessageModel message) {},
                         moveTo: (MessageModel message) {});

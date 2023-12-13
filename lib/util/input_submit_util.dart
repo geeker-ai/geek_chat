@@ -412,11 +412,59 @@ class InputSubmitUtil {
     }
   }
 
+  errorHander(
+      ChatSessionController chatSessionController,
+      ChatMessageController chatMessageController,
+      SettingsServerController settingsServerController,
+      QuestionInputController questionInputController,
+      String errorMsg) {
+    MessageModel userMessage = MessageModel(
+      msgId: const Uuid().v4(),
+      role: MessageRole.user.name,
+      content: questionInputController.inputText,
+      sId: chatSessionController.currentSession.sid,
+      model: chatSessionController.currentSession.model,
+      msgType: 1,
+      synced: false,
+      generating: false,
+      updated: getCurrentDateTime(),
+    );
+
+    chatMessageController.addMessage(userMessage);
+    chatMessageController.update();
+
+    MessageModel targetMessage = MessageModel(
+      msgId: const Uuid().v4(),
+      role: MessageRole.assistant.name,
+      content: errorMsg,
+      sId: chatSessionController.currentSession.sid,
+      model: AppConstants.aiModels[0].modelName,
+      msgType: 1,
+      synced: false,
+      generating: false,
+      updated: getCurrentDateTime() + 1,
+    );
+
+    chatMessageController.addMessage(targetMessage);
+    chatMessageController.update();
+  }
+
+  oldChatFunction(
+      ChatSessionController chatSessionController,
+      ChatMessageController chatMessageController,
+      SettingsServerController settingsServerController,
+      QuestionInputController questionInputController) async {
+    //
+  }
+
+  /// TODO 需重构, 使用server支持的模型定义来编写逻辑
   Future<void> submitInput(
       ChatSessionController chatSessionController,
       ChatMessageController chatMessageController,
       SettingsServerController settingsServerController,
       QuestionInputController questionInputController) async {
+    logger.d(
+        "call submitInput ${settingsServerController.defaultServer.provider}");
     AiModel aiModel =
         AppConstants.getAiModel(chatSessionController.currentSession.model);
     if (settingsServerController.defaultServer.provider == "openai" ||
@@ -439,11 +487,31 @@ class InputSubmitUtil {
         } else if (chatSessionController.currentSession.modelType ==
             ModelType.text.name) {
           // TODO process text model
+        } else {
+          /// process error
+          errorHander(
+              chatSessionController,
+              chatMessageController,
+              settingsServerController,
+              questionInputController,
+              "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
+                  .tr);
         }
         questionInputController.clear();
         questionInputController.update();
       } else if (aiModel.aiType == AiType.bard) {
         logger.d("bard type");
+
+        /// add old bard supported
+      } else {
+        /// process error
+        errorHander(
+            chatSessionController,
+            chatMessageController,
+            settingsServerController,
+            questionInputController,
+            "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
+                .tr);
       }
     } else if (settingsServerController.defaultServer.provider == "azure") {
       if (aiModel.aiType == AiType.chatgpt) {
@@ -454,9 +522,27 @@ class InputSubmitUtil {
               chatSessionController,
               questionInputController,
               settingsServerController);
+        } else {
+          errorHander(
+              chatSessionController,
+              chatMessageController,
+              settingsServerController,
+              questionInputController,
+              "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
+                  .tr);
         }
         questionInputController.clear();
         questionInputController.update();
+      } else {
+        /// process error
+        logger.e("error: ${aiModel.aiType}");
+        errorHander(
+            chatSessionController,
+            chatMessageController,
+            settingsServerController,
+            questionInputController,
+            "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
+                .tr);
       }
     }
   }
