@@ -201,7 +201,7 @@ class ServerModel {
 
       for (var key in azconfig.keys) {
         String tmpKey = "";
-        String tmpVersion = "";
+        // String tmpVersion = "";
         // print("--------------------------${azconfig[key].keys}");
         if (azconfig[key]!.containsKey("apiKey")) {
           tmpKey = azconfig[key]!['apiKey'];

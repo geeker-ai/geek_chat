@@ -17,6 +17,10 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     tracker
         .trackEvent("Page-About", {"uuid": settingsController.settings.uuid});
+    ChangeLogModel lastVersion = mainController.versions.first;
+    List<ChangeLogModel> changeLogs = [];
+    changeLogs.addAll(mainController.versions);
+    changeLogs.removeAt(0);
     return Scaffold(
       appBar: AppBar(
         title: Text("About".tr),
@@ -43,13 +47,49 @@ class AboutPage extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      MarkdownWidget(
+                        data: "Geeker Chat Intro".tr,
+                        shrinkWrap: true,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: const MarkdownWidget(
+                          data:
+                              "Download Link: https://github.com/geeker-ai/geek_chat/releases",
+                          shrinkWrap: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "${lastVersion.version} (Latest Version)",
+                  style: TextStyle(
+                      fontSize:
+                          Theme.of(context).textTheme.titleLarge?.fontSize),
+                ),
+                dense: true,
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
                   child: MarkdownWidget(
-                    data: "Geeker Chat Intro".tr,
+                    data: lastVersion.content,
                     shrinkWrap: true,
                   ),
                 ),
               ),
-              for (ChangeLogModel version in mainController.versions)
+              for (ChangeLogModel version in changeLogs)
                 ExpansionTile(
                   title: Text(version.version),
                   controlAffinity: ListTileControlAffinity.leading,

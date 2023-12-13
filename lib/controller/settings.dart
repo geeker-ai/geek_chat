@@ -68,6 +68,9 @@ class SettingsController extends GetxController {
 
   Logger logger = Get.find();
 
+  bool hasNewVersion = false;
+  String newVersion = "*";
+
   @override
   void onInit() {
     resetSettings();

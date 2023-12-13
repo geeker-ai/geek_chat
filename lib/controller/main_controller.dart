@@ -64,6 +64,8 @@ class MainController extends GetxController {
     version.then((value) {
       logger.d("message: $value");
       if (value.isNotEmpty) {
+        // value =
+        //     '{"version": "v0.0.46", "notice": true, "assets": [{"name": "GeekChat-0.0.81+81-android.aab", "url": "https://pub-6be131b6553c4ce5a6f736f91a7d011a.r2.dev/v0.0.81/GeekChat-0.0.81+81-android.aab"}, {"name": "GeekChat-0.0.81+81-android.apk", "url": "https://pub-6be131b6553c4ce5a6f736f91a7d011a.r2.dev/v0.0.81/GeekChat-0.0.81+81-android.apk"}, {"name": "GeekChat-0.0.81+81-macos.dmg", "url": "https://pub-6be131b6553c4ce5a6f736f91a7d011a.r2.dev/v0.0.81/GeekChat-0.0.81+81-macos.dmg"}, {"name": "GeekChat-0.0.81+81-windows-setup.exe", "url": "https://pub-6be131b6553c4ce5a6f736f91a7d011a.r2.dev/v0.0.81/GeekChat-0.0.81+81-windows-setup.exe"}, {"name": "GeekChat-0.0.81+81-windows.msix", "url": "https://pub-6be131b6553c4ce5a6f736f91a7d011a.r2.dev/v0.0.81/GeekChat-0.0.81+81-windows.msix"}]}';
         _releaseModel = ReleaseModel.fromJson(value, currentVersion);
         logger.d("release model: ${_releaseModel.needUpdate}");
         if (releaseModel.needUpdate) {

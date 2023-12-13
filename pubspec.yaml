@@ -163,6 +163,9 @@ dependencies:
   # https://pub.dev/packages/image_gallery_saver
   image_gallery_saver: '^2.0.3'
 
+  # https://pub.dev/packages/badges
+  badges: ^3.1.2
+
 
 dev_dependencies:
   flutter_test:
