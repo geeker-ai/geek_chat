@@ -10,6 +10,8 @@ enum ImageModelType { create, edit, variation }
 
 class AppConstants {
   static LocaleModel defaultLocale = locales[0];
+
+  /// https://github.com/Azure/azure-rest-api-specs/tree/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference
   static String azureAPIVersion = "2023-05-15";
 
   // https://emojipedia.org/flags/

@@ -454,7 +454,16 @@ class InputSubmitUtil {
       ChatMessageController chatMessageController,
       SettingsServerController settingsServerController,
       QuestionInputController questionInputController) async {
-    //
+    chatMessageController.inputQuestion = questionInputController.inputText;
+    // chatMessageController.quoteMessages =
+    //     questionInputController.questionInputModel.quotedMessages;
+    chatMessageController.submit(chatSessionController.currentSession.sid,
+        onDone: () {
+      chatMessageController.inputQuestion = "";
+      chatSessionController
+          .updateSessionLastEdit(chatSessionController.currentSession);
+      chatSessionController.update();
+    }, onError: () {});
   }
 
   /// TODO 需重构, 使用server支持的模型定义来编写逻辑
@@ -503,6 +512,10 @@ class InputSubmitUtil {
         logger.d("bard type");
 
         /// add old bard supported
+        oldChatFunction(chatSessionController, chatMessageController,
+            settingsServerController, questionInputController);
+        questionInputController.clear();
+        questionInputController.update();
       } else {
         /// process error
         errorHander(
