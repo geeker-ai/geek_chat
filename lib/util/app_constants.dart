@@ -10,6 +10,7 @@ enum ImageModelType { create, edit, variation }
 
 class AppConstants {
   static LocaleModel defaultLocale = locales[0];
+  static String azureAPIVersion = "2023-05-15";
 
   // https://emojipedia.org/flags/
   static List<LocaleModel> locales = [

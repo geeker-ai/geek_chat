@@ -52,34 +52,69 @@ class InputSubmitUtil {
               .getApiKeyByModel(chatSessionController.currentSession.model)
         },
         queryParams: {
-          'api-version': settingsServerController.defaultServer
-              .getApiVersion(chatSessionController.currentSession.model)
+          'api-version': AppConstants.azureAPIVersion
         });
-    final stream = client.createChatCompletionStream(
-      request: CreateChatCompletionRequest(
-        model: ChatCompletionModel.modelId(
-            chatSessionController.currentSession.model),
-        // messages: getAzureRequestMessages(
-        //     chatMessageController.messages,
-        //     chatSessionController.currentSession,
-        //     userMessage,
-        //     questionInputController.questionInputModel.quotedMessages),
-        messages: [
-          ChatCompletionMessage.system(
-            content:
-                'You are a helpful assistant that replies only with numbers in order without any spaces or commas',
-          ),
-          ChatCompletionMessage.user(
-            content: ChatCompletionUserMessageContent.string(
-              'List the numbers from 1 to 9',
-            ),
-          ),
-        ],
-      ),
-    );
-    await for (final res in stream) {
-      print(res.choices.first.delta.content);
-    }
+    try {
+      final stream = client.createChatCompletionStream(
+        request: CreateChatCompletionRequest(
+          model: ChatCompletionModel.modelId(
+              chatSessionController.currentSession.model),
+          messages: getAzureRequestMessages(
+              chatMessageController.messages,
+              chatSessionController.currentSession,
+              userMessage,
+              questionInputController.questionInputModel.quotedMessages),
+          // messages: [
+          //   ChatCompletionMessage.system(
+          //     content:
+          //         'You are a helpful assistant that replies only with numbers in order without any spaces or commas',
+          //   ),
+          //   ChatCompletionMessage.user(
+          //     content: ChatCompletionUserMessageContent.string(
+          //       'List the numbers from 1 to 9',
+          //     ),
+          //   ),
+          // ],
+        ),
+      );
+      chatMessageController.addMessage(userMessage);
+      chatMessageController.update();
+      MessageModel targetMessage = MessageModel(
+        msgId: const Uuid().v4(),
+        role: MessageRole.assistant.name,
+        content: "",
+        sId: chatSessionController.currentSession.sid,
+        model: chatSessionController.currentSession.model,
+        msgType: 1,
+        synced: false,
+        updated: getCurrentDateTime(),
+        generating: true,
+      );
+      chatMessageController.addMessage(targetMessage);
+      chatMessageController.update();
+      stream.listen((event) {
+        logger.d("chat completion event: ${event.toString()} ");
+        // final List<OpenAIChatCompletionChoiceMessageContentItemModel>? content =
+        //     event.choices.first.delta.content;
+        String? content = event.choices.first.delta.content;
+        // targetMessage.content = content;
+        if (content != null) {
+          targetMessage.content = "${targetMessage.content}$content";
+          targetMessage.streamContent = targetMessage.content;
+        }
+      }, onDone: () {
+        targetMessage.generating = false;
+        targetMessage.closeStream();
+        chatMessageController.saveMessage(userMessage);
+        chatMessageController.saveMessage(targetMessage);
+        chatSessionController
+            .updateSessionLastEdit(chatSessionController.currentSession);
+        chatSessionController.update();
+      }, onError: (e) {});
+      // await for (final res in stream) {
+      //   print(res.choices.first.delta.content);
+      // }
+    } catch (e) {}
   }
 
   List<ChatCompletionMessage> getAzureRequestMessages(
@@ -219,6 +254,8 @@ class InputSubmitUtil {
         chatSessionController
             .updateSessionLastEdit(chatSessionController.currentSession);
         chatSessionController.update();
+      }, onError: (error) {
+        // TODO process error.
       });
     } on RequestFailedException catch (e) {
       logger.e("error: $e");
