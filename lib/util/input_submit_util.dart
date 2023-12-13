@@ -109,7 +109,9 @@ class InputSubmitUtil {
         chatSessionController
             .updateSessionLastEdit(chatSessionController.currentSession);
         chatSessionController.update();
-      }, onError: (e) {});
+      }, onError: (error) {
+        targetMessage.content = error.message;
+      });
       // await for (final res in stream) {
       //   print(res.choices.first.delta.content);
       // }
