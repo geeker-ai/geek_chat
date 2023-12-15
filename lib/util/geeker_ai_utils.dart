@@ -12,10 +12,21 @@ class GeekerAIUtils {
 
   OpenAI getOpenaiInstance(ServerModel defaultServer) {
     defaultServer = defaultServer;
-    initOpenAI(defaultServer);
-    // OpenAI.requestsTimeOut(Duration(seconds: 60));
+    OpenAI.apiKey = defaultServer.apiKey;
+    OpenAI.baseUrl = defaultServer.apiHost;
     OpenAI.requestsTimeOut = const Duration(seconds: 60);
+    OpenAI.showLogs = debug;
+    OpenAI.showResponsesLogs = debug;
     return OpenAI.instance;
+  }
+
+  AzureOpenAI getAzureOpenaiInstance(ServerModel defaultServer, String model) {
+    AzureOpenAI.apiKey = defaultServer.getApiKeyByModel(model);
+    AzureOpenAI.baseUrl = defaultServer.getBaseUrlByModel(model);
+    AzureOpenAI.requestsTimeOut = const Duration(seconds: 60);
+    AzureOpenAI.showLogs = debug;
+    AzureOpenAI.showResponsesLogs = debug;
+    return AzureOpenAI.instance;
   }
 
   OpenAI getGeekerChatInstance(ServerModel defaultServer) {
@@ -38,10 +49,23 @@ class GeekerAIUtils {
 
   GeekerAIUtils._();
 
-  initOpenAI(ServerModel defaultServer) {
-    OpenAI.apiKey = defaultServer.apiKey;
-    OpenAI.baseUrl = defaultServer.apiHost;
-    // OpenAI.showLogs = true;
-    // OpenAI.showResponsesLogs = true;
+  initOpenAI(ServerModel defaultServer, {String? model}) {
+    if (defaultServer.provider == "azure") {
+      AzureOpenAI.apiKey = defaultServer.getApiKeyByModel(model!);
+      AzureOpenAI.baseUrl = defaultServer.getBaseUrlByModel(model);
+      AzureOpenAI.requestsTimeOut = const Duration(seconds: 60);
+      AzureOpenAI.showLogs = debug;
+      AzureOpenAI.showResponsesLogs = debug;
+      return AzureOpenAI.instance;
+    } else {
+      OpenAI.apiKey = defaultServer.apiKey;
+      OpenAI.baseUrl = defaultServer.apiHost;
+      OpenAI.requestsTimeOut = const Duration(seconds: 60);
+      OpenAI.showLogs = debug;
+      OpenAI.showResponsesLogs = debug;
+      return OpenAI.instance;
+    }
   }
+
+  bool debug = true;
 }

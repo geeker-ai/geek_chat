@@ -124,6 +124,25 @@ class ServerModel {
     return apiKey;
   }
 
+  String getDeploymentIdByModel(String modelName) {
+    //deploymentId
+    Map<String, String> modelSettings = getAzureModelSettings(modelName);
+    if (modelSettings.containsKey("deploymentId")) {
+      return "${modelSettings['deploymentId']}";
+    }
+    return "No deploymentId";
+  }
+
+  String getBaseUrlByModel(String modelName) {
+    if (provider == "azure") {
+      Map<String, String> modelSettings = getAzureModelSettings(modelName);
+      if (modelSettings.containsKey("url")) {
+        return "${modelSettings['url']}";
+      }
+    }
+    return apiHost;
+  }
+
   String getApiVersion(String modelName) {
     if (provider == 'azure') {
       return AppConstants.azureAPIVersion;

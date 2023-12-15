@@ -25,150 +25,150 @@ class InputSubmitUtil {
 
   final Logger logger = Get.find();
 
-  Future<void> submitAzureChatModel(
-    ChatMessageController chatMessageController,
-    ChatSessionController chatSessionController,
-    QuestionInputController questionInputController,
-    SettingsServerController settingsServerController,
-  ) async {
-    logger.d("submitAzureChatModel");
-    MessageModel userMessage = MessageModel(
-      msgId: const Uuid().v4(),
-      role: MessageRole.user.name,
-      content: questionInputController.inputText,
-      sId: chatSessionController.currentSession.sid,
-      model: chatSessionController.currentSession.model,
-      msgType: 1,
-      synced: false,
-      generating: false,
-      updated: getCurrentDateTime(),
-    );
+  // Future<void> submitAzureChatModel(
+  //   ChatMessageController chatMessageController,
+  //   ChatSessionController chatSessionController,
+  //   QuestionInputController questionInputController,
+  //   SettingsServerController settingsServerController,
+  // ) async {
+  //   logger.d("submitAzureChatModel");
+  //   MessageModel userMessage = MessageModel(
+  //     msgId: const Uuid().v4(),
+  //     role: MessageRole.user.name,
+  //     content: questionInputController.inputText,
+  //     sId: chatSessionController.currentSession.sid,
+  //     model: chatSessionController.currentSession.model,
+  //     msgType: 1,
+  //     synced: false,
+  //     generating: false,
+  //     updated: getCurrentDateTime(),
+  //   );
 
-    /// add quotes in the user message
-    if (questionInputController.questionInputModel.quotedMessages.isNotEmpty) {
-      userMessage.quotes = [];
-      for (MessageModel msg
-          in questionInputController.questionInputModel.quotedMessages) {
-        userMessage.quotes!.add(msg.msgId);
-      }
-    }
+  //   /// add quotes in the user message
+  //   if (questionInputController.questionInputModel.quotedMessages.isNotEmpty) {
+  //     userMessage.quotes = [];
+  //     for (MessageModel msg
+  //         in questionInputController.questionInputModel.quotedMessages) {
+  //       userMessage.quotes!.add(msg.msgId);
+  //     }
+  //   }
 
-    final client = OpenAIClient(
-        baseUrl: settingsServerController.defaultServer
-            .getRequestUrlForOpenaiDart(
-                chatSessionController.currentSession.model),
-        headers: {
-          'api-key': settingsServerController.defaultServer
-              .getApiKeyByModel(chatSessionController.currentSession.model)
-        },
-        queryParams: {
-          'api-version': AppConstants.azureAPIVersion
-        });
-    try {
-      final stream = client.createChatCompletionStream(
-        request: CreateChatCompletionRequest(
-          model: ChatCompletionModel.modelId(
-              chatSessionController.currentSession.model),
-          messages: getAzureRequestMessages(
-              chatMessageController.messages,
-              chatSessionController.currentSession,
-              userMessage,
-              questionInputController.questionInputModel.quotedMessages),
-        ),
-      );
-      chatMessageController.addMessage(userMessage);
-      chatMessageController.update();
-      MessageModel targetMessage = MessageModel(
-        msgId: const Uuid().v4(),
-        role: MessageRole.assistant.name,
-        content: "",
-        sId: chatSessionController.currentSession.sid,
-        model: chatSessionController.currentSession.model,
-        msgType: 1,
-        synced: false,
-        updated: getCurrentDateTime() + 1,
-        generating: true,
-      );
-      chatMessageController.addMessage(targetMessage);
-      chatMessageController.update();
-      stream.listen((event) {
-        logger.d("chat completion event: ${event.toString()} ");
-        // final List<OpenAIChatCompletionChoiceMessageContentItemModel>? content =
-        //     event.choices.first.delta.content;
-        String? content = event.choices.first.delta.content;
-        // targetMessage.content = content;
-        if (content != null) {
-          targetMessage.content = "${targetMessage.content}$content";
-          targetMessage.streamContent = targetMessage.content;
-        }
-      }, onDone: () {
-        targetMessage.generating = false;
-        targetMessage.closeStream();
-        chatMessageController.saveMessage(userMessage);
-        targetMessage.updated = getCurrentDateTime() + 1;
-        chatMessageController.saveMessage(targetMessage);
-        chatSessionController
-            .updateSessionLastEdit(chatSessionController.currentSession);
-        chatSessionController.update();
-      }, onError: (error) {
-        targetMessage.content = error.message;
-      });
-      // await for (final res in stream) {
-      //   print(res.choices.first.delta.content);
-      // }
-    } catch (e) {
-      logger.e("e");
-      // TODO process exception
-    }
-  }
+  //   final client = OpenAIClient(
+  //       baseUrl: settingsServerController.defaultServer
+  //           .getRequestUrlForOpenaiDart(
+  //               chatSessionController.currentSession.model),
+  //       headers: {
+  //         'api-key': settingsServerController.defaultServer
+  //             .getApiKeyByModel(chatSessionController.currentSession.model)
+  //       },
+  //       queryParams: {
+  //         'api-version': AppConstants.azureAPIVersion
+  //       });
+  //   try {
+  //     final stream = client.createChatCompletionStream(
+  //       request: CreateChatCompletionRequest(
+  //         model: ChatCompletionModel.modelId(
+  //             chatSessionController.currentSession.model),
+  //         messages: getAzureRequestMessages(
+  //             chatMessageController.messages,
+  //             chatSessionController.currentSession,
+  //             userMessage,
+  //             questionInputController.questionInputModel.quotedMessages),
+  //       ),
+  //     );
+  //     chatMessageController.addMessage(userMessage);
+  //     chatMessageController.update();
+  //     MessageModel targetMessage = MessageModel(
+  //       msgId: const Uuid().v4(),
+  //       role: MessageRole.assistant.name,
+  //       content: "",
+  //       sId: chatSessionController.currentSession.sid,
+  //       model: chatSessionController.currentSession.model,
+  //       msgType: 1,
+  //       synced: false,
+  //       updated: getCurrentDateTime() + 1,
+  //       generating: true,
+  //     );
+  //     chatMessageController.addMessage(targetMessage);
+  //     chatMessageController.update();
+  //     stream.listen((event) {
+  //       logger.d("chat completion event: ${event.toString()} ");
+  //       // final List<OpenAIChatCompletionChoiceMessageContentItemModel>? content =
+  //       //     event.choices.first.delta.content;
+  //       String? content = event.choices.first.delta.content;
+  //       // targetMessage.content = content;
+  //       if (content != null) {
+  //         targetMessage.content = "${targetMessage.content}$content";
+  //         targetMessage.streamContent = targetMessage.content;
+  //       }
+  //     }, onDone: () {
+  //       targetMessage.generating = false;
+  //       targetMessage.closeStream();
+  //       chatMessageController.saveMessage(userMessage);
+  //       targetMessage.updated = getCurrentDateTime() + 1;
+  //       chatMessageController.saveMessage(targetMessage);
+  //       chatSessionController
+  //           .updateSessionLastEdit(chatSessionController.currentSession);
+  //       chatSessionController.update();
+  //     }, onError: (error) {
+  //       targetMessage.content = error.message;
+  //     });
+  //     // await for (final res in stream) {
+  //     //   print(res.choices.first.delta.content);
+  //     // }
+  //   } catch (e) {
+  //     logger.e("e");
+  //     // TODO process exception
+  //   }
+  // }
 
-  List<ChatCompletionMessage> getAzureRequestMessages(
-      List<MessageModel> historyMessages,
-      SessionModel currentSession,
-      MessageModel userMessage,
-      [List<MessageModel>? quotedMessages]) {
-    List<ChatCompletionMessage> messages = [];
-    //// prompt
-    List<OpenAIChatCompletionChoiceMessageModel> openaiRequestMessages =
-        getChatRequestMessages(
-            historyMessages, currentSession, userMessage, quotedMessages);
-    OpenAIChatCompletionChoiceMessageModel promptMessage =
-        openaiRequestMessages.first;
-    messages.add(ChatCompletionMessage.system(
-        content: getMessageContentText(promptMessage.content)));
-    openaiRequestMessages.removeAt(0);
-    for (OpenAIChatCompletionChoiceMessageModel item in openaiRequestMessages) {
-      // messages.add(value)
-      if (item.role == OpenAIChatMessageRole.user) {
-        messages.add(ChatCompletionMessage.user(
-            content: ChatCompletionUserMessageContent.string(
-                getMessageContentText(item.content))));
-      } else if (item.role == OpenAIChatMessageRole.assistant) {
-        messages.add(ChatCompletionMessage.assistant(
-            content: getMessageContentText(item.content)));
-      } else if (item.role == OpenAIChatMessageRole.function) {
-        //
-      } else if (item.role == OpenAIChatMessageRole.tool) {
-        ///
-      }
-    }
-    return messages;
-  }
+  // List<ChatCompletionMessage> getAzureRequestMessages(
+  //     List<MessageModel> historyMessages,
+  //     SessionModel currentSession,
+  //     MessageModel userMessage,
+  //     [List<MessageModel>? quotedMessages]) {
+  //   List<ChatCompletionMessage> messages = [];
+  //   //// prompt
+  //   List<OpenAIChatCompletionChoiceMessageModel> openaiRequestMessages =
+  //       getChatRequestMessages(
+  //           historyMessages, currentSession, userMessage, quotedMessages);
+  //   OpenAIChatCompletionChoiceMessageModel promptMessage =
+  //       openaiRequestMessages.first;
+  //   messages.add(ChatCompletionMessage.system(
+  //       content: getMessageContentText(promptMessage.content)));
+  //   openaiRequestMessages.removeAt(0);
+  //   for (OpenAIChatCompletionChoiceMessageModel item in openaiRequestMessages) {
+  //     // messages.add(value)
+  //     if (item.role == OpenAIChatMessageRole.user) {
+  //       messages.add(ChatCompletionMessage.user(
+  //           content: ChatCompletionUserMessageContent.string(
+  //               getMessageContentText(item.content))));
+  //     } else if (item.role == OpenAIChatMessageRole.assistant) {
+  //       messages.add(ChatCompletionMessage.assistant(
+  //           content: getMessageContentText(item.content)));
+  //     } else if (item.role == OpenAIChatMessageRole.function) {
+  //       //
+  //     } else if (item.role == OpenAIChatMessageRole.tool) {
+  //       ///
+  //     }
+  //   }
+  //   return messages;
+  // }
 
-  String getMessageContentText(
-      List<OpenAIChatCompletionChoiceMessageContentItemModel>? msgs) {
-    String text = "";
-    if (msgs != null) {
-      for (OpenAIChatCompletionChoiceMessageContentItemModel item in msgs) {
-        if (item.type == "text") {
-          text = item.text!;
-          break;
-        }
-      }
-    }
+  // String getMessageContentText(
+  //     List<OpenAIChatCompletionChoiceMessageContentItemModel>? msgs) {
+  //   String text = "";
+  //   if (msgs != null) {
+  //     for (OpenAIChatCompletionChoiceMessageContentItemModel item in msgs) {
+  //       if (item.type == "text") {
+  //         text = item.text!;
+  //         break;
+  //       }
+  //     }
+  //   }
 
-    return text;
-  }
+  //   return text;
+  // }
 
   Future<void> submitChatModel(
     ChatMessageController chatMessageController,
@@ -190,11 +190,27 @@ class InputSubmitUtil {
     );
 
     try {
-      OpenAI openai = GeekerAIUtils.instance
-          .getOpenaiInstance(settingsServerController.defaultServer);
+      // var openai = GeekerAIUtils.instance.getOpenaiInstance(
+      //     settingsServerController.defaultServer,
+      //     model: chatSessionController.currentSession.model);
+      // var openai = null;
+      late var openai;
+      String model = chatSessionController.currentSession.model;
+      String deploymentId = "";
+      String provider = settingsServerController.defaultServer.provider;
+      logger.d("provider: $provider , $model");
+      if (provider == "azure") {
+        openai = GeekerAIUtils.instance.getAzureOpenaiInstance(
+            settingsServerController.defaultServer, model);
+        deploymentId = settingsServerController.defaultServer
+            .getDeploymentIdByModel(model);
+      } else {
+        openai = GeekerAIUtils.instance
+            .getOpenaiInstance(settingsServerController.defaultServer);
+      }
       Stream<OpenAIStreamChatCompletionModel> chatCompletionStream =
           openai.chat.createStream(
-        model: userMessage.model!,
+        model: provider == "azure" ? deploymentId : model,
         messages: getChatRequestMessages(
             chatMessageController.messages,
             chatSessionController.currentSession,
@@ -363,7 +379,7 @@ class InputSubmitUtil {
     try {
       chatMessageController.addMessage(userMessage);
       chatMessageController.update();
-      OpenAI openAI = GeekerAIUtils.instance
+      final openAI = GeekerAIUtils.instance
           .getOpenaiInstance(settingsServerController.defaultServer);
       OpenAIImageModel images = await openAI.image.create(
         model: chatSessionController.currentSession.model,
@@ -543,7 +559,7 @@ class InputSubmitUtil {
       if (aiModel.aiType == AiType.chatgpt) {
         if (chatSessionController.currentSession.modelType ==
             ModelType.chat.name) {
-          await InputSubmitUtil.instance.submitAzureChatModel(
+          await InputSubmitUtil.instance.submitChatModel(
               chatMessageController,
               chatSessionController,
               questionInputController,
