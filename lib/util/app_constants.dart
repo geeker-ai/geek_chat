@@ -12,7 +12,7 @@ class AppConstants {
   static LocaleModel defaultLocale = locales[0];
 
   /// https://github.com/Azure/azure-rest-api-specs/tree/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference
-  static String azureAPIVersion = "2023-05-15";
+  static String azureAPIVersion = "2023-12-01-preview";
 
   // https://emojipedia.org/flags/
   static List<LocaleModel> locales = [
@@ -102,6 +102,15 @@ class AppConstants {
     AiModel(
         modelName: 'gpt-4-32k',
         alias: 'gpt-4-32k',
+        aiType: AiType.chatgpt,
+        modelType: ModelType.chat,
+        temperature: 0.7,
+        maxContextSize: 15000,
+        modelMaxContextSize: 15000,
+        maxTokens: 0),
+    AiModel(
+        modelName: 'gpt-4-vision',
+        alias: 'gpt-4-vision',
         aiType: AiType.chatgpt,
         modelType: ModelType.chat,
         temperature: 0.7,
@@ -209,7 +218,7 @@ class AppConstants {
       id: "azure",
       name: "Azure API",
       baseUrl: "",
-      supportedModels: azureModelNameList,
+      supportedModels: openaiModelNameList,
     )
   ];
   static ProviderModel getProvider(String providerId) {

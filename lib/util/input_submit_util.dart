@@ -8,13 +8,14 @@ import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
+import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:geek_chat/util/geeker_ai_utils.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:openai_dart/openai_dart.dart';
+// import 'package:openai_dart/openai_dart.dart';
 import 'package:uuid/uuid.dart';
 
 class InputSubmitUtil {
@@ -24,151 +25,6 @@ class InputSubmitUtil {
   static InputSubmitUtil get instance => _instance;
 
   final Logger logger = Get.find();
-
-  // Future<void> submitAzureChatModel(
-  //   ChatMessageController chatMessageController,
-  //   ChatSessionController chatSessionController,
-  //   QuestionInputController questionInputController,
-  //   SettingsServerController settingsServerController,
-  // ) async {
-  //   logger.d("submitAzureChatModel");
-  //   MessageModel userMessage = MessageModel(
-  //     msgId: const Uuid().v4(),
-  //     role: MessageRole.user.name,
-  //     content: questionInputController.inputText,
-  //     sId: chatSessionController.currentSession.sid,
-  //     model: chatSessionController.currentSession.model,
-  //     msgType: 1,
-  //     synced: false,
-  //     generating: false,
-  //     updated: getCurrentDateTime(),
-  //   );
-
-  //   /// add quotes in the user message
-  //   if (questionInputController.questionInputModel.quotedMessages.isNotEmpty) {
-  //     userMessage.quotes = [];
-  //     for (MessageModel msg
-  //         in questionInputController.questionInputModel.quotedMessages) {
-  //       userMessage.quotes!.add(msg.msgId);
-  //     }
-  //   }
-
-  //   final client = OpenAIClient(
-  //       baseUrl: settingsServerController.defaultServer
-  //           .getRequestUrlForOpenaiDart(
-  //               chatSessionController.currentSession.model),
-  //       headers: {
-  //         'api-key': settingsServerController.defaultServer
-  //             .getApiKeyByModel(chatSessionController.currentSession.model)
-  //       },
-  //       queryParams: {
-  //         'api-version': AppConstants.azureAPIVersion
-  //       });
-  //   try {
-  //     final stream = client.createChatCompletionStream(
-  //       request: CreateChatCompletionRequest(
-  //         model: ChatCompletionModel.modelId(
-  //             chatSessionController.currentSession.model),
-  //         messages: getAzureRequestMessages(
-  //             chatMessageController.messages,
-  //             chatSessionController.currentSession,
-  //             userMessage,
-  //             questionInputController.questionInputModel.quotedMessages),
-  //       ),
-  //     );
-  //     chatMessageController.addMessage(userMessage);
-  //     chatMessageController.update();
-  //     MessageModel targetMessage = MessageModel(
-  //       msgId: const Uuid().v4(),
-  //       role: MessageRole.assistant.name,
-  //       content: "",
-  //       sId: chatSessionController.currentSession.sid,
-  //       model: chatSessionController.currentSession.model,
-  //       msgType: 1,
-  //       synced: false,
-  //       updated: getCurrentDateTime() + 1,
-  //       generating: true,
-  //     );
-  //     chatMessageController.addMessage(targetMessage);
-  //     chatMessageController.update();
-  //     stream.listen((event) {
-  //       logger.d("chat completion event: ${event.toString()} ");
-  //       // final List<OpenAIChatCompletionChoiceMessageContentItemModel>? content =
-  //       //     event.choices.first.delta.content;
-  //       String? content = event.choices.first.delta.content;
-  //       // targetMessage.content = content;
-  //       if (content != null) {
-  //         targetMessage.content = "${targetMessage.content}$content";
-  //         targetMessage.streamContent = targetMessage.content;
-  //       }
-  //     }, onDone: () {
-  //       targetMessage.generating = false;
-  //       targetMessage.closeStream();
-  //       chatMessageController.saveMessage(userMessage);
-  //       targetMessage.updated = getCurrentDateTime() + 1;
-  //       chatMessageController.saveMessage(targetMessage);
-  //       chatSessionController
-  //           .updateSessionLastEdit(chatSessionController.currentSession);
-  //       chatSessionController.update();
-  //     }, onError: (error) {
-  //       targetMessage.content = error.message;
-  //     });
-  //     // await for (final res in stream) {
-  //     //   print(res.choices.first.delta.content);
-  //     // }
-  //   } catch (e) {
-  //     logger.e("e");
-  //     // TODO process exception
-  //   }
-  // }
-
-  // List<ChatCompletionMessage> getAzureRequestMessages(
-  //     List<MessageModel> historyMessages,
-  //     SessionModel currentSession,
-  //     MessageModel userMessage,
-  //     [List<MessageModel>? quotedMessages]) {
-  //   List<ChatCompletionMessage> messages = [];
-  //   //// prompt
-  //   List<OpenAIChatCompletionChoiceMessageModel> openaiRequestMessages =
-  //       getChatRequestMessages(
-  //           historyMessages, currentSession, userMessage, quotedMessages);
-  //   OpenAIChatCompletionChoiceMessageModel promptMessage =
-  //       openaiRequestMessages.first;
-  //   messages.add(ChatCompletionMessage.system(
-  //       content: getMessageContentText(promptMessage.content)));
-  //   openaiRequestMessages.removeAt(0);
-  //   for (OpenAIChatCompletionChoiceMessageModel item in openaiRequestMessages) {
-  //     // messages.add(value)
-  //     if (item.role == OpenAIChatMessageRole.user) {
-  //       messages.add(ChatCompletionMessage.user(
-  //           content: ChatCompletionUserMessageContent.string(
-  //               getMessageContentText(item.content))));
-  //     } else if (item.role == OpenAIChatMessageRole.assistant) {
-  //       messages.add(ChatCompletionMessage.assistant(
-  //           content: getMessageContentText(item.content)));
-  //     } else if (item.role == OpenAIChatMessageRole.function) {
-  //       //
-  //     } else if (item.role == OpenAIChatMessageRole.tool) {
-  //       ///
-  //     }
-  //   }
-  //   return messages;
-  // }
-
-  // String getMessageContentText(
-  //     List<OpenAIChatCompletionChoiceMessageContentItemModel>? msgs) {
-  //   String text = "";
-  //   if (msgs != null) {
-  //     for (OpenAIChatCompletionChoiceMessageContentItemModel item in msgs) {
-  //       if (item.type == "text") {
-  //         text = item.text!;
-  //         break;
-  //       }
-  //     }
-  //   }
-
-  //   return text;
-  // }
 
   Future<void> submitChatModel(
     ChatMessageController chatMessageController,
@@ -253,17 +109,19 @@ class InputSubmitUtil {
       chatMessageController.update();
       chatCompletionStream.listen((event) {
         logger.d("chat completion event: ${event.toString()} ");
-        final List<OpenAIChatCompletionChoiceMessageContentItemModel>? content =
-            event.choices.first.delta.content;
-        // targetMessage.content = content;
-        if (content != null) {
-          for (OpenAIChatCompletionChoiceMessageContentItemModel item
-              in content) {
-            targetMessage.content =
-                "${targetMessage.content}${item.text ?? ''}";
-            logger.d("target message: ${targetMessage.content}");
-            if (targetMessage.generating == true) {
-              targetMessage.streamContent = targetMessage.content;
+        if (event.choices.isNotEmpty) {
+          final List<OpenAIChatCompletionChoiceMessageContentItemModel>?
+              content = event.choices.first.delta.content;
+          // targetMessage.content = content;
+          if (content != null) {
+            for (OpenAIChatCompletionChoiceMessageContentItemModel item
+                in content) {
+              targetMessage.content =
+                  "${targetMessage.content}${item.text ?? ''}";
+              logger.d("target message: ${targetMessage.content}");
+              if (targetMessage.generating == true) {
+                targetMessage.streamContent = targetMessage.content;
+              }
             }
           }
         }
@@ -376,13 +234,25 @@ class InputSubmitUtil {
     userMessage.status = 1;
 
     /// request openai
+    var openAI;
+    String provider = settingsServerController.defaultServer.provider;
+    String model = chatSessionController.currentSession.model;
+    String deploymentId = "";
     try {
       chatMessageController.addMessage(userMessage);
       chatMessageController.update();
-      final openAI = GeekerAIUtils.instance
-          .getOpenaiInstance(settingsServerController.defaultServer);
+      if (provider == "azure") {
+        openAI = GeekerAIUtils.instance.getAzureOpenaiInstance(
+            settingsServerController.defaultServer, model);
+        deploymentId = settingsServerController.defaultServer
+            .getDeploymentIdByModel(model);
+      } else {
+        openAI = GeekerAIUtils.instance
+            .getOpenaiInstance(settingsServerController.defaultServer);
+      }
+
       OpenAIImageModel images = await openAI.image.create(
-        model: chatSessionController.currentSession.model,
+        model: provider == "azure" ? deploymentId : model,
         prompt: questionInputController.inputText,
         n: int.parse(questionInputController.defaultImageN),
         size: AppConstants.getGeekerAIImageSize(
@@ -495,56 +365,26 @@ class InputSubmitUtil {
         "call submitInput ${settingsServerController.defaultServer.provider}");
     AiModel aiModel =
         AppConstants.getAiModel(chatSessionController.currentSession.model);
-    if (settingsServerController.defaultServer.provider == "openai" ||
-        settingsServerController.defaultServer.provider == "geekerchat") {
-      if (aiModel.aiType == AiType.chatgpt) {
-        if (chatSessionController.currentSession.modelType ==
-            ModelType.image.name) {
-          await InputSubmitUtil.instance.submitImageModel(
-              chatMessageController,
-              chatSessionController,
-              questionInputController,
-              settingsServerController);
-        } else if (chatSessionController.currentSession.modelType ==
-            ModelType.chat.name) {
-          await InputSubmitUtil.instance.submitChatModel(
-              chatMessageController,
-              chatSessionController,
-              questionInputController,
-              settingsServerController);
-        } else if (chatSessionController.currentSession.modelType ==
-            ModelType.text.name) {
-          // TODO process text model
-        } else {
-          /// process error
-          errorHander(
-              chatSessionController,
-              chatMessageController,
-              settingsServerController,
-              questionInputController,
-              "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
-                  .tr);
-        }
-        questionInputController.clear();
-        questionInputController.update();
-      } else if (aiModel.aiType == AiType.bard) {
-        logger.d("bard type");
-        if (settingsServerController.defaultServer.provider == "geekerchat") {
-          oldChatFunction(chatSessionController, chatMessageController,
-              settingsServerController, questionInputController);
-          questionInputController.clear();
-          questionInputController.update();
-        } else {
-          errorHander(
-              chatSessionController,
-              chatMessageController,
-              settingsServerController,
-              questionInputController,
-              "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
-                  .tr);
-        }
-
-        /// add old bard supported
+    String provider = settingsServerController.defaultServer.provider;
+    ProviderModel providerModel = AppConstants.getProvider(provider);
+    if (providerModel.supportedModels.contains(aiModel.modelName)) {
+      if (chatSessionController.currentSession.modelType ==
+          ModelType.image.name) {
+        await InputSubmitUtil.instance.submitImageModel(
+            chatMessageController,
+            chatSessionController,
+            questionInputController,
+            settingsServerController);
+      } else if (chatSessionController.currentSession.modelType ==
+          ModelType.chat.name) {
+        await InputSubmitUtil.instance.submitChatModel(
+            chatMessageController,
+            chatSessionController,
+            questionInputController,
+            settingsServerController);
+      } else if (chatSessionController.currentSession.modelType ==
+          ModelType.text.name) {
+        // TODO process text model
       } else {
         /// process error
         errorHander(
@@ -555,37 +395,16 @@ class InputSubmitUtil {
             "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
                 .tr);
       }
-    } else if (settingsServerController.defaultServer.provider == "azure") {
-      if (aiModel.aiType == AiType.chatgpt) {
-        if (chatSessionController.currentSession.modelType ==
-            ModelType.chat.name) {
-          await InputSubmitUtil.instance.submitChatModel(
-              chatMessageController,
-              chatSessionController,
-              questionInputController,
-              settingsServerController);
-        } else {
-          errorHander(
-              chatSessionController,
-              chatMessageController,
-              settingsServerController,
-              questionInputController,
-              "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
-                  .tr);
-        }
-        questionInputController.clear();
-        questionInputController.update();
-      } else {
-        /// process error
-        logger.e("error: ${aiModel.aiType}");
-        errorHander(
-            chatSessionController,
-            chatMessageController,
-            settingsServerController,
-            questionInputController,
-            "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
-                .tr);
-      }
+      questionInputController.clear();
+      questionInputController.update();
+    } else {
+      errorHander(
+          chatSessionController,
+          chatMessageController,
+          settingsServerController,
+          questionInputController,
+          "The current server does not support this model. If you need to use all models, it is recommended to use the Geeker Chat server."
+              .tr);
     }
   }
 }

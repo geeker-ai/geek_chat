@@ -1,6 +1,7 @@
 import 'package:dart_openai/dart_openai.dart';
 // import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/server.dart';
+import 'package:geek_chat/util/app_constants.dart';
 // import 'package:geek_chat/models/session.dart';
 
 class GeekerAIUtils {
@@ -23,6 +24,7 @@ class GeekerAIUtils {
   AzureOpenAI getAzureOpenaiInstance(ServerModel defaultServer, String model) {
     AzureOpenAI.apiKey = defaultServer.getApiKeyByModel(model);
     AzureOpenAI.baseUrl = defaultServer.getBaseUrlByModel(model);
+    AzureOpenAI.apiVersion = AppConstants.azureAPIVersion;
     AzureOpenAI.requestsTimeOut = const Duration(seconds: 60);
     AzureOpenAI.showLogs = debug;
     AzureOpenAI.showResponsesLogs = debug;
@@ -44,7 +46,8 @@ class GeekerAIUtils {
   // OpenAIImageModel createImage(QuestionInputModel input) {
   //   OpenAIImageModel image = getOpenaiInstance(serverController)
   // }
-
+  // https://openai-sweden-center.openai.azure.com/openai/deployments/dalle3/images/generations?api-version=2023-09-15-preview
+  // https://openai-sweden-center.openai.azure.com/openai/deployments/dalle3/images/generations?api-version=2023-12-01-preview
   /// TODO
 
   GeekerAIUtils._();
@@ -67,5 +70,5 @@ class GeekerAIUtils {
     }
   }
 
-  bool debug = true;
+  bool debug = false;
 }

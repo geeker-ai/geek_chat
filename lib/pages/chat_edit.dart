@@ -35,6 +35,8 @@ class ChatEditPage extends StatelessWidget {
   }
 
   List<GroupedBottomSwitcherOption> getGroupedModelOptions() {
+    AiModel currentAiModel =
+        AppConstants.getAiModel(chatSessionController.currentSession.model);
     List<GroupedBottomSwitcherOption> options = [];
     ProviderModel providerModel = AppConstants.getProvider(
         settingsServerController.defaultServer.provider);
@@ -45,14 +47,13 @@ class ChatEditPage extends StatelessWidget {
 
       for (AiModel model in settingsController.getModelsByType(group.aitype)) {
         bool disabled = false;
-        //// is supported model
-        // if (settingsServerController.defaultServer.provider != "geekerchat" &&
-        //     model.aiType == AiType.bard) {
         if (!providerModel.supportedModels.contains(model.modelName)) {
           disabled = true;
-        } else if (isEdit) {
+        }
+        if (isEdit) {
           if (chatSessionController.currentSession.modelType !=
-              model.modelType.name) {
+                  model.modelType.name ||
+              currentAiModel.aiType != model.aiType) {
             disabled = true;
           }
         }

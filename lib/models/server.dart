@@ -68,6 +68,12 @@ class ServerModel {
           "deploymentId": "",
           "url": "",
           // "apiVersion": "",
+        },
+        "dall-e-3": {
+          "name": "gpt-4-32k",
+          "apiKey": "",
+          "deploymentId": "",
+          "url": "",
         }
       };
     }

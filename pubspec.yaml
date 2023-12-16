@@ -132,10 +132,10 @@ dependencies:
   # https://pub.dev/packages/dart_openai
   # dart_openai: ^5.0.0
   dart_openai:
-    path: ../dart_openai
-    # git:
-    #   url: https://github.com/geeker-ai/dart_openai.git
-    #   ref: main
+    # path: ../dart_openai
+    git:
+      url: https://github.com/geeker-ai/dart_openai.git
+      ref: main
 
   # https://pub.dev/packages/openai_dart
   openai_dart: ^0.1.2
