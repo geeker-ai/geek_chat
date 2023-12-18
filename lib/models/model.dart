@@ -18,7 +18,7 @@ class AiGroup {
 
 class AiModel {
   String modelName;
-  String alias;
+  List<String> alias;
   AiType aiType;
   ModelType modelType;
   double temperature;

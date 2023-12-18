@@ -74,7 +74,7 @@ class AppConstants {
   static List<AiModel> aiModels = [
     AiModel(
         modelName: 'gpt-3.5-turbo',
-        alias: 'gpt-3.5',
+        alias: ['gpt-3.5'],
         aiType: AiType.chatgpt,
         modelType: ModelType.chat,
         temperature: 0.7,
@@ -83,7 +83,7 @@ class AppConstants {
         maxTokens: 0),
     AiModel(
         modelName: 'gpt-3.5-turbo-16k',
-        alias: 'gpt-3.5-16k',
+        alias: ['gpt-3.5-16k'],
         aiType: AiType.chatgpt,
         modelType: ModelType.chat,
         temperature: 0.7,
@@ -92,7 +92,7 @@ class AppConstants {
         maxTokens: 0),
     AiModel(
         modelName: 'gpt-4',
-        alias: 'gpt-4',
+        alias: ['gpt-4'],
         aiType: AiType.chatgpt,
         modelType: ModelType.chat,
         temperature: 0.7,
@@ -101,7 +101,7 @@ class AppConstants {
         maxTokens: 0),
     AiModel(
         modelName: 'gpt-4-32k',
-        alias: 'gpt-4-32k',
+        alias: ['gpt-4-32k'],
         aiType: AiType.chatgpt,
         modelType: ModelType.chat,
         temperature: 0.7,
@@ -109,17 +109,18 @@ class AppConstants {
         modelMaxContextSize: 15000,
         maxTokens: 0),
     AiModel(
-        modelName: 'gpt-4-vision',
-        alias: 'gpt-4-vision',
+        modelName: 'gpt-4-vision-preview',
+        alias: ['gpt-4-vision-preview', 'gpt-4-vision'],
         aiType: AiType.chatgpt,
         modelType: ModelType.chat,
         temperature: 0.7,
         maxContextSize: 15000,
         modelMaxContextSize: 15000,
-        maxTokens: 0),
+        maxTokens: 0,
+        enableImage: true),
     AiModel(
         modelName: 'chat-bison',
-        alias: 'chat-bison',
+        alias: ['chat-bison'],
         aiType: AiType.bard,
         modelType: ModelType.chat,
         temperature: 0.7,
@@ -128,7 +129,7 @@ class AppConstants {
         maxTokens: 0),
     AiModel(
         modelName: 'codechat-bison',
-        alias: 'codechat-bison',
+        alias: ['codechat-bison'],
         aiType: AiType.bard,
         modelType: ModelType.chat,
         temperature: 0.7,
@@ -137,7 +138,7 @@ class AppConstants {
         maxTokens: 0),
     AiModel(
         modelName: 'chat-bison-32k',
-        alias: 'chat-bison-32k',
+        alias: ['chat-bison-32k'],
         aiType: AiType.bard,
         modelType: ModelType.chat,
         temperature: 0.7,
@@ -146,7 +147,7 @@ class AppConstants {
         maxTokens: 0),
     AiModel(
         modelName: 'codechat-bison-32k',
-        alias: 'codechat-bison-32k',
+        alias: ['codechat-bison-32k'],
         aiType: AiType.bard,
         modelType: ModelType.chat,
         temperature: 0.7,
@@ -155,7 +156,7 @@ class AppConstants {
         maxTokens: 0),
     AiModel(
         modelName: 'dall-e-3',
-        alias: 'dall-e-3',
+        alias: ['dall-e-3'],
         aiType: AiType.chatgpt,
         modelType: ModelType.image,
         temperature: 1,
@@ -167,6 +168,8 @@ class AppConstants {
   static AiModel getAiModel(String modelName) {
     for (AiModel model in AppConstants.aiModels) {
       if (modelName == model.modelName) {
+        return model;
+      } else if (model.alias.contains(modelName)) {
         return model;
       }
     }

@@ -166,6 +166,8 @@ dependencies:
   # https://pub.dev/packages/badges
   badges: ^3.1.2
 
+  # https://pub.dev/packages/image
+  image: ^4.1.3
 
 dev_dependencies:
   flutter_test:

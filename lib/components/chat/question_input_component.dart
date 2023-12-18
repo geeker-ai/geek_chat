@@ -8,6 +8,7 @@ import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/app_loading_dialog.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
@@ -43,6 +44,21 @@ class QuestionInputPanelCompoent extends StatelessWidget {
     return isImage;
   }
 
+  bool isModelEnableImage() {
+    return true;
+  }
+
+  Widget buildImageUploader(BuildContext context) {
+    AiModel aiModel = AppConstants.getAiModel(session.model);
+    // logger.d("aiModel: ${aiModel.enableImage}, ${aiModel.modelName}");
+    if (aiModel.enableImage == null) {
+      return const SizedBox();
+    }
+    const IconData upload = IconData(0xe695, fontFamily: 'MaterialIcons');
+    Widget widget = const Icon(upload);
+    return widget;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,6 +72,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
               if (isImageSession()) buildImageToolBar(context),
               Row(
                 children: [
+                  buildImageUploader(context),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.only(left: 2, right: 2),

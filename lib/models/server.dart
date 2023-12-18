@@ -74,6 +74,12 @@ class ServerModel {
           "apiKey": "",
           "deploymentId": "",
           "url": "",
+        },
+        "gpt-4-vision": {
+          "name": "gpt-4-vision",
+          "apiKey": "",
+          "deploymentId": "",
+          "url": "",
         }
       };
     }
