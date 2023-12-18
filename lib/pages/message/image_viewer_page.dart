@@ -39,6 +39,8 @@ class GeekChatImageViewerPage extends StatelessWidget {
             child: ExtendedImage.network(
               imageUrl,
               cache: true,
+              cacheMaxAge: const Duration(days: 10000000),
+              cacheRawData: true,
               enableLoadState: true,
             ),
             onTap: () {

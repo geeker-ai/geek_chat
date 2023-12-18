@@ -48,6 +48,8 @@ class ImageMessageComponent extends StatelessWidget {
                       fit: BoxFit.cover,
                       alignment: Alignment.center,
                       cache: true,
+                      cacheMaxAge: const Duration(days: 100000),
+                      cacheRawData: true,
                       retries: 3,
                       timeLimit: const Duration(seconds: 10),
                       enableLoadState: true,
