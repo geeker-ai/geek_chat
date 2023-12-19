@@ -42,6 +42,13 @@ class HttpClientService {
     }
   }
 
+  static Future<Response> postData(String url,
+      {required Object data, required Map<String, String> headers}) {
+    Options options =
+        Options(headers: headers, responseType: ResponseType.json);
+    return _dio.post(url, options: options, data: data);
+  }
+
   static Future<Response> post(String url,
       {required dynamic json, Map<String, String>? headers}) {
     Options? options;

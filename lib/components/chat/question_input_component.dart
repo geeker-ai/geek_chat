@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_chat/controller/chat_session_controller.dart';
@@ -13,6 +16,8 @@ import 'package:geek_chat/util/app_loading_dialog.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:image/image.dart' as img;
+import 'package:dio/dio.dart' as dio;
 
 // ignore: must_be_immutable
 class QuestionInputPanelCompoent extends StatelessWidget {
@@ -54,8 +59,85 @@ class QuestionInputPanelCompoent extends StatelessWidget {
     if (aiModel.enableImage == null) {
       return const SizedBox();
     }
-    const IconData upload = IconData(0xe695, fontFamily: 'MaterialIcons');
-    Widget widget = const Icon(upload);
+    const IconData upload =
+        Icons.image_outlined; //IconData(0xe695, fontFamily: 'MaterialIcons');
+    double iconSize = 12;
+    iconSize = Theme.of(context).primaryTextTheme.bodyLarge?.fontSize ?? 12;
+    iconSize = iconSize + 25.0;
+    Widget widget = Icon(
+      upload,
+      size: iconSize,
+    );
+    return Container(
+      padding: const EdgeInsets.only(right: 7),
+      child: Column(
+        children: [
+          InkWell(
+            child: widget,
+            onTap: () async {
+              FilePickerResult? filePickerResult = await FilePicker.platform
+                  .pickFiles(allowMultiple: false, type: FileType.image);
+              if (filePickerResult != null) {
+                logger.d("FilePickerResult: ${filePickerResult.files}");
+                String? filePath = filePickerResult.files.first.path;
+                if (filePath != null) {
+                  logger.d(
+                      "filePath: $filePath , ${questionInputController.uploadTmpDirectory}");
+                  String dstFile =
+                      "${questionInputController.uploadTmpDirectory}/${filePickerResult.files.first.name}.png";
+                  logger.d("dest file: $dstFile");
+                  final cmd = img.Command();
+                  cmd.decodePngFile(filePath);
+                  cmd.encodePng();
+                  cmd.copyResize(
+                    // width: 1024,
+                    height: 1024,
+                  );
+                  // cmd.copyResizeCropSquare(size: 1024);
+                  cmd.writeToFile(dstFile);
+                  await cmd.executeThread();
+                  dio.Response response =
+                      await questionInputController.uploadFile(
+                          uuid: settingsController.settings.uuid,
+                          filePath: dstFile);
+                  if (response.statusCode == 200) {
+                    final res = jsonDecode(response.data);
+                    logger.d("message res: $res");
+                    if (res['status'] == true) {
+                      questionInputController.questionInputModel.uploadImage =
+                          res['url'];
+                      logger.d(
+                          "image urls: ${questionInputController.questionInputModel.imageUrls} ");
+                      questionInputController.update();
+                    }
+                  }
+                }
+              }
+            },
+          ),
+          // Text("Upload".tr)
+          buildRemoveImageWidget(context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRemoveImageWidget(BuildContext context) {
+    Widget widget = const SizedBox();
+    logger.d(
+        "questionInputController.questionInputModel.hasUploadImage: ${questionInputController.questionInputModel.hasUploadImage}");
+    logger.d(
+        "question urls: ${questionInputController.questionInputModel.imageUrls}");
+    if (questionInputController.questionInputModel.hasUploadImage) {
+      widget = InkWell(
+        child: const Text("Remove"),
+        onTap: () {
+          questionInputController.questionInputModel.clearImage();
+          questionInputController.update();
+        },
+      );
+    }
+
     return widget;
   }
 
