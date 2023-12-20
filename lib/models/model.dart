@@ -24,7 +24,7 @@ class AiModel {
   double temperature;
   int maxContextSize;
   int modelMaxContextSize;
-  int maxTokens;
+  int? maxTokens;
   bool? enableImage;
 
   AiModel({
@@ -35,7 +35,7 @@ class AiModel {
     required this.temperature,
     required this.maxContextSize,
     required this.modelMaxContextSize,
-    required this.maxTokens,
+    this.maxTokens,
     this.enableImage,
   });
 }

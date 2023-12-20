@@ -55,6 +55,7 @@ class MessageTable {
 
   /// post json
   String? postJson;
+  List<String>? imageUrls;
 
   /// response json
   String? responseJson;

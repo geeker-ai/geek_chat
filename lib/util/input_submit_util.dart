@@ -32,6 +32,9 @@ class InputSubmitUtil {
     QuestionInputController questionInputController,
     SettingsServerController settingsServerController,
   ) async {
+    String model = chatSessionController.currentSession.model;
+    AiModel aiModel = AppConstants.getAiModel(model);
+
     /// 创建用户输入的Message
     MessageModel userMessage = MessageModel(
       msgId: const Uuid().v4(),
@@ -45,13 +48,21 @@ class InputSubmitUtil {
       updated: getCurrentDateTime(),
     );
 
+    if (aiModel.enableImage != null && aiModel.enableImage == true) {
+      // userMessage.inputImageUrls.add(questionInputController.questionInputModel)
+      if (questionInputController.questionInputModel.hasUploadImage) {
+        userMessage.imageUrl =
+            questionInputController.questionInputModel.uploadImage;
+      }
+    }
+
     try {
       // var openai = GeekerAIUtils.instance.getOpenaiInstance(
       //     settingsServerController.defaultServer,
       //     model: chatSessionController.currentSession.model);
       // var openai = null;
       late var openai;
-      String model = chatSessionController.currentSession.model;
+
       String deploymentId = "";
       String provider = settingsServerController.defaultServer.provider;
       logger.d("provider: $provider , $model");
@@ -64,6 +75,10 @@ class InputSubmitUtil {
         openai = GeekerAIUtils.instance
             .getOpenaiInstance(settingsServerController.defaultServer);
       }
+      // int? maxTokens;
+      // if (aiModel.modelType == ModelType.chat) {
+      //   maxTokens = aiModel.maxTokens;
+      // }
       Stream<OpenAIStreamChatCompletionModel> chatCompletionStream =
           openai.chat.createStream(
         model: provider == "azure" ? deploymentId : model,
@@ -71,9 +86,11 @@ class InputSubmitUtil {
             chatMessageController.messages,
             chatSessionController.currentSession,
             userMessage,
+            aiModel,
             questionInputController.questionInputModel.quotedMessages),
         // toolChoice: "auto",
         temperature: chatSessionController.currentSession.temperature,
+        maxTokens: aiModel.maxTokens,
         // responseFormat: {"type": "json_object"},
         // user:
         // seed: 6, //https://platform.openai.com/docs/api-reference/chat/create
@@ -129,6 +146,7 @@ class InputSubmitUtil {
         logger.d("stream message is done");
         targetMessage.generating = false;
         targetMessage.closeStream();
+        logger.d("user message: ${userMessage.imageUrls} ");
         chatMessageController.saveMessage(userMessage);
         targetMessage.updated = getCurrentDateTime() + 1;
         chatMessageController.saveMessage(targetMessage);
@@ -137,13 +155,15 @@ class InputSubmitUtil {
         chatSessionController.update();
       }, onError: (error) {
         logger.e("stream error: $error");
-        targetMessage.content = error.message;
+        targetMessage.content = "Error: ${error.message}";
+        chatMessageController.update();
+        targetMessage.closeStream();
         // TODO process error.
       });
     } on RequestFailedException catch (e) {
       logger.e("error: $e");
       // TODO process exception
-    } catch (e) {
+    } on Exception catch (e) {
       logger.e("getOpenAIInstance error: $e");
     }
   }
@@ -152,6 +172,7 @@ class InputSubmitUtil {
       List<MessageModel> historyMessages,
       SessionModel currentSession,
       MessageModel userMessage,
+      AiModel aiModel,
       [List<MessageModel>? quotedMessages]) {
     List<OpenAIChatCompletionChoiceMessageModel> messages = [];
     messages.add(OpenAIChatCompletionChoiceMessageModel(
@@ -164,7 +185,12 @@ class InputSubmitUtil {
         role: OpenAIChatMessageRole.user,
         content: [
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
-              userMessage.content)
+              userMessage.content),
+          if (aiModel.enableImage != null &&
+              aiModel.enableImage == true &&
+              userMessage.hasImage)
+            OpenAIChatCompletionChoiceMessageContentItemModel.imageUrl(
+                userMessage.imageUrl),
         ]));
 
     /// 计算tokens
@@ -185,8 +211,13 @@ class InputSubmitUtil {
             OpenAIChatCompletionChoiceMessageModel(
                 role: OpenAIChatMessageRole.user,
                 content: [
+                  if (aiModel.enableImage != null &&
+                      aiModel.enableImage == true &&
+                      quoteMessage.hasImage)
+                    OpenAIChatCompletionChoiceMessageContentItemModel.imageUrl(
+                        quoteMessage.imageUrl),
                   OpenAIChatCompletionChoiceMessageContentItemModel.text(
-                      quoteMessage.content)
+                      quoteMessage.content),
                 ]));
       }
       return messages;
@@ -211,8 +242,13 @@ class InputSubmitUtil {
                 role: OpenAIChatMessageRole.values
                     .firstWhere((e) => e.name == message.role),
                 content: [
+                  if (aiModel.enableImage != null &&
+                      aiModel.enableImage == true &&
+                      message.hasImage)
+                    OpenAIChatCompletionChoiceMessageContentItemModel.imageUrl(
+                        message.imageUrl),
                   OpenAIChatCompletionChoiceMessageContentItemModel.text(
-                      message.content)
+                      message.content),
                 ]));
       }
     }

@@ -22,6 +22,10 @@ class QuestionInputModel {
     imageUrls.add(url);
   }
 
+  String get uploadImage {
+    return imageUrls.first;
+  }
+
   bool get hasUploadImage {
     return imageUrls.isNotEmpty;
   }

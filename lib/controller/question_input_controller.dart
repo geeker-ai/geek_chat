@@ -117,6 +117,7 @@ class QuestionInputController extends GetxController {
   void clear() {
     inputText = "";
     questionInputModel.quotedMessages.clear();
+    questionInputModel.imageUrls.clear();
   }
 
   Future<dio.Response> uploadFile(

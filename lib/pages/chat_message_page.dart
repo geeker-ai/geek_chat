@@ -150,6 +150,7 @@ class ChatMessagePage extends StatelessWidget {
                   }
                 },
                 settingsController: settingsController,
+                settingsServerController: settingsServerController,
               ),
             ),
             // Container(

@@ -53,7 +53,7 @@ class ChatSessionController extends GetxController {
     currentSession.model = model.modelName;
     currentSession.modelType = model.modelType.name;
     currentSession.maxContextSize = model.maxContextSize;
-    currentSession.maxTokens = model.maxTokens;
+    currentSession.maxTokens = model.maxTokens ?? 0;
   }
 
   SessionModel createNewSession() {
@@ -68,7 +68,7 @@ class ChatSessionController extends GetxController {
         maxContextSize: model.maxContextSize,
         maxContextMsgCount: 22,
         temperature: model.temperature,
-        maxTokens: model.maxTokens,
+        maxTokens: model.maxTokens ?? 0,
         updated: int.parse(Moment.now()
             .format("YYYYMMDDHHmmssSSS")
             .toString()), // TODO updated
@@ -92,7 +92,7 @@ class ChatSessionController extends GetxController {
         maxContextSize: model.maxContextSize,
         maxContextMsgCount: 22,
         temperature: model.temperature,
-        maxTokens: model.maxTokens,
+        maxTokens: model.maxTokens ?? 0,
         updated: getCurrentDateTime(),
         synced: false,
         status: 1);

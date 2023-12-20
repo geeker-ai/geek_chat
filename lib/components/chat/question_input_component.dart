@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
@@ -30,6 +32,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
     required this.questionInputController,
     required this.onQuestionInputSubmit,
     required this.settingsController,
+    required this.settingsServerController,
   });
 
   String sid;
@@ -38,6 +41,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
   Function onQuestionInputSubmit;
   // FocusNode questionInputFocus;
   QuestionInputController questionInputController;
+  SettingsServerController settingsServerController;
   SettingsController settingsController;
   Logger logger = Get.find<Logger>();
 
@@ -68,6 +72,19 @@ class QuestionInputPanelCompoent extends StatelessWidget {
       upload,
       size: iconSize,
     );
+    if (questionInputController.questionInputModel.hasUploadImage) {
+      widget = Container(
+        height: 35,
+        width: 35,
+        child: ExtendedImage.network(
+          questionInputController.questionInputModel.imageUrls.first,
+          cache: true,
+          cacheMaxAge: const Duration(days: 10000000),
+          cacheRawData: true,
+          enableLoadState: true,
+        ),
+      );
+    }
     return Container(
       padding: const EdgeInsets.only(right: 7),
       child: Column(
@@ -78,6 +95,8 @@ class QuestionInputPanelCompoent extends StatelessWidget {
               FilePickerResult? filePickerResult = await FilePicker.platform
                   .pickFiles(allowMultiple: false, type: FileType.image);
               if (filePickerResult != null) {
+                // ignore: use_build_context_synchronously
+                AppLoadingProgress.start(context);
                 logger.d("FilePickerResult: ${filePickerResult.files}");
                 String? filePath = filePickerResult.files.first.path;
                 if (filePath != null) {
@@ -99,7 +118,9 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                   dio.Response response =
                       await questionInputController.uploadFile(
                           uuid: settingsController.settings.uuid,
-                          filePath: dstFile);
+                          filePath: dstFile,
+                          apiKey:
+                              settingsServerController.defaultServer.apiKey);
                   if (response.statusCode == 200) {
                     final res = jsonDecode(response.data);
                     logger.d("message res: $res");
@@ -112,6 +133,8 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                     }
                   }
                 }
+                // ignore: use_build_context_synchronously
+                AppLoadingProgress.stop(context);
               }
             },
           ),
@@ -129,8 +152,14 @@ class QuestionInputPanelCompoent extends StatelessWidget {
     logger.d(
         "question urls: ${questionInputController.questionInputModel.imageUrls}");
     if (questionInputController.questionInputModel.hasUploadImage) {
+      double fontSize = 12;
+      fontSize = Theme.of(context).textTheme.bodySmall?.fontSize ?? 12;
+      fontSize -= 1;
       widget = InkWell(
-        child: const Text("Remove"),
+        child: Text(
+          "Remove",
+          style: TextStyle(fontSize: fontSize),
+        ),
         onTap: () {
           questionInputController.questionInputModel.clearImage();
           questionInputController.update();
