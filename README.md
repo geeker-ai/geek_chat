@@ -110,6 +110,7 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
   - [x] Create image
   - [ ] Create image edit
   - [ ] Create image variation
+- [x] Support GPT-4-Vision model
 - [ ] Copy button for code blocks
 - [ ] Chat with files.
 - [ ] Chat with URLs.
