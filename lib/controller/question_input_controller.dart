@@ -129,7 +129,9 @@ class QuestionInputController extends GetxController {
     dio.FormData data = dio.FormData.fromMap({
       "file": await dio.MultipartFile.fromFile(filePath),
     });
-    return HttpClientService.postData("https://api2.fucklina.com/app/upload",
-        data: data, headers: headers);
+    return HttpClientService.postData(
+        "${AppConstants.appServerHost}/app/upload",
+        data: data,
+        headers: headers);
   }
 }

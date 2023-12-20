@@ -1,4 +1,5 @@
 import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/models/geekerai/geekerai_models.dart';
 import 'package:geek_chat/models/locale_model.dart';
@@ -13,6 +14,14 @@ class AppConstants {
 
   /// https://github.com/Azure/azure-rest-api-specs/tree/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference
   static String azureAPIVersion = "2023-12-01-preview";
+
+  static String get appServerHost {
+    String host = "https://capi.fucklina.com";
+    if (kDebugMode) {
+      host = "https://api2.fucklina.com";
+    }
+    return host;
+  }
 
   // https://emojipedia.org/flags/
   static List<LocaleModel> locales = [

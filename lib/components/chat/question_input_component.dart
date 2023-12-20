@@ -130,6 +130,9 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                       logger.d(
                           "image urls: ${questionInputController.questionInputModel.imageUrls} ");
                       questionInputController.update();
+                    } else {
+                      // ignore: use_build_context_synchronously
+                      showCustomToast(title: res['message'], context: context);
                     }
                   }
                 }
