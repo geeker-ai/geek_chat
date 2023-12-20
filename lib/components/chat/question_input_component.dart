@@ -115,7 +115,11 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                   );
                   // cmd.copyResizeCropSquare(size: 1024);
                   cmd.writeToFile(dstFile);
-                  await cmd.executeThread();
+                  try {
+                    await cmd.executeThread();
+                  } catch (e) {
+                    logger.e("image process error: $e");
+                  }
                   bool check = await io.File(dstFile).exists();
                   if (check) {
                     dio.Response response =
