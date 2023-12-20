@@ -26,6 +26,7 @@ class AiModel {
   int modelMaxContextSize;
   int? maxTokens;
   bool? enableImage;
+  int? maxContextMsgCount;
 
   AiModel({
     required this.modelName,
@@ -37,5 +38,6 @@ class AiModel {
     required this.modelMaxContextSize,
     this.maxTokens,
     this.enableImage,
+    this.maxContextMsgCount,
   });
 }

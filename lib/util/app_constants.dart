@@ -130,7 +130,8 @@ class AppConstants {
         maxContextSize: 15000,
         modelMaxContextSize: 15000,
         maxTokens: 4096,
-        enableImage: true),
+        enableImage: true,
+        maxContextMsgCount: 8),
     AiModel(
       modelName: 'chat-bison',
       alias: ['chat-bison'],

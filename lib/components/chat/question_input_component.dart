@@ -20,6 +20,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:image/image.dart' as img;
 import 'package:dio/dio.dart' as dio;
+import 'dart:io' as io;
 
 // ignore: must_be_immutable
 class QuestionInputPanelCompoent extends StatelessWidget {
@@ -106,7 +107,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                       "${questionInputController.uploadTmpDirectory}/${filePickerResult.files.first.name}.png";
                   logger.d("dest file: $dstFile");
                   final cmd = img.Command();
-                  cmd.decodePngFile(filePath);
+                  cmd.decodeImageFile(filePath);
                   cmd.encodePng();
                   cmd.copyResize(
                     // width: 1024,
@@ -115,25 +116,31 @@ class QuestionInputPanelCompoent extends StatelessWidget {
                   // cmd.copyResizeCropSquare(size: 1024);
                   cmd.writeToFile(dstFile);
                   await cmd.executeThread();
-                  dio.Response response =
-                      await questionInputController.uploadFile(
-                          uuid: settingsController.settings.uuid,
-                          filePath: dstFile,
-                          apiKey:
-                              settingsServerController.defaultServer.apiKey);
-                  if (response.statusCode == 200) {
-                    final res = jsonDecode(response.data);
-                    logger.d("message res: $res");
-                    if (res['status'] == true) {
-                      questionInputController.questionInputModel.uploadImage =
-                          res['url'];
-                      logger.d(
-                          "image urls: ${questionInputController.questionInputModel.imageUrls} ");
-                      questionInputController.update();
-                    } else {
-                      // ignore: use_build_context_synchronously
-                      showCustomToast(title: res['message'], context: context);
+                  bool check = await io.File(dstFile).exists();
+                  if (check) {
+                    dio.Response response =
+                        await questionInputController.uploadFile(
+                            uuid: settingsController.settings.uuid,
+                            filePath: dstFile,
+                            apiKey:
+                                settingsServerController.defaultServer.apiKey);
+                    if (response.statusCode == 200) {
+                      final res = jsonDecode(response.data);
+                      logger.d("message res: $res");
+                      if (res['status'] == true) {
+                        questionInputController.questionInputModel.uploadImage =
+                            res['url'];
+                        logger.d(
+                            "image urls: ${questionInputController.questionInputModel.imageUrls} ");
+                        questionInputController.update();
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        showCustomToast(
+                            title: res['message'], context: context);
+                      }
                     }
+                  } else {
+                    logger.e("file not exists");
                   }
                 }
                 // ignore: use_build_context_synchronously

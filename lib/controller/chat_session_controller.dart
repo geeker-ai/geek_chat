@@ -90,7 +90,7 @@ class ChatSessionController extends GetxController {
         modelType: model.modelType.name,
         model: model.modelName,
         maxContextSize: model.maxContextSize,
-        maxContextMsgCount: 22,
+        maxContextMsgCount: model.maxContextMsgCount ?? 22,
         temperature: model.temperature,
         maxTokens: model.maxTokens ?? 0,
         updated: getCurrentDateTime(),
@@ -117,6 +117,15 @@ class ChatSessionController extends GetxController {
 
   SessionModel switchSession(String sid) {
     return getSessionBysid(sid);
+  }
+
+  SessionModel switchSessionModel(String modelName) {
+    AiModel aiModel = AppConstants.getAiModel(modelName);
+    currentSession.model = aiModel.modelName;
+    currentSession.modelType = aiModel.modelType.name;
+    currentSession.maxContextMsgCount = aiModel.maxContextMsgCount ?? 22;
+    currentSession.maxContextSize = aiModel.maxContextSize;
+    return currentSession;
   }
 
   @Deprecated("message")

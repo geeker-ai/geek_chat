@@ -190,7 +190,15 @@ class MessageContent extends StatelessWidget {
             ),
             Expanded(
               // child: markDownWidgetWithStream(message, isDark),
-              child: messageContentAdaptor(message, controller, isDark),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  messageContentAdaptor(message, controller, isDark),
+                  if (message.hasImage)
+                    buildImageBlock(context, message.imageUrl),
+                ],
+              ),
               // child: CustomPopupMenu(
               //   menuBuilder: _buildLongPressMenu,
               //   barrierColor: Colors.transparent,

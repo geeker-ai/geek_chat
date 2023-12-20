@@ -402,6 +402,21 @@ class InputSubmitUtil {
     AiModel aiModel =
         AppConstants.getAiModel(chatSessionController.currentSession.model);
     String provider = settingsServerController.defaultServer.provider;
+
+    /// validate server configure
+    if (settingsServerController.provider.isEmpty ||
+        settingsServerController.defaultServer.getApiKey(aiModel).isEmpty ||
+        settingsServerController.defaultServer
+            .getBaseUrlByModel(aiModel.modelName)
+            .isEmpty) {
+      errorHander(
+          chatSessionController,
+          chatMessageController,
+          settingsServerController,
+          questionInputController,
+          "The server configuration is incorrect.".tr);
+      return;
+    }
     ProviderModel providerModel = AppConstants.getProvider(provider);
     if (providerModel.supportedModels.contains(aiModel.modelName)) {
       if (chatSessionController.currentSession.modelType ==

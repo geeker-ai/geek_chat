@@ -238,7 +238,8 @@ class ChatEditPage extends StatelessWidget {
         leadingIcon: Icons.smart_toy_outlined,
         onTapCallback: (value) {
           // controller.currentSession.model = value;
-          controller.currentModelName = value;
+          // controller.currentModelName = value;
+          controller.switchSessionModel(value);
           controller.update();
         }));
     widgets.add(Container(
