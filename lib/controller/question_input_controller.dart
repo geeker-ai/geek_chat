@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:geek_chat/models/geekerai/geekerai_models.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/question_input_model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/service/http_service.dart';
 import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
@@ -12,6 +16,17 @@ class QuestionInputController extends GetxController {
   TextEditingController textEditingController = TextEditingController();
   FocusNode inputFocus = FocusNode();
   Logger logger = Get.find();
+  Directory applicationDocumentsDirectory;
+  QuestionInputController({required this.applicationDocumentsDirectory});
+
+  String get uploadTmpDirectory {
+    String path = "${applicationDocumentsDirectory.path}/upload";
+    final check = Directory(path).existsSync();
+    if (check == false) {
+      Directory(path).create();
+    }
+    return path;
+  }
 
   QuestionInputModel questionInputModel = QuestionInputModel(
       inputText: '',
@@ -102,5 +117,21 @@ class QuestionInputController extends GetxController {
   void clear() {
     inputText = "";
     questionInputModel.quotedMessages.clear();
+    questionInputModel.imageUrls.clear();
+  }
+
+  Future<dio.Response> uploadFile(
+      {String? apiKey, required String uuid, required filePath}) async {
+    Map<String, String> headers = {
+      "uuid": uuid,
+      if (apiKey != null) "Authorization": "Bearer $apiKey",
+    };
+    dio.FormData data = dio.FormData.fromMap({
+      "file": await dio.MultipartFile.fromFile(filePath),
+    });
+    return HttpClientService.postData(
+        "${AppConstants.appServerHost}/app/upload",
+        data: data,
+        headers: headers);
   }
 }

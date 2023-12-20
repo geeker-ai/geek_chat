@@ -15,6 +15,24 @@ class QuestionInputModel {
   String? imageParameterStyle;
   String inputText;
   List<MessageModel> quotedMessages = [];
+  List<String> imageUrls = [];
+
+  set uploadImage(String url) {
+    imageUrls.clear();
+    imageUrls.add(url);
+  }
+
+  String get uploadImage {
+    return imageUrls.first;
+  }
+
+  bool get hasUploadImage {
+    return imageUrls.isNotEmpty;
+  }
+
+  clearImage() {
+    imageUrls.clear();
+  }
 
   String toJson() {
     return '{"inputText": "$inputText", "imageParameterN": $imageParameterN, "imageParameterQuality": "$imageParameterQuality", "imageParameterSize": "$imageParameterSize", "imageParameterStyle": "$imageParameterStyle"}';

@@ -18,6 +18,7 @@ class MessageModel {
   bool? synced;
   int? status; // 1 = show, 2=delete
   List<String>? quotes;
+  List<String>? imageUrls;
   StreamController<String>? contentStream;
 
   String? postJson;
@@ -37,12 +38,30 @@ class MessageModel {
     this.quotes,
     this.postJson,
     this.responseJson,
+    this.imageUrls,
   }) {
     if (generating == true) {
       // print("contentStream = StreamController<String>();");
       contentStream = StreamController<String>();
       streamContent = content;
     }
+  }
+
+  set imageUrl(String url) {
+    imageUrls ??= [];
+    imageUrls!.add(url);
+  }
+
+  bool get hasImage {
+    bool has = false;
+    if (imageUrls != null && imageUrls!.isNotEmpty) {
+      has = true;
+    }
+    return has;
+  }
+
+  String get imageUrl {
+    return imageUrls!.first;
   }
   //: this.updated = int.parse(Moment.now().format('YYYYMMDDHHmmssSSS').toString())
 
@@ -79,6 +98,9 @@ class MessageModel {
     if (mt.responseJson != null) {
       mm.responseJson = mt.responseJson;
     }
+    if (mt.imageUrls != null) {
+      mm.imageUrls = mt.imageUrls;
+    }
     return mm;
   }
 
@@ -106,6 +128,7 @@ class MessageModel {
     mt.updated = updated;
     mt.synced = synced ?? false;
     mt.status = status ?? 1;
+    mt.imageUrls = imageUrls;
     if (quotes != null) {
       mt.quotes = quotes;
     }

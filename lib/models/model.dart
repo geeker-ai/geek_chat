@@ -18,13 +18,15 @@ class AiGroup {
 
 class AiModel {
   String modelName;
-  String alias;
+  List<String> alias;
   AiType aiType;
   ModelType modelType;
   double temperature;
   int maxContextSize;
   int modelMaxContextSize;
-  int maxTokens;
+  int? maxTokens;
+  bool? enableImage;
+  int? maxContextMsgCount;
 
   AiModel({
     required this.modelName,
@@ -34,6 +36,8 @@ class AiModel {
     required this.temperature,
     required this.maxContextSize,
     required this.modelMaxContextSize,
-    required this.maxTokens,
+    this.maxTokens,
+    this.enableImage,
+    this.maxContextMsgCount,
   });
 }

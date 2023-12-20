@@ -68,6 +68,18 @@ class ServerModel {
           "deploymentId": "",
           "url": "",
           // "apiVersion": "",
+        },
+        "dall-e-3": {
+          "name": "gpt-4-32k",
+          "apiKey": "",
+          "deploymentId": "",
+          "url": "",
+        },
+        "gpt-4-vision-preview": {
+          "name": "gpt-4-vision-preview",
+          "apiKey": "",
+          "deploymentId": "",
+          "url": "",
         }
       };
     }
@@ -122,6 +134,25 @@ class ServerModel {
       }
     }
     return apiKey;
+  }
+
+  String getDeploymentIdByModel(String modelName) {
+    //deploymentId
+    Map<String, String> modelSettings = getAzureModelSettings(modelName);
+    if (modelSettings.containsKey("deploymentId")) {
+      return "${modelSettings['deploymentId']}";
+    }
+    return "No deploymentId";
+  }
+
+  String getBaseUrlByModel(String modelName) {
+    if (provider == "azure") {
+      Map<String, String> modelSettings = getAzureModelSettings(modelName);
+      if (modelSettings.containsKey("url")) {
+        return "${modelSettings['url']}";
+      }
+    }
+    return apiHost;
   }
 
   String getApiVersion(String modelName) {

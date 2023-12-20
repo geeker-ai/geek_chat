@@ -3114,53 +3114,58 @@ const MessageTableSchema = CollectionSchema(
       name: r'content',
       type: IsarType.string,
     ),
-    r'mid': PropertySchema(
+    r'imageUrls': PropertySchema(
       id: 1,
+      name: r'imageUrls',
+      type: IsarType.stringList,
+    ),
+    r'mid': PropertySchema(
+      id: 2,
       name: r'mid',
       type: IsarType.string,
     ),
     r'model': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'model',
       type: IsarType.string,
     ),
     r'postJson': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'postJson',
       type: IsarType.string,
     ),
     r'quotes': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'quotes',
       type: IsarType.stringList,
     ),
     r'responseJson': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'responseJson',
       type: IsarType.string,
     ),
     r'role': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'role',
       type: IsarType.string,
     ),
     r'sid': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'sid',
       type: IsarType.string,
     ),
     r'status': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'status',
       type: IsarType.long,
     ),
     r'synced': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'synced',
       type: IsarType.bool,
     ),
     r'updated': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'updated',
       type: IsarType.long,
     )
@@ -3237,6 +3242,18 @@ int _messageTableEstimateSize(
     }
   }
   {
+    final list = object.imageUrls;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += value.length * 3;
+        }
+      }
+    }
+  }
+  {
     final value = object.mid;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -3294,16 +3311,17 @@ void _messageTableSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.content);
-  writer.writeString(offsets[1], object.mid);
-  writer.writeString(offsets[2], object.model);
-  writer.writeString(offsets[3], object.postJson);
-  writer.writeStringList(offsets[4], object.quotes);
-  writer.writeString(offsets[5], object.responseJson);
-  writer.writeString(offsets[6], object.role);
-  writer.writeString(offsets[7], object.sid);
-  writer.writeLong(offsets[8], object.status);
-  writer.writeBool(offsets[9], object.synced);
-  writer.writeLong(offsets[10], object.updated);
+  writer.writeStringList(offsets[1], object.imageUrls);
+  writer.writeString(offsets[2], object.mid);
+  writer.writeString(offsets[3], object.model);
+  writer.writeString(offsets[4], object.postJson);
+  writer.writeStringList(offsets[5], object.quotes);
+  writer.writeString(offsets[6], object.responseJson);
+  writer.writeString(offsets[7], object.role);
+  writer.writeString(offsets[8], object.sid);
+  writer.writeLong(offsets[9], object.status);
+  writer.writeBool(offsets[10], object.synced);
+  writer.writeLong(offsets[11], object.updated);
 }
 
 MessageTable _messageTableDeserialize(
@@ -3315,16 +3333,17 @@ MessageTable _messageTableDeserialize(
   final object = MessageTable();
   object.content = reader.readStringOrNull(offsets[0]);
   object.id = id;
-  object.mid = reader.readStringOrNull(offsets[1]);
-  object.model = reader.readStringOrNull(offsets[2]);
-  object.postJson = reader.readStringOrNull(offsets[3]);
-  object.quotes = reader.readStringList(offsets[4]);
-  object.responseJson = reader.readStringOrNull(offsets[5]);
-  object.role = reader.readStringOrNull(offsets[6]);
-  object.sid = reader.readStringOrNull(offsets[7]);
-  object.status = reader.readLong(offsets[8]);
-  object.synced = reader.readBool(offsets[9]);
-  object.updated = reader.readLongOrNull(offsets[10]);
+  object.imageUrls = reader.readStringList(offsets[1]);
+  object.mid = reader.readStringOrNull(offsets[2]);
+  object.model = reader.readStringOrNull(offsets[3]);
+  object.postJson = reader.readStringOrNull(offsets[4]);
+  object.quotes = reader.readStringList(offsets[5]);
+  object.responseJson = reader.readStringOrNull(offsets[6]);
+  object.role = reader.readStringOrNull(offsets[7]);
+  object.sid = reader.readStringOrNull(offsets[8]);
+  object.status = reader.readLong(offsets[9]);
+  object.synced = reader.readBool(offsets[10]);
+  object.updated = reader.readLongOrNull(offsets[11]);
   return object;
 }
 
@@ -3338,24 +3357,26 @@ P _messageTableDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readStringList(offset)) as P;
-    case 5:
       return (reader.readStringOrNull(offset)) as P;
+    case 5:
+      return (reader.readStringList(offset)) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 9:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 10:
+      return (reader.readBool(offset)) as P;
+    case 11:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -4041,6 +4062,249 @@ extension MessageTableQueryFilter
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'imageUrls',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'imageUrls',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imageUrls',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'imageUrls',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'imageUrls',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'imageUrls',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'imageUrls',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'imageUrls',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'imageUrls',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'imageUrls',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imageUrls',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'imageUrls',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imageUrls',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imageUrls',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imageUrls',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imageUrls',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imageUrls',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<MessageTable, MessageTable, QAfterFilterCondition>
+      imageUrlsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imageUrls',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -5611,6 +5875,12 @@ extension MessageTableQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByImageUrls() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'imageUrls');
+    });
+  }
+
   QueryBuilder<MessageTable, MessageTable, QDistinct> distinctByMid(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -5689,6 +5959,13 @@ extension MessageTableQueryProperty
   QueryBuilder<MessageTable, String?, QQueryOperations> contentProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'content');
+    });
+  }
+
+  QueryBuilder<MessageTable, List<String>?, QQueryOperations>
+      imageUrlsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'imageUrls');
     });
   }
 

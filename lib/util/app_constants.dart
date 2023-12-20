@@ -1,4 +1,5 @@
 import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_chat/models/geekerai/geekerai_models.dart';
 import 'package:geek_chat/models/locale_model.dart';
@@ -12,7 +13,15 @@ class AppConstants {
   static LocaleModel defaultLocale = locales[0];
 
   /// https://github.com/Azure/azure-rest-api-specs/tree/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference
-  static String azureAPIVersion = "2023-05-15";
+  static String azureAPIVersion = "2023-12-01-preview";
+
+  static String get appServerHost {
+    String host = "https://capi.fucklina.com";
+    if (kDebugMode) {
+      host = "https://api2.fucklina.com";
+    }
+    return host;
+  }
 
   // https://emojipedia.org/flags/
   static List<LocaleModel> locales = [
@@ -73,91 +82,113 @@ class AppConstants {
   /// AI 支持的模型
   static List<AiModel> aiModels = [
     AiModel(
-        modelName: 'gpt-3.5-turbo',
-        alias: 'gpt-3.5',
-        aiType: AiType.chatgpt,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 4000,
-        modelMaxContextSize: 4000,
-        maxTokens: 0),
+      modelName: 'gpt-3.5-turbo',
+      alias: ['gpt-3.5'],
+      aiType: AiType.chatgpt,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 4000,
+      modelMaxContextSize: 4000,
+      // maxTokens: 4096,
+    ),
     AiModel(
-        modelName: 'gpt-3.5-turbo-16k',
-        alias: 'gpt-3.5-16k',
-        aiType: AiType.chatgpt,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 10000,
-        modelMaxContextSize: 16000,
-        maxTokens: 0),
+      modelName: 'gpt-3.5-turbo-16k',
+      alias: ['gpt-3.5-16k'],
+      aiType: AiType.chatgpt,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 10000,
+      modelMaxContextSize: 16000,
+      // maxTokens: 6000,
+    ),
     AiModel(
-        modelName: 'gpt-4',
-        alias: 'gpt-4',
-        aiType: AiType.chatgpt,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 4000,
-        modelMaxContextSize: 4000,
-        maxTokens: 0),
+      modelName: 'gpt-4',
+      alias: ['gpt-4'],
+      aiType: AiType.chatgpt,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 4000,
+      modelMaxContextSize: 4000,
+      // maxTokens: 1000000,
+    ),
     AiModel(
-        modelName: 'gpt-4-32k',
-        alias: 'gpt-4-32k',
+      modelName: 'gpt-4-32k',
+      alias: ['gpt-4-32k'],
+      aiType: AiType.chatgpt,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 15000,
+      modelMaxContextSize: 15000,
+      // maxTokens: 15000,
+    ),
+    AiModel(
+        modelName: 'gpt-4-vision-preview',
+        alias: ['gpt-4-vision-preview', 'gpt-4-vision'],
         aiType: AiType.chatgpt,
         modelType: ModelType.chat,
         temperature: 0.7,
         maxContextSize: 15000,
         modelMaxContextSize: 15000,
-        maxTokens: 0),
+        maxTokens: 4096,
+        enableImage: true,
+        maxContextMsgCount: 8),
     AiModel(
-        modelName: 'chat-bison',
-        alias: 'chat-bison',
-        aiType: AiType.bard,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 7000,
-        modelMaxContextSize: 8192,
-        maxTokens: 0),
+      modelName: 'chat-bison',
+      alias: ['chat-bison'],
+      aiType: AiType.bard,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 7000,
+      modelMaxContextSize: 8192,
+      // maxTokens: 8192,
+    ),
     AiModel(
-        modelName: 'codechat-bison',
-        alias: 'codechat-bison',
-        aiType: AiType.bard,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 5000,
-        modelMaxContextSize: 6144,
-        maxTokens: 0),
+      modelName: 'codechat-bison',
+      alias: ['codechat-bison'],
+      aiType: AiType.bard,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 5000,
+      modelMaxContextSize: 6144,
+      // maxTokens: 8192,
+    ),
     AiModel(
-        modelName: 'chat-bison-32k',
-        alias: 'chat-bison-32k',
-        aiType: AiType.bard,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 15000,
-        modelMaxContextSize: 15000,
-        maxTokens: 0),
+      modelName: 'chat-bison-32k',
+      alias: ['chat-bison-32k'],
+      aiType: AiType.bard,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 15000,
+      modelMaxContextSize: 15000,
+      // maxTokens: 32000,
+    ),
     AiModel(
-        modelName: 'codechat-bison-32k',
-        alias: 'codechat-bison-32k',
-        aiType: AiType.bard,
-        modelType: ModelType.chat,
-        temperature: 0.7,
-        maxContextSize: 15000,
-        modelMaxContextSize: 15000,
-        maxTokens: 0),
+      modelName: 'codechat-bison-32k',
+      alias: ['codechat-bison-32k'],
+      aiType: AiType.bard,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 15000,
+      modelMaxContextSize: 15000,
+      // maxTokens: 32000,
+    ),
     AiModel(
-        modelName: 'dall-e-3',
-        alias: 'dall-e-3',
-        aiType: AiType.chatgpt,
-        modelType: ModelType.image,
-        temperature: 1,
-        maxContextSize: 0,
-        modelMaxContextSize: 0,
-        maxTokens: 0),
+      modelName: 'dall-e-3',
+      alias: ['dall-e-3'],
+      aiType: AiType.chatgpt,
+      modelType: ModelType.image,
+      temperature: 1,
+      maxContextSize: 0,
+      modelMaxContextSize: 0,
+      // maxTokens: 0,
+    ),
   ];
 
   static AiModel getAiModel(String modelName) {
     for (AiModel model in AppConstants.aiModels) {
       if (modelName == model.modelName) {
+        return model;
+      } else if (model.alias.contains(modelName)) {
         return model;
       }
     }
@@ -209,7 +240,7 @@ class AppConstants {
       id: "azure",
       name: "Azure API",
       baseUrl: "",
-      supportedModels: azureModelNameList,
+      supportedModels: openaiModelNameList,
     )
   ];
   static ProviderModel getProvider(String providerId) {

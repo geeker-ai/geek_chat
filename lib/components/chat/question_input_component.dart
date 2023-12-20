@@ -1,17 +1,26 @@
+import 'dart:convert';
+
+import 'package:extended_image/extended_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
+import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/app_loading_dialog.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:image/image.dart' as img;
+import 'package:dio/dio.dart' as dio;
+import 'dart:io' as io;
 
 // ignore: must_be_immutable
 class QuestionInputPanelCompoent extends StatelessWidget {
@@ -24,6 +33,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
     required this.questionInputController,
     required this.onQuestionInputSubmit,
     required this.settingsController,
+    required this.settingsServerController,
   });
 
   String sid;
@@ -32,6 +42,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
   Function onQuestionInputSubmit;
   // FocusNode questionInputFocus;
   QuestionInputController questionInputController;
+  SettingsServerController settingsServerController;
   SettingsController settingsController;
   Logger logger = Get.find<Logger>();
 
@@ -41,6 +52,132 @@ class QuestionInputPanelCompoent extends StatelessWidget {
       isImage = true;
     }
     return isImage;
+  }
+
+  bool isModelEnableImage() {
+    return true;
+  }
+
+  Widget buildImageUploader(BuildContext context) {
+    AiModel aiModel = AppConstants.getAiModel(session.model);
+    // logger.d("aiModel: ${aiModel.enableImage}, ${aiModel.modelName}");
+    if (aiModel.enableImage == null) {
+      return const SizedBox();
+    }
+    const IconData upload =
+        Icons.image_outlined; //IconData(0xe695, fontFamily: 'MaterialIcons');
+    double iconSize = 12;
+    iconSize = Theme.of(context).primaryTextTheme.bodyLarge?.fontSize ?? 12;
+    iconSize = iconSize + 25.0;
+    Widget widget = Icon(
+      upload,
+      size: iconSize,
+    );
+    if (questionInputController.questionInputModel.hasUploadImage) {
+      widget = Container(
+        height: 35,
+        width: 35,
+        child: ExtendedImage.network(
+          questionInputController.questionInputModel.imageUrls.first,
+          cache: true,
+          cacheMaxAge: const Duration(days: 10000000),
+          cacheRawData: true,
+          enableLoadState: true,
+        ),
+      );
+    }
+    return Container(
+      padding: const EdgeInsets.only(right: 7),
+      child: Column(
+        children: [
+          InkWell(
+            child: widget,
+            onTap: () async {
+              FilePickerResult? filePickerResult = await FilePicker.platform
+                  .pickFiles(allowMultiple: false, type: FileType.image);
+              if (filePickerResult != null) {
+                // ignore: use_build_context_synchronously
+                AppLoadingProgress.start(context);
+                logger.d("FilePickerResult: ${filePickerResult.files}");
+                String? filePath = filePickerResult.files.first.path;
+                if (filePath != null) {
+                  logger.d(
+                      "filePath: $filePath , ${questionInputController.uploadTmpDirectory}");
+                  String dstFile =
+                      "${questionInputController.uploadTmpDirectory}/${filePickerResult.files.first.name}.png";
+                  logger.d("dest file: $dstFile");
+                  final cmd = img.Command();
+                  cmd.decodeImageFile(filePath);
+                  cmd.encodePng();
+                  cmd.copyResize(
+                    // width: 1024,
+                    height: 1024,
+                  );
+                  // cmd.copyResizeCropSquare(size: 1024);
+                  cmd.writeToFile(dstFile);
+                  await cmd.executeThread();
+                  bool check = await io.File(dstFile).exists();
+                  if (check) {
+                    dio.Response response =
+                        await questionInputController.uploadFile(
+                            uuid: settingsController.settings.uuid,
+                            filePath: dstFile,
+                            apiKey:
+                                settingsServerController.defaultServer.apiKey);
+                    if (response.statusCode == 200) {
+                      final res = jsonDecode(response.data);
+                      logger.d("message res: $res");
+                      if (res['status'] == true) {
+                        questionInputController.questionInputModel.uploadImage =
+                            res['url'];
+                        logger.d(
+                            "image urls: ${questionInputController.questionInputModel.imageUrls} ");
+                        questionInputController.update();
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        showCustomToast(
+                            title: res['message'], context: context);
+                      }
+                    }
+                  } else {
+                    logger.e("file not exists");
+                  }
+                }
+                // ignore: use_build_context_synchronously
+                AppLoadingProgress.stop(context);
+              }
+            },
+          ),
+          // Text("Upload".tr)
+          buildRemoveImageWidget(context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRemoveImageWidget(BuildContext context) {
+    Widget widget = const SizedBox();
+    logger.d(
+        "questionInputController.questionInputModel.hasUploadImage: ${questionInputController.questionInputModel.hasUploadImage}");
+    logger.d(
+        "question urls: ${questionInputController.questionInputModel.imageUrls}");
+    if (questionInputController.questionInputModel.hasUploadImage) {
+      double fontSize = 12;
+      fontSize = Theme.of(context).textTheme.bodySmall?.fontSize ?? 12;
+      fontSize -= 1;
+      widget = InkWell(
+        child: Text(
+          "Remove",
+          style: TextStyle(fontSize: fontSize),
+        ),
+        onTap: () {
+          questionInputController.questionInputModel.clearImage();
+          questionInputController.update();
+        },
+      );
+    }
+
+    return widget;
   }
 
   @override
@@ -56,6 +193,7 @@ class QuestionInputPanelCompoent extends StatelessWidget {
               if (isImageSession()) buildImageToolBar(context),
               Row(
                 children: [
+                  buildImageUploader(context),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.only(left: 2, right: 2),

@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -189,7 +190,15 @@ class MessageContent extends StatelessWidget {
             ),
             Expanded(
               // child: markDownWidgetWithStream(message, isDark),
-              child: messageContentAdaptor(message, controller, isDark),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  messageContentAdaptor(message, controller, isDark),
+                  if (message.hasImage)
+                    buildImageBlock(context, message.imageUrl),
+                ],
+              ),
               // child: CustomPopupMenu(
               //   menuBuilder: _buildLongPressMenu,
               //   barrierColor: Colors.transparent,
@@ -243,6 +252,7 @@ class MessageContent extends StatelessWidget {
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     padding: const EdgeInsets.only(top: 10, left: 5),
@@ -254,11 +264,20 @@ class MessageContent extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 10, bottom: 3),
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.only(right: 8),
-                      child: messageContentAdaptor(message, controller, isDark),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(top: 10, bottom: 3),
+                          alignment: Alignment.centerLeft,
+                          margin: const EdgeInsets.only(right: 8),
+                          child: messageContentAdaptor(
+                              message, controller, isDark),
+                        ),
+                        if (message.hasImage)
+                          buildImageBlock(context, message.imageUrl),
+                      ],
                     ),
                   )
                 ],
@@ -269,6 +288,53 @@ class MessageContent extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget buildImageBlock(BuildContext context, String imageUrl) {
+    Widget widget = Wrap(
+      crossAxisAlignment: WrapCrossAlignment.start,
+      children: [
+        Container(
+          // width: 512,
+          height: 256,
+          width: 256,
+          padding: const EdgeInsets.only(bottom: 5),
+          child: GestureDetector(
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: Hero(
+                tag: message.msgId,
+                child: ExtendedImage.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                  cache: true,
+                  cacheMaxAge: const Duration(days: 100000),
+                  cacheRawData: true,
+                  retries: 3,
+                  timeLimit: const Duration(seconds: 10),
+                  enableLoadState: true,
+                  scale: 0.5,
+                  // mode: ExtendedImageMode.gesture,
+                  initGestureConfigHandler: (state) {
+                    return GestureConfig(
+                        inPageView: false,
+                        initialScale: 1,
+                        cacheGesture: false);
+                  },
+                  // scale: BorderSide.strokeAlignCenter,
+                ),
+              ),
+            ),
+            onTap: () {
+              Get.toNamed("/image/view",
+                  parameters: {"url": imageUrl, "id": message.msgId});
+            },
+          ),
+        )
+      ],
+    );
+    return widget;
   }
 
   Widget messageContentAdaptor(

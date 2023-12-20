@@ -6,6 +6,7 @@ import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/chat_message_scroll_controller.dart';
 import 'package:geek_chat/controller/question_input_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
+import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/models/message.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
@@ -20,7 +21,8 @@ class DeskTopMainRightComponent extends StatelessWidget {
       {super.key,
       required this.sid,
       required this.questionInputController,
-      required this.onQuestionSubmit}) {
+      required this.onQuestionSubmit,
+      required this.settingsServerController}) {
     chatMessageController = Get.find<ChatMessageController>();
 
     /// init right scroll button
@@ -36,6 +38,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
   Function onQuestionSubmit;
 
   QuestionInputController questionInputController;
+  SettingsServerController settingsServerController;
 
   void scrollButtonListener() {
     final extentAfter = scrollController.position.extentAfter;
@@ -252,6 +255,7 @@ class DeskTopMainRightComponent extends StatelessWidget {
             onQuestionInputSubmit: onQuestionSubmit,
             questionInputController: questionInputController,
             settingsController: settingsController,
+            settingsServerController: settingsServerController,
           ),
         ],
       ),

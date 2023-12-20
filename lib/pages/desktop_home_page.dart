@@ -176,6 +176,7 @@ class DesktopHomePage extends StatelessWidget {
                         sid: chatSessionController.currentSession.sid,
                         questionInputController: questionInputController,
                         onQuestionSubmit: onQuestionInputSubmit,
+                        settingsServerController: settingsServerController,
                       );
               }),
             )
