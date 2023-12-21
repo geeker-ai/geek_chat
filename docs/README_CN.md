@@ -101,7 +101,7 @@ Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPa
   - [ ] Create image edit
   - [ ] Create image variation
 - [x] 支持 GPT-4-Vision 模型
-- [ ] 代码块的复制按钮
+- [x] 代码块的复制按钮
 - [ ] 可以与文件进行对话。
 - [ ] 可以与URL进行对话。
 - [ ] 实时语对话
