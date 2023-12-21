@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
+import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
@@ -135,17 +136,19 @@ class AzureServerSettingsComponent extends StatelessWidget {
                     settingsController.settings.provider =
                         controller.defaultServer.provider;
                     settingsController.saveSettings();
+                    showCustomToast(
+                        title: "Saved successfully!".tr, context: context);
                     // controller.needReactive = true;
                     // controller.saveSettings();
-                    Get.snackbar(
-                      "Saved successfully!".tr,
-                      "The configuration has been updated!".tr,
-                      icon: const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
-                      snackPosition: SnackPosition.TOP,
-                    );
+                    // Get.snackbar(
+                    //   "Saved successfully!".tr,
+                    //   "The configuration has been updated!".tr,
+                    //   icon: const Icon(
+                    //     Icons.check,
+                    //     color: Colors.green,
+                    //   ),
+                    //   snackPosition: SnackPosition.TOP,
+                    // );
                   },
                   child: Text('Save'.tr),
                 ),
