@@ -105,6 +105,29 @@ class ChatMessagePage extends StatelessWidget {
         title: GetBuilder<ChatSessionController>(builder: (controller) {
           return Text(session.name);
         }),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Get.defaultDialog(
+                  title: "Clean Session".tr,
+                  onCancel: () {
+                    Get.back();
+                  },
+                  onConfirm: () {
+                    // onDelete(message);
+                    chatMessageController.cleanSessionMessages(
+                        chatSessionController.currentSession.sid);
+                    chatMessageController.update();
+                    Get.back();
+                  },
+                  textCancel: "Cancel".tr,
+                  textConfirm: "Confirm".tr,
+                  middleText: "Confirm clean session?".tr,
+                  radius: 5,
+                );
+              },
+              icon: const Icon(Icons.cleaning_services))
+        ],
       ),
       body: SafeArea(
         child: Column(
