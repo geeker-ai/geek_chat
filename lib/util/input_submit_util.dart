@@ -417,6 +417,11 @@ class InputSubmitUtil {
           "The server configuration is incorrect.".tr);
       return;
     }
+    if (aiModel.aiType == AiType.bard) {
+      oldChatFunction(chatSessionController, chatMessageController,
+          settingsServerController, questionInputController);
+      return;
+    }
     ProviderModel providerModel = AppConstants.getProvider(provider);
     if (providerModel.supportedModels.contains(aiModel.modelName)) {
       if (chatSessionController.currentSession.modelType ==
