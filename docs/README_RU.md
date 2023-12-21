@@ -10,6 +10,8 @@ Geek Chat - это кросс-платформенный AI-клиент, под
 
 ![iOS](https://img.shields.io/badge/-iOS-black?style=flat-square&logo=apple&logoColor=white) ![Android](https://img.shields.io/badge/-Android-black?style=flat-square&logo=android&logoColor=white) ![macOS](https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white) ![Windows](https://img.shields.io/badge/-Windows-black?style=flat-square&logo=windows&logoColor=white) ![GitHub все загрузки](https://img.shields.io/github/downloads/geeker-ai/geek_chat/total)
 
+> iOS в настоящее время недоступен для загрузки в App Store. Пожалуйста, поддержите нас, приобретая GeekChat Server, чтобы помочь накопить средства на аккаунт разработчика Apple. Спасибо.
+
 <!-- <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
   <img
     src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"

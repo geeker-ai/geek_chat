@@ -10,6 +10,8 @@ Geek ChatはクロスプラットフォームのAIクライアントで、MacOS�
 
 ![iOS](https://img.shields.io/badge/-iOS-black?style=flat-square&logo=apple&logoColor=white) ![Android](https://img.shields.io/badge/-Android-black?style=flat-square&logo=android&logoColor=white) ![macOS](https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white) ![Windows](https://img.shields.io/badge/-Windows-black?style=flat-square&logo=windows&logoColor=white) ![GitHub all releases](https://img.shields.io/github/downloads/geeker-ai/geek_chat/total)
 
+> iOSは現在アプリストアでダウンロードできません。Appleの開発者アカウントの費用を積み立てるために、GeekChat Serverを購入していただけると助かります。ありがとうございます。
+
 ## インストールの提案
 - Windows [トラブルシューティングAppInstallerの問題](https://learn.microsoft.com/zh-cn/windows/msix/app-installer/troubleshoot-appinstaller-issues)
 - macOS [未確認の開発元のMacアプリを開く](https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac)
