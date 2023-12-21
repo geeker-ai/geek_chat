@@ -56,6 +56,7 @@ class ChatSessionController extends GetxController {
     currentSession.maxTokens = model.maxTokens ?? 0;
   }
 
+  @Deprecated("message")
   SessionModel createNewSession() {
     AiModel model = SettingsController.to.getModelByName('gpt-3.5-turbo');
     currentSession = SessionModel(
@@ -78,6 +79,27 @@ class ChatSessionController extends GetxController {
     return currentSession;
   }
 
+  SessionModel newSession(
+      {String name = 'Untitled',
+      String prompt = 'You are a helpful assistant.'}) {
+    AiModel model = AppConstants.getAiModel('gpt-3.5-turbo');
+    return SessionModel(
+        sid: const Uuid().v4(),
+        name: name,
+        promptContent: prompt,
+        type: model.aiType.name,
+        modelType: model.modelType.name,
+        model: model.modelName,
+        maxContextSize: model.maxContextSize,
+        maxContextMsgCount: model.maxContextMsgCount ?? 22,
+        temperature: model.temperature,
+        maxTokens: model.maxTokens ?? 0,
+        updated: getCurrentDateTime(),
+        synced: false,
+        status: 1);
+  }
+
+  @Deprecated("message")
   SessionModel createSession(
       {String name = 'Untitled',
       String prompt = 'You are a helpful assistant.'}) {

@@ -10,6 +10,7 @@ import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 // import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
 import 'package:geek_chat/controller/chat_session_controller.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
+import 'package:geek_chat/controller/chat_session_edit_controller.dart';
 import 'package:geek_chat/controller/locale_controller.dart';
 import 'package:geek_chat/controller/main_controller.dart';
 import 'package:geek_chat/controller/message_block_controller.dart';
@@ -111,6 +112,7 @@ initServices() async {
   Get.put(ChatMessageController());
   Get.put(QuestionInputController(applicationDocumentsDirectory: dir));
   Get.put(MessageBlockController());
+  Get.put(ChatSessionEditController());
   //// migrate
   GeekChatMigration geekChatMigration = GeekChatMigration();
   geekChatMigration.migrate();

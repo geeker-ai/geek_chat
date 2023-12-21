@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:geek_chat/components/settings/bottom_sheet_switcher.dart';
 import 'package:geek_chat/components/settings/grouped_bottom_sheet_switcher.dart';
 import 'package:geek_chat/controller/chat_session_controller.dart';
+import 'package:geek_chat/controller/chat_session_edit_controller.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/controller/tracker_controller.dart';
@@ -9,6 +10,7 @@ import 'package:geek_chat/models/bottom_switcher_model.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/server.dart';
 import 'package:geek_chat/util/app_constants.dart';
+import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
@@ -83,30 +85,39 @@ class ChatEditPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ChatSessionEditController chatSessionEditController = ChatSessionEditController(editSession: editSession)
     var data = Get.parameters;
     // var options = getModelOptions();
+    ChatSessionEditController chatSessionEditController = Get.find();
 
     if (data['opt'] == 'new') {
-      chatSessionController.createNewSession();
+      // chatSessionController.createNewSession();
+      chatSessionEditController.session = chatSessionController.newSession();
+      isEdit = false;
+      chatSessionEditController.isEdit = isEdit;
       tracker.trackEvent(
           "Page-newchat", {"uuid": settingsController.settings.uuid});
     } else {
       isEdit = true;
-      chatSessionController.getSessionBysid(data['sid']!);
+      chatSessionEditController.isEdit = isEdit;
+      // chatSessionController.getSessionBysid(data['sid']!);
+      chatSessionEditController.session =
+          chatSessionController.getSessionBysid(data['sid']!).copyWith();
       tracker.trackEvent(
           "Page-editchat", {"uuid": settingsController.settings.uuid});
     }
-    titleEditingController.text = chatSessionController.currentSession.name;
+
+    titleEditingController.text = chatSessionEditController.session.name;
     promptEditingController.text =
-        chatSessionController.currentSession.promptContent;
+        chatSessionEditController.session.promptContent;
 
     return Scaffold(
       appBar: AppBar(
-        title: GetBuilder<ChatSessionController>(builder: (controller) {
+        title: GetBuilder<ChatSessionEditController>(builder: (controller) {
           return Text(getTitle(data['opt']).tr);
         }),
       ),
-      body: GetBuilder<ChatSessionController>(builder: (controller) {
+      body: GetBuilder<ChatSessionEditController>(builder: (controller) {
         return ListView(
           padding: const EdgeInsets.only(
               left: 10.0, top: 0.0, right: 10.0, bottom: 0.0),
@@ -117,7 +128,7 @@ class ChatEditPage extends StatelessWidget {
   }
 
   List<Widget> buildFormList(
-      BuildContext context, ChatSessionController controller) {
+      BuildContext context, ChatSessionEditController controller) {
     List<Widget> widgets = [];
     widgets.add(const Divider());
     widgets.add(ListTile(
@@ -138,13 +149,13 @@ class ChatEditPage extends StatelessWidget {
         ),
         onChanged: (value) {
           // controller.settings.apiKey = value;
-          controller.currentSession.name = value;
+          controller.session.name = value;
           // titleEditingController.text = value;
           // controller.update();
         },
       ),
     ));
-    if (controller.currentSession.modelType == ModelType.chat.name) {
+    if (controller.session.modelType == ModelType.chat.name) {
       widgets.add(ListTile(
         dense: true,
         title: Text(
@@ -164,7 +175,7 @@ class ChatEditPage extends StatelessWidget {
           minLines: 4,
           maxLines: 4,
           onChanged: (value) {
-            controller.currentSession.promptContent = value;
+            controller.session.promptContent = value;
             // promptEditingController.text = value;
             // controller.update();
           },
@@ -184,15 +195,15 @@ class ChatEditPage extends StatelessWidget {
           showValueIndicator: ShowValueIndicator.always,
         ),
         child: Slider(
-          value: controller.currentSession.temperature,
+          value: controller.session.temperature,
           max: 1,
           min: 0,
           divisions: 10,
           onChanged: (value) {
-            controller.currentSession.temperature = value;
+            controller.session.temperature = value;
             controller.update();
           },
-          label: controller.currentSession.temperature.toString(),
+          label: controller.session.temperature.toString(),
         ),
       ));
       widgets.add(ListTile(
@@ -210,14 +221,14 @@ class ChatEditPage extends StatelessWidget {
           onChanged: (value) {
             // print(value);
             int count = value.floor();
-            controller.currentSession.maxContextMsgCount = count;
+            controller.session.maxContextMsgCount = count;
             controller.update();
           },
-          value: controller.currentSession.maxContextMsgCount.toDouble(),
+          value: controller.session.maxContextMsgCount.toDouble(),
           min: 0,
           max: 22,
           divisions: 22,
-          label: controller.currentSession.maxContextMsgCountLabel,
+          label: controller.session.maxContextMsgCountLabel,
         ),
       ));
     }
@@ -232,13 +243,14 @@ class ChatEditPage extends StatelessWidget {
 
     widgets.add(GroupedBottomSheetSwitcherComponent(
         title: 'Model',
-        subTitle: controller.currentSession.model.toUpperCase(),
-        selectedValue: controller.currentSession.model,
+        subTitle: controller.session.model.toUpperCase(),
+        selectedValue: controller.session.model,
         options: getGroupedModelOptions(),
         leadingIcon: Icons.smart_toy_outlined,
         onTapCallback: (value) {
           // controller.currentSession.model = value;
           // controller.currentModelName = value;
+          // controller.switchSessionModel(value);
           controller.switchSessionModel(value);
           controller.update();
         }));
@@ -263,21 +275,12 @@ class ChatEditPage extends StatelessWidget {
         children: [
           OutlinedButton(
             onPressed: () {
-              controller.saveSession(controller.currentSession);
-              chatSessionController.update();
+              chatSessionController.saveSession(controller.session);
               chatSessionController.reloadSessions();
               chatSessionController.update();
               Get.back();
-              Get.snackbar(
-                "Saved successfully!".tr,
-                "New chat created successful!".tr,
-                icon: const Icon(
-                  Icons.check,
-                  color: Colors.green,
-                ),
-                snackPosition: SnackPosition.TOP,
-                duration: const Duration(seconds: 2),
-              );
+              showCustomToast(
+                  title: "Saved successfully!".tr, context: context);
             },
             child: Text('Save'.tr),
           ),

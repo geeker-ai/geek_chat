@@ -46,6 +46,23 @@ class SessionModel {
         msgId: const Uuid().v4(), role: 'system', content: promptContent);
   }
 
+  SessionModel copyWith({int? lastUpdated}) {
+    return SessionModel(
+        sid: sid,
+        name: name,
+        promptContent: promptContent,
+        type: type,
+        modelType: modelType,
+        model: model,
+        maxContextSize: maxContextSize,
+        maxContextMsgCount: maxContextMsgCount,
+        temperature: temperature,
+        maxTokens: maxTokens,
+        updated: lastUpdated ?? updated,
+        synced: synced,
+        status: status);
+  }
+
   factory SessionModel.fromTable(SessionTable session) {
     return SessionModel(
         sid: session.sid,
