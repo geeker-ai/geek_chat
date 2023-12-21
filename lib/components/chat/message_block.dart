@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geek_chat/components/chat/image_message_component.dart';
+import 'package:geek_chat/components/markdown/code_warpper.dart';
 import 'package:geek_chat/components/markdown/latex.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/message_block_controller.dart';
@@ -657,10 +658,23 @@ Widget markDownWidgetWithStream(MessageModel message, bool isDark) {
 }
 
 Widget markDownWidget(String message, bool isDark) {
+  final config =
+      isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+  codeWrapper(child, text) => CodeWrapperWidget(child: child, text: text);
   Widget markdownWidget = MarkdownWidget(
     data: message,
     shrinkWrap: true,
-    config: isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig,
+    // config: isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig,
+    config: config.copy(configs: [
+      isDark
+          ? PreConfig.darkConfig.copy(wrapper: codeWrapper)
+          : const PreConfig().copy(wrapper: codeWrapper),
+      TableConfig(
+          wrapper: (table) => SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: table,
+              )),
+    ]),
     physics: const ScrollPhysics(),
     // markdownGeneratorConfig: MarkdownGeneratorConfig(
     //   generators: [latexGenerator],
