@@ -95,6 +95,38 @@ class ChatMessagePage extends StatelessWidget {
     tracker.trackEvent("chat", {"uuid": settingsController.settings.uuid});
   }
 
+  handelMenuClick(int item, BuildContext context) {
+    logger.d("handelMenuClick: $item");
+    if (item == 0) {
+      Get.toNamed('/editchat', parameters: {
+        'opt': 'edit',
+        'sid': chatSessionController.currentSession.sid
+      })!
+          .then((value) {
+        logger.d("edit return");
+        chatSessionController.update();
+      });
+    } else if (item == 1) {
+      Get.defaultDialog(
+        title: "Clean Session".tr,
+        onCancel: () {
+          Get.back();
+        },
+        onConfirm: () {
+          // onDelete(message);
+          chatMessageController
+              .cleanSessionMessages(chatSessionController.currentSession.sid);
+          chatMessageController.update();
+          Get.back();
+        },
+        textCancel: "Cancel".tr,
+        textConfirm: "Confirm".tr,
+        middleText: "Confirm clean session?".tr,
+        radius: 5,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // print("messages.length: ${messages.length}");
@@ -103,30 +135,52 @@ class ChatMessagePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: GetBuilder<ChatSessionController>(builder: (controller) {
-          return Text(session.name);
+          return Text(controller.currentSession.name);
         }),
         actions: [
-          IconButton(
-              onPressed: () {
-                Get.defaultDialog(
-                  title: "Clean Session".tr,
-                  onCancel: () {
-                    Get.back();
-                  },
-                  onConfirm: () {
-                    // onDelete(message);
-                    chatMessageController.cleanSessionMessages(
-                        chatSessionController.currentSession.sid);
-                    chatMessageController.update();
-                    Get.back();
-                  },
-                  textCancel: "Cancel".tr,
-                  textConfirm: "Confirm".tr,
-                  middleText: "Confirm clean session?".tr,
-                  radius: 5,
-                );
-              },
-              icon: const Icon(Icons.cleaning_services))
+          PopupMenuButton<int>(
+            onSelected: (item) {
+              handelMenuClick(item, context);
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(
+                  value: 0,
+                  child: ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.edit),
+                    title: Text("Edit".tr),
+                  )),
+              PopupMenuItem<int>(
+                  value: 1,
+                  child: ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.cleaning_services),
+                    title: Text("Clean".tr),
+                  )),
+            ],
+          ),
+          // IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+          // IconButton(
+          //     onPressed: () {
+          //       Get.defaultDialog(
+          //         title: "Clean Session".tr,
+          //         onCancel: () {
+          //           Get.back();
+          //         },
+          //         onConfirm: () {
+          //           // onDelete(message);
+          //           chatMessageController.cleanSessionMessages(
+          //               chatSessionController.currentSession.sid);
+          //           chatMessageController.update();
+          //           Get.back();
+          //         },
+          //         textCancel: "Cancel".tr,
+          //         textConfirm: "Confirm".tr,
+          //         middleText: "Confirm clean session?".tr,
+          //         radius: 5,
+          //       );
+          //     },
+          //     icon: const Icon(Icons.cleaning_services))
         ],
       ),
       body: SafeArea(
