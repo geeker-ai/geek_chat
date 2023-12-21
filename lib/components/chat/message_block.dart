@@ -657,10 +657,16 @@ Widget markDownWidgetWithStream(MessageModel message, bool isDark) {
   }
 }
 
+// Widget codeWrapper(Widget child, String text, String language) =>
+//     CodeWrapperWidget(text: text, child: child);
+
 Widget markDownWidget(String message, bool isDark) {
   final config =
       isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
-  codeWrapper(child, text) => CodeWrapperWidget(child: child, text: text);
+
+  codeWrapper(Widget child, String text, String language) =>
+      CodeWrapperWidget(text: text, child: child);
+
   Widget markdownWidget = MarkdownWidget(
     data: message,
     shrinkWrap: true,

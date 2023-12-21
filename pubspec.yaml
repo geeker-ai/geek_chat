@@ -114,7 +114,7 @@ dependencies:
   # https://pub.dev/packages/flutter_tex
   # flutter_tex: ^4.0.3+4
   # https://pub.dev/packages/markdown_widget
-  markdown_widget: ^2.3.1
+  markdown_widget: ^2.3.2+2
   # https://pub.dev/packages/flutter_math_fork
   flutter_math_fork: ^0.7.2
 
