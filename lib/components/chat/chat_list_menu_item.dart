@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/models/model.dart';
 import 'package:geek_chat/models/session.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 // ignore: must_be_immutable
 class ChatListMenuItemComponent extends StatelessWidget {
@@ -16,28 +17,22 @@ class ChatListMenuItemComponent extends StatelessWidget {
   SessionModel? currentSession;
   Function onTap;
   Function onDelete;
+  Logger logger = Get.find();
 
   @override
   Widget build(BuildContext context) {
     bool isSelected = currentSession?.sid == session.sid ? true : false;
-    return PopupMenuItem(
-      padding: const EdgeInsets.all(0),
-      height: 42,
-      // value: session.sid,
-      child: ListTile(
-        minVerticalPadding: 0,
-        visualDensity: const VisualDensity(horizontal: -2, vertical: -4),
-        contentPadding:
-            const EdgeInsets.only(right: 2, left: 16, top: 0, bottom: 0),
-        title: buildMenuItem(context, isSelected, onDelete),
-        selectedTileColor: const Color.fromARGB(50, 84, 77, 77),
-        leading: leadingIcon(context),
-        onTap: () {
-          onTap(session.sid);
-        },
-        selected: isSelected,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
-      ),
+    return ListTile(
+      minVerticalPadding: 0,
+      visualDensity: const VisualDensity(horizontal: -2, vertical: -4),
+      contentPadding:
+          const EdgeInsets.only(right: 2, left: 16, top: 0, bottom: 0),
+      title: buildMenuItem(context, isSelected, onDelete),
+      selectedTileColor: const Color.fromARGB(50, 84, 77, 77),
+      leading: leadingIcon(context),
+      onTap: isSelected ? () => false : () => onTap(session.sid),
+      selected: isSelected,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
     );
   }
 
