@@ -76,7 +76,11 @@ class AppConstants {
     AiGroup(
         aitype: AiType.bard,
         groupName: "Google Vertex AI",
-        groupDesc: "Google Vertex AI")
+        groupDesc: "Google Vertex AI"),
+    AiGroup(
+        aitype: AiType.google,
+        groupName: "Google Gemini",
+        groupDesc: "Google Gemini AI"),
   ];
 
   /// AI 支持的模型
@@ -182,6 +186,16 @@ class AppConstants {
       modelMaxContextSize: 0,
       // maxTokens: 0,
     ),
+    AiModel(
+      modelName: 'gemini-pro',
+      alias: ['gemini-pro'],
+      aiType: AiType.google,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 2048,
+      modelMaxContextSize: 2048,
+      // maxTokens: 0,
+    ),
   ];
 
   static AiModel getAiModel(String modelName) {
@@ -193,6 +207,16 @@ class AppConstants {
       }
     }
     return AppConstants.aiModels[0];
+  }
+
+  static List<String> get geminiModeNamelList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      if (model.aiType == AiType.google) {
+        list.add(model.modelName);
+      }
+    }
+    return list;
   }
 
   static List<String> get allModelNameList {
@@ -241,7 +265,12 @@ class AppConstants {
       name: "Azure API",
       baseUrl: "",
       supportedModels: openaiModelNameList,
-    )
+    ),
+    ProviderModel(
+        id: "gemini",
+        name: "Google Gemini",
+        baseUrl: "https://generativelanguage.googleapis.com",
+        supportedModels: geminiModeNamelList),
   ];
   static ProviderModel getProvider(String providerId) {
     for (ProviderModel provider in servers) {

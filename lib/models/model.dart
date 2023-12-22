@@ -1,6 +1,7 @@
 enum AiType {
   chatgpt,
   bard,
+  google,
 }
 
 enum ModelType { chat, text, image }

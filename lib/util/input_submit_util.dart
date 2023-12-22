@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dart_openai/dart_openai.dart';
 // import 'package:extended_image/extended_image.dart';
@@ -420,6 +421,11 @@ class InputSubmitUtil {
     if (aiModel.aiType == AiType.bard) {
       oldChatFunction(chatSessionController, chatMessageController,
           settingsServerController, questionInputController);
+      return;
+    }
+    logger.d("aitype: ${aiModel.aiType}");
+    if (aiModel.aiType == AiType.google) {
+      logger.e("TODO");
       return;
     }
     ProviderModel providerModel = AppConstants.getProvider(provider);

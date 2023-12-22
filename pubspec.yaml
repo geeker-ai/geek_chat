@@ -172,6 +172,9 @@ dependencies:
   # https://pub.dev/packages/file_picker
   file_picker: ^6.1.1
 
+  # https://pub.dev/packages/langchain_google
+  langchain_google: ^0.2.1+2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
