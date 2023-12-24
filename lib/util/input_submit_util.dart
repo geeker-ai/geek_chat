@@ -416,22 +416,124 @@ class InputSubmitUtil {
       generating: false,
       updated: getCurrentDateTime(),
     );
+
+    /// add quotes in the user message
+    if (questionInputController.questionInputModel.quotedMessages.isNotEmpty) {
+      userMessage.quotes = [];
+      for (MessageModel msg
+          in questionInputController.questionInputModel.quotedMessages) {
+        userMessage.quotes!.add(msg.msgId);
+      }
+    }
+
+    Map<String, String>? headers;
+    String? baseUrl;
+
+    if (settingsServerController.defaultServer.provider == "geekerchat") {
+      headers = {
+        "Authorization":
+            "Bearer ${settingsServerController.defaultServer.apiKey}"
+      };
+      baseUrl = "${settingsServerController.defaultServer.apiHost}/v1beta";
+      // baseUrl = "http://localhost:3008/v1beta";
+    }
     try {
       // final gemini = genai.GenerativeModel(model = aiModel.modelName);
       final client = ChatGoogleGenerativeAI(
         apiKey: settingsServerController.defaultServer.apiKey,
+        headers: headers,
+        baseUrl: baseUrl,
         defaultOptions: ChatGoogleGenerativeAIOptions(
-            model: aiModel.modelName, candidateCount: 1, maxOutputTokens: 2048),
+            model: aiModel.modelName, candidateCount: 1, maxOutputTokens: 8192),
       );
-      final result = client
-          .stream(PromptValue.chat([ChatMessage.humanText("讲一个故事，不少于400字")]));
-      result.listen((event) {
-        logger.d("chunk: ${event}");
-      });
+      // final result = client
+      //     .stream(PromptValue.chat([ChatMessage.humanText("讲一个故事，不少于400字")]));
+      // result.listen((event) {
+      //   logger.d("chunk: ${event}");
+      // });
+      final result = await client.generate(getGoogleChatMessages(
+          chatMessageController.messages,
+          chatSessionController.currentSession,
+          userMessage,
+          aiModel,
+          questionInputController.questionInputModel.quotedMessages));
+      logger.d("result: $result");
+      logger.d(result.generations);
       // GoogleAIClient(apiKey: settingsServerController.defaultServer.apiKey);
+      MessageModel targetMessage = MessageModel(
+        msgId: const Uuid().v4(),
+        role: MessageRole.assistant.name,
+        content: "",
+        sId: chatSessionController.currentSession.sid,
+        model: chatSessionController.currentSession.model,
+        msgType: 1,
+        synced: false,
+        updated: getCurrentDateTime() + 1,
+        generating: false,
+      );
+      targetMessage.content = result.generations.first.outputAsString;
+      chatMessageController.addMessage(userMessage);
+      chatMessageController.addMessage(targetMessage);
+      chatMessageController.saveMessage(userMessage);
+      chatMessageController.saveMessage(targetMessage);
+      chatMessageController.update();
     } on Exception catch (e) {
       logger.e("submit google model error: $e");
     }
+  }
+
+  List<ChatMessage> getGoogleChatMessages(List<MessageModel> historyMessages,
+      SessionModel currentSession, MessageModel userMessage, AiModel aiModel,
+      [List<MessageModel>? quotedMessages]) {
+    List<ChatMessage> messages = [];
+    int maxInputTokens = 20000; //32760;
+    // messages.add(ChatMessage.humanText(currentSession.prompt.content));
+    // messages.add(ChatMessage.humanText("Hi"));
+    // messages.add(ChatMessage.ai("Hello! How can I assist you today?"));
+    // messages.add(ChatMessage.humanText(userMessage.content));
+    // if (historyMessages.isNotEmpty) {
+    //   historyMessages.first.role != "user";
+    //   historyMessages.removeAt(0);
+    // }
+    String nextRole = "user";
+    String currentRole = "";
+    maxInputTokens = maxInputTokens -
+        numTokenCounter(aiModel.modelName, userMessage.content);
+
+    String userMessageContent = userMessage.content;
+    if (quotedMessages != null) {
+      for (MessageModel message in quotedMessages) {
+        userMessageContent = "${message.content} \n $userMessageContent";
+      }
+      messages.add(ChatMessage.humanText(userMessageContent));
+      return messages;
+    }
+    int messageCount = 0;
+    for (MessageModel message in historyMessages) {
+      maxInputTokens =
+          maxInputTokens - numTokenCounter(aiModel.modelName, message.content);
+      if (maxInputTokens > 0 &&
+          currentSession.maxContextMsgCount > messageCount) {
+        if (message.role == nextRole) {
+          if (nextRole == "user") {
+            messages.add(ChatMessage.humanText(message.content));
+            nextRole = "assistant";
+            currentRole = "user";
+          } else if (nextRole == "assistant") {
+            messages.add(ChatMessage.ai(message.content));
+            nextRole = "user";
+            currentRole = "assistant";
+          }
+        }
+        messageCount += 1;
+      }
+    }
+    if (currentRole == "user" && messages.isNotEmpty) {
+      messages.removeLast();
+    }
+    messages.add(ChatMessage.humanText(userMessageContent));
+    // messages.add(ChatMessage.human(ChatMessageContent.text(currentSession.prompt.content)));
+    return messages;
   }
 
   /// TODO 需重构, 使用server支持的模型定义来编写逻辑

@@ -129,6 +129,7 @@ class ChatEditPage extends StatelessWidget {
 
   List<Widget> buildFormList(
       BuildContext context, ChatSessionEditController controller) {
+    AiModel aiModel = AppConstants.getAiModel(controller.session.model);
     List<Widget> widgets = [];
     widgets.add(const Divider());
     widgets.add(ListTile(
@@ -156,31 +157,35 @@ class ChatEditPage extends StatelessWidget {
       ),
     ));
     if (controller.session.modelType == ModelType.chat.name) {
-      widgets.add(ListTile(
-        dense: true,
-        title: Text(
-          'Prompt'.tr,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ));
-      widgets.add(Padding(
-        padding: const EdgeInsets.only(left: 20, top: 0, bottom: 10, right: 10),
-        child: TextFormField(
-          // initialValue: controller.currentSession.promptContent,
-          controller: promptEditingController,
-          decoration: const InputDecoration(
-            // labelText: 'Prompt'.tr,
-            filled: false,
+      if (aiModel.disablePrompt != null && aiModel.disablePrompt != true) {
+        widgets.add(ListTile(
+          dense: true,
+          title: Text(
+            'Prompt'.tr,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          minLines: 4,
-          maxLines: 4,
-          onChanged: (value) {
-            controller.session.promptContent = value;
-            // promptEditingController.text = value;
-            // controller.update();
-          },
-        ),
-      ));
+        ));
+        widgets.add(Padding(
+          padding:
+              const EdgeInsets.only(left: 20, top: 0, bottom: 10, right: 10),
+          child: TextFormField(
+            // initialValue: controller.currentSession.promptContent,
+            controller: promptEditingController,
+            decoration: const InputDecoration(
+              // labelText: 'Prompt'.tr,
+              filled: false,
+            ),
+            minLines: 4,
+            maxLines: 4,
+            onChanged: (value) {
+              controller.session.promptContent = value;
+              // promptEditingController.text = value;
+              // controller.update();
+            },
+          ),
+        ));
+      }
+
       widgets.add(ListTile(
         dense: true,
         title: Text(

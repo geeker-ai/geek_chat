@@ -28,6 +28,7 @@ class AiModel {
   int? maxTokens;
   bool? enableImage;
   int? maxContextMsgCount;
+  bool? disablePrompt;
 
   AiModel({
     required this.modelName,
@@ -40,5 +41,6 @@ class AiModel {
     this.maxTokens,
     this.enableImage,
     this.maxContextMsgCount,
+    this.disablePrompt,
   });
 }

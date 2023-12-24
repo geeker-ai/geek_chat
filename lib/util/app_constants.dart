@@ -194,6 +194,7 @@ class AppConstants {
       temperature: 0.7,
       maxContextSize: 2048,
       modelMaxContextSize: 2048,
+      disablePrompt: true,
       // maxTokens: 0,
     ),
   ];
@@ -227,6 +228,14 @@ class AppConstants {
     return list;
   }
 
+  static List<String> get geekerchatModelNameList {
+    List<String> list = [];
+    list.addAll(openaiModelNameList);
+    list.addAll(vertexModelNameList);
+    list.addAll(geminiModeNamelList);
+    return list;
+  }
+
   static List<String> get openaiModelNameList {
     List<String> list = [];
     for (AiModel model in aiModels) {
@@ -240,7 +249,17 @@ class AppConstants {
   static List<String> get azureModelNameList {
     List<String> list = [];
     for (AiModel model in aiModels) {
-      if (model.aiType == AiType.chatgpt && model.modelType == ModelType.chat) {
+      if (model.aiType == AiType.chatgpt) {
+        list.add(model.modelName);
+      }
+    }
+    return list;
+  }
+
+  static List<String> get vertexModelNameList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      if (model.aiType == AiType.bard) {
         list.add(model.modelName);
       }
     }
@@ -258,7 +277,7 @@ class AppConstants {
       id: "geekerchat",
       name: "Geeker Chat",
       baseUrl: "https://capi.fucklina.com",
-      supportedModels: allModelNameList,
+      supportedModels: geekerchatModelNameList,
     ),
     ProviderModel(
       id: "azure",
