@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_chat/components/settings/azure_server_component.dart';
 import 'package:geek_chat/components/settings/bottom_sheet_switcher.dart';
 import 'package:geek_chat/components/settings/geekerchat_active.dart';
+import 'package:geek_chat/components/settings/google_gemini_server_component.dart';
 import 'package:geek_chat/components/settings/standard_server.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
@@ -87,6 +88,8 @@ class ServerSettingsPage extends StatelessWidget {
       return StandardServerSettingsComponent();
     } else if (provider == 'azure') {
       return AzureServerSettingsComponent();
+    } else if (provider == 'gemini') {
+      return GooleGeminiServerSettingsComponent();
     }
     return const SizedBox();
   }

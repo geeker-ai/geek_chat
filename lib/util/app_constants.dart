@@ -76,7 +76,11 @@ class AppConstants {
     AiGroup(
         aitype: AiType.bard,
         groupName: "Google Vertex AI",
-        groupDesc: "Google Vertex AI")
+        groupDesc: "Google Vertex AI"),
+    AiGroup(
+        aitype: AiType.google,
+        groupName: "Google Gemini",
+        groupDesc: "Google Gemini AI"),
   ];
 
   /// AI 支持的模型
@@ -182,6 +186,17 @@ class AppConstants {
       modelMaxContextSize: 0,
       // maxTokens: 0,
     ),
+    AiModel(
+      modelName: 'gemini-pro',
+      alias: ['gemini-pro'],
+      aiType: AiType.google,
+      modelType: ModelType.chat,
+      temperature: 0.7,
+      maxContextSize: 2048,
+      modelMaxContextSize: 2048,
+      disablePrompt: true,
+      // maxTokens: 0,
+    ),
   ];
 
   static AiModel getAiModel(String modelName) {
@@ -195,11 +210,29 @@ class AppConstants {
     return AppConstants.aiModels[0];
   }
 
+  static List<String> get geminiModeNamelList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      if (model.aiType == AiType.google) {
+        list.add(model.modelName);
+      }
+    }
+    return list;
+  }
+
   static List<String> get allModelNameList {
     List<String> list = [];
     for (AiModel model in aiModels) {
       list.add(model.modelName);
     }
+    return list;
+  }
+
+  static List<String> get geekerchatModelNameList {
+    List<String> list = [];
+    list.addAll(openaiModelNameList);
+    list.addAll(vertexModelNameList);
+    list.addAll(geminiModeNamelList);
     return list;
   }
 
@@ -216,7 +249,17 @@ class AppConstants {
   static List<String> get azureModelNameList {
     List<String> list = [];
     for (AiModel model in aiModels) {
-      if (model.aiType == AiType.chatgpt && model.modelType == ModelType.chat) {
+      if (model.aiType == AiType.chatgpt) {
+        list.add(model.modelName);
+      }
+    }
+    return list;
+  }
+
+  static List<String> get vertexModelNameList {
+    List<String> list = [];
+    for (AiModel model in aiModels) {
+      if (model.aiType == AiType.bard) {
         list.add(model.modelName);
       }
     }
@@ -234,14 +277,19 @@ class AppConstants {
       id: "geekerchat",
       name: "Geeker Chat",
       baseUrl: "https://capi.fucklina.com",
-      supportedModels: allModelNameList,
+      supportedModels: geekerchatModelNameList,
     ),
     ProviderModel(
       id: "azure",
       name: "Azure API",
       baseUrl: "",
       supportedModels: openaiModelNameList,
-    )
+    ),
+    ProviderModel(
+        id: "gemini",
+        name: "Google Gemini",
+        baseUrl: "https://generativelanguage.googleapis.com",
+        supportedModels: geminiModeNamelList),
   ];
   static ProviderModel getProvider(String providerId) {
     for (ProviderModel provider in servers) {
