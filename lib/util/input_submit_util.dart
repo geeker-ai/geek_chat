@@ -482,6 +482,8 @@ class InputSubmitUtil {
       chatMessageController.addMessage(targetMessage);
       chatMessageController.saveMessage(userMessage);
       chatMessageController.saveMessage(targetMessage);
+      chatSessionController
+          .updateSessionLastEdit(chatSessionController.currentSession);
       chatMessageController.update();
     }
   }
