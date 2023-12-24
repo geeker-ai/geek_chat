@@ -429,6 +429,18 @@ class InputSubmitUtil {
     Map<String, String>? headers;
     String? baseUrl;
 
+    MessageModel targetMessage = MessageModel(
+      msgId: const Uuid().v4(),
+      role: MessageRole.assistant.name,
+      content: "",
+      sId: chatSessionController.currentSession.sid,
+      model: chatSessionController.currentSession.model,
+      msgType: 1,
+      synced: false,
+      updated: getCurrentDateTime() + 1,
+      generating: false,
+    );
+
     if (settingsServerController.defaultServer.provider == "geekerchat") {
       headers = {
         "Authorization":
@@ -460,25 +472,17 @@ class InputSubmitUtil {
       logger.d("result: $result");
       logger.d(result.generations);
       // GoogleAIClient(apiKey: settingsServerController.defaultServer.apiKey);
-      MessageModel targetMessage = MessageModel(
-        msgId: const Uuid().v4(),
-        role: MessageRole.assistant.name,
-        content: "",
-        sId: chatSessionController.currentSession.sid,
-        model: chatSessionController.currentSession.model,
-        msgType: 1,
-        synced: false,
-        updated: getCurrentDateTime() + 1,
-        generating: false,
-      );
+
       targetMessage.content = result.generations.first.outputAsString;
+    } on Exception catch (e) {
+      logger.e("submit google model error: $e");
+      targetMessage.content = e.toString();
+    } finally {
       chatMessageController.addMessage(userMessage);
       chatMessageController.addMessage(targetMessage);
       chatMessageController.saveMessage(userMessage);
       chatMessageController.saveMessage(targetMessage);
       chatMessageController.update();
-    } on Exception catch (e) {
-      logger.e("submit google model error: $e");
     }
   }
 

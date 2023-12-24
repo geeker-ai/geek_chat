@@ -108,6 +108,9 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 - [x] Multi Language support (English, 简体中文, 繁體中文, Русский, 日本語).
 - [x] Prompt Library
 - [x] Azure OpenAI API compatibility
+- [x] Support Google Gemini AI
+  - [x] Gemini-pro model
+  - [ ] Gemini-pro-vision *coming soon*
 - [ ] DALL-E3
   - [x] Create image
   - [ ] Create image edit

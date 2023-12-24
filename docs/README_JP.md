@@ -98,6 +98,9 @@ Geek ChatはクロスプラットフォームのAIクライアントで、MacOS�
 - [x] 多言語サポート (English, 简体中文, 繁體中文, Русский) 。
 - [x] ヒントワードライブラリ
 - [x] Azure OpenAI APIと互換性あり
+- [x] Google Gemini AI をサポート
+  - [x] Gemini-pro モデル
+  - [x] Gemini-pro-vision *近日公開*
 - [ ] DALL-E3
   - [x] 画像を作成する
   - [ ] 画像編集を作成する

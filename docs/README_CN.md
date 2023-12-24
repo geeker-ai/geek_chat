@@ -98,6 +98,9 @@ Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPa
 - [x] 支持多语言 (English, 简体中文, 繁體中文, Русский, 日本語).
 - [x] 提示词库
 - [x] 与Azure OpenAI API兼容
+- [x] 支持谷歌 Gemini AI
+  - [x] Gemini-pro 模型
+  - [x] Gemini-pro-vision *即将推出*
 - [ ] DALL-E3
   - [x] Create image
   - [ ] Create image edit
