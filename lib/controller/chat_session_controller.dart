@@ -81,8 +81,9 @@ class ChatSessionController extends GetxController {
 
   SessionModel newSession(
       {String name = 'Untitled',
-      String prompt = 'You are a helpful assistant.'}) {
-    AiModel model = AppConstants.getAiModel('gpt-3.5-turbo');
+      String prompt = 'You are a helpful assistant.',
+      String modelName = 'gpt-3.5-turbo'}) {
+    AiModel model = AppConstants.getAiModel(modelName);
     return SessionModel(
         sid: const Uuid().v4(),
         name: name,

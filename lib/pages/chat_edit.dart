@@ -96,7 +96,11 @@ class ChatEditPage extends StatelessWidget {
 
     if (data['opt'] == 'new') {
       // chatSessionController.createNewSession();
-      chatSessionEditController.session = chatSessionController.newSession();
+      ProviderModel providerModel = AppConstants.getProvider(
+          settingsServerController.defaultServer.provider);
+
+      chatSessionEditController.session = chatSessionController.newSession(
+          modelName: providerModel.supportedModels.first);
       isEdit = false;
       chatSessionEditController.isEdit = isEdit;
       tracker.trackEvent(
