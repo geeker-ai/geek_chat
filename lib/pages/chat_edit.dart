@@ -37,8 +37,12 @@ class ChatEditPage extends StatelessWidget {
   }
 
   List<GroupedBottomSwitcherOption> getGroupedModelOptions() {
-    AiModel currentAiModel =
-        AppConstants.getAiModel(chatSessionController.currentSession.model);
+    AiModel aiModel = AppConstants.getAiModel("gpt-3.5-turbo");
+    String modelName = aiModel.modelName;
+    if (chatSessionController.currentSessionId.isNotEmpty) {
+      modelName = chatSessionController.currentSession.model;
+    }
+    AiModel currentAiModel = AppConstants.getAiModel(modelName);
     List<GroupedBottomSwitcherOption> options = [];
     ProviderModel providerModel = AppConstants.getProvider(
         settingsServerController.defaultServer.provider);

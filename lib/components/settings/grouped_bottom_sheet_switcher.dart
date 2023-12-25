@@ -113,9 +113,12 @@ class GroupedBottomSheetSwitcherComponent extends StatelessWidget {
               isScrollControlled: true,
               builder: (context) {
                 return SafeArea(
+                  child: SingleChildScrollView(
                     child: Wrap(
-                  children: buildOptionsList(context),
-                ));
+                      children: buildOptionsList(context),
+                    ),
+                  ),
+                );
               });
         },
       );

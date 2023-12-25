@@ -74,13 +74,13 @@ class AppConstants {
         groupName: "ChatGPT",
         groupDesc: "OpenAI ChatGPT"),
     AiGroup(
-        aitype: AiType.bard,
-        groupName: "Google Vertex AI",
-        groupDesc: "Google Vertex AI"),
-    AiGroup(
         aitype: AiType.google,
         groupName: "Google Gemini",
         groupDesc: "Google Gemini AI"),
+    AiGroup(
+        aitype: AiType.bard,
+        groupName: "Google Vertex AI",
+        groupDesc: "Google Vertex AI"),
   ];
 
   /// AI 支持的模型
