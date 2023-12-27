@@ -15,6 +15,7 @@ import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:geek_chat/util/geeker_ai_utils.dart';
 import 'package:get/get.dart';
+import 'package:googleai_dart/googleai_dart.dart';
 import 'package:logger/logger.dart';
 // import 'package:openai_dart/openai_dart.dart';
 import 'package:uuid/uuid.dart';
@@ -451,41 +452,68 @@ class InputSubmitUtil {
     }
     try {
       // final gemini = genai.GenerativeModel(model = aiModel.modelName);
-      final client = ChatGoogleGenerativeAI(
-        apiKey: settingsServerController.defaultServer.apiKey,
-        headers: headers,
-        baseUrl: baseUrl,
-        defaultOptions: ChatGoogleGenerativeAIOptions(
-            model: aiModel.modelName, candidateCount: 1, maxOutputTokens: 8192),
-      );
+      // final client = ChatGoogleGenerativeAI(
+      //   apiKey: settingsServerController.defaultServer.apiKey,
+      //   headers: headers,
+      //   baseUrl: baseUrl,
+      //   defaultOptions: ChatGoogleGenerativeAIOptions(
+      //       model: aiModel.modelName, candidateCount: 1, maxOutputTokens: 8192),
+      // );
       // final result = client
       //     .stream(PromptValue.chat([ChatMessage.humanText("讲一个故事，不少于400字")]));
       // result.listen((event) {
       //   logger.d("chunk: ${event}");
       // });
-      final result = await client.generate(getGoogleChatMessages(
-          chatMessageController.messages,
-          chatSessionController.currentSession,
-          userMessage,
-          aiModel,
-          questionInputController.questionInputModel.quotedMessages));
-      logger.d("result: $result");
-      logger.d(result.generations);
+      // final result = await client.generate(getGoogleChatMessages(
+      // final result = await client.generate(getGoogleChatMessages(
+      //     chatMessageController.messages,
+      //     chatSessionController.currentSession,
+      //     userMessage,
+      //     aiModel,
+      //     questionInputController.questionInputModel.quotedMessages));
+      // logger.d("result: $result");
+      // logger.d(result.generations);
       // GoogleAIClient(apiKey: settingsServerController.defaultServer.apiKey);
 
-      targetMessage.content = result.generations.first.outputAsString;
+      // targetMessage.content = result.generations.first.outputAsString;
+      final client = GoogleAIClient(
+          apiKey: settingsServerController.defaultServer.apiKey,
+          baseUrl: "${settingsServerController.defaultServer.apiHost}/v1",
+          headers: headers);
+      final result = client.streamGenerateContent(
+        modelId: aiModel.modelName,
+        request: GenerateContentRequest(
+            generationConfig: const GenerationConfig(
+                candidateCount: 1, maxOutputTokens: 8192),
+            contents: getGoogleChatContents(
+                chatMessageController.messages,
+                chatSessionController.currentSession,
+                userMessage,
+                aiModel,
+                questionInputController.questionInputModel.quotedMessages)),
+      );
+      result.then((value) {
+        logger.d("streamed response: $value");
+      });
     } on Exception catch (e) {
       logger.e("submit google model error: $e");
-      targetMessage.content = e.toString();
+      // targetMessage.content = e.toString();
     } finally {
-      chatMessageController.addMessage(userMessage);
-      chatMessageController.addMessage(targetMessage);
-      chatMessageController.saveMessage(userMessage);
-      chatMessageController.saveMessage(targetMessage);
-      chatSessionController
-          .updateSessionLastEdit(chatSessionController.currentSession);
-      chatMessageController.update();
+      // chatMessageController.addMessage(userMessage);
+      // chatMessageController.addMessage(targetMessage);
+      // chatMessageController.saveMessage(userMessage);
+      // chatMessageController.saveMessage(targetMessage);
+      // chatSessionController
+      //     .updateSessionLastEdit(chatSessionController.currentSession);
+      // chatMessageController.update();
     }
+  }
+
+  List<Content> getGoogleChatContents(List<MessageModel> historyMessages,
+      SessionModel currentSession, MessageModel userMessage, AiModel aiModel,
+      [List<MessageModel>? quotedMessages]) {
+    List<Content> contents = [];
+    return contents;
   }
 
   List<ChatMessage> getGoogleChatMessages(List<MessageModel> historyMessages,
