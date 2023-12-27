@@ -448,7 +448,7 @@ class InputSubmitUtil {
             "Bearer ${settingsServerController.defaultServer.apiKey}"
       };
       baseUrl = "${settingsServerController.defaultServer.apiHost}/v1beta";
-      // baseUrl = "http://localhost:3008/v1beta";
+      baseUrl = "http://localhost:3008/v1beta";
     }
     try {
       // final gemini = genai.GenerativeModel(model = aiModel.modelName);
@@ -478,7 +478,7 @@ class InputSubmitUtil {
       // targetMessage.content = result.generations.first.outputAsString;
       final client = GoogleAIClient(
           apiKey: settingsServerController.defaultServer.apiKey,
-          baseUrl: "${settingsServerController.defaultServer.apiHost}/v1",
+          baseUrl: baseUrl,
           headers: headers);
       final result = client.streamGenerateContent(
         modelId: aiModel.modelName,
@@ -493,7 +493,8 @@ class InputSubmitUtil {
                 questionInputController.questionInputModel.quotedMessages)),
       );
       result.then((value) {
-        logger.d("streamed response: $value");
+        // logger.d("streamed response: $value");
+        logger.d("message");
       });
     } on Exception catch (e) {
       logger.e("submit google model error: $e");
@@ -513,6 +514,8 @@ class InputSubmitUtil {
       SessionModel currentSession, MessageModel userMessage, AiModel aiModel,
       [List<MessageModel>? quotedMessages]) {
     List<Content> contents = [];
+    contents
+        .add(Content(role: "user", parts: [Part(text: userMessage.content)]));
     return contents;
   }
 
