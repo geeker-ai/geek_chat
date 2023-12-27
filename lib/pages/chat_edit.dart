@@ -165,7 +165,7 @@ class ChatEditPage extends StatelessWidget {
       ),
     ));
     if (controller.session.modelType == ModelType.chat.name) {
-      if (aiModel.disablePrompt != null && aiModel.disablePrompt != true) {
+      if (aiModel.disablePrompt == null || aiModel.disablePrompt == false) {
         widgets.add(ListTile(
           dense: true,
           title: Text(
