@@ -396,6 +396,92 @@ class InputSubmitUtil {
     }, onError: () {});
   }
 
+  submitChatVertexModel(
+      ChatSessionController chatSessionController,
+      ChatMessageController chatMessageController,
+      SettingsServerController settingsServerController,
+      QuestionInputController questionInputController) async {
+    //
+    String model = chatSessionController.currentSession.model;
+    AiModel aiModel = AppConstants.getAiModel(model);
+
+    /// 创建用户输入的Message
+    MessageModel userMessage = MessageModel(
+      msgId: const Uuid().v4(),
+      role: MessageRole.user.name,
+      content: questionInputController.inputText,
+      sId: chatSessionController.currentSession.sid,
+      model: chatSessionController.currentSession.model,
+      msgType: 1,
+      synced: false,
+      generating: false,
+      updated: getCurrentDateTime(),
+    );
+
+    /// add quotes in the user message
+    if (questionInputController.questionInputModel.quotedMessages.isNotEmpty) {
+      userMessage.quotes = [];
+      for (MessageModel msg
+          in questionInputController.questionInputModel.quotedMessages) {
+        userMessage.quotes!.add(msg.msgId);
+      }
+    }
+    Map<String, String>? headers;
+    String? baseUrl;
+
+    MessageModel targetMessage = MessageModel(
+      msgId: const Uuid().v4(),
+      role: MessageRole.assistant.name,
+      content: "",
+      sId: chatSessionController.currentSession.sid,
+      model: chatSessionController.currentSession.model,
+      msgType: 1,
+      synced: false,
+      updated: getCurrentDateTime() + 1,
+      generating: false,
+    );
+
+    if (settingsServerController.defaultServer.provider == "geekerchat") {
+      headers = {
+        "Authorization":
+            "Bearer ${settingsServerController.defaultServer.apiKey}"
+      };
+      baseUrl = "${settingsServerController.defaultServer.apiHost}/v1beta";
+      baseUrl = "http://localhost:3008/v1";
+    }
+
+    try {
+      final client = ChatGoogleGenerativeAI(
+        apiKey: settingsServerController.defaultServer.apiKey,
+        headers: headers,
+        baseUrl: baseUrl,
+        defaultOptions: ChatGoogleGenerativeAIOptions(
+            model: aiModel.modelName, candidateCount: 1, maxOutputTokens: 8192),
+      );
+      final vertex = client.stream(
+        PromptValue.string("请写一个400字的小故事"),
+      );
+      vertex.listen((event) {
+        logger.d(event);
+      }, onError: (e) {
+        logger.e("error $e");
+      }, onDone: () {
+        logger.d("on Done");
+      });
+    } on Exception catch (e) {
+      logger.e("submit vertex model error: $e");
+      targetMessage.content = e.toString();
+    } finally {
+      chatMessageController.addMessage(userMessage);
+      chatMessageController.addMessage(targetMessage);
+      // chatMessageController.saveMessage(userMessage);
+      // chatMessageController.saveMessage(targetMessage);
+      chatSessionController
+          .updateSessionLastEdit(chatSessionController.currentSession);
+      chatMessageController.update();
+    }
+  }
+
   submitGoogleModel(
       ChatSessionController chatSessionController,
       ChatMessageController chatMessageController,
@@ -583,8 +669,13 @@ class InputSubmitUtil {
       } else if (chatSessionController.currentSession.modelType ==
           ModelType.chat.name) {
         if (aiModel.aiType == AiType.bard) {
-          oldChatFunction(chatSessionController, chatMessageController,
-              settingsServerController, questionInputController);
+          // oldChatFunction(chatSessionController, chatMessageController,
+          //     settingsServerController, questionInputController);
+          InputSubmitUtil.instance.submitChatVertexModel(
+              chatSessionController,
+              chatMessageController,
+              settingsServerController,
+              questionInputController);
           return;
         } else if (aiModel.aiType == AiType.google) {
           await InputSubmitUtil.instance.submitGoogleModel(
