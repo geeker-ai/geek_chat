@@ -108,7 +108,7 @@ Geek Chat - это кросс-платформенный AI-клиент, под
 - [x] Библиотека предложений
 - [x] Совместимость с API Azure OpenAI
 - [x] Поддержка искусственного интеллекта Google Gemini
-  - [x] Модель Gemini-pro
+  - [x] Модель Gemini-pro  **With Stream**
   - [x] Gemini-pro-vision *скоро*
 - [ ] DALL-E3
   - [x] Создать изображение
