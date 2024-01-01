@@ -175,6 +175,12 @@ dependencies:
   # https://pub.dev/packages/langchain_google
   langchain_google: ^0.2.1+2
   langchain: ^0.3.0
+  # flutter_gemini: ^2.0.0
+  flutter_gemini:
+    # path: ../flutter_gemini
+    git:
+      url: https://github.com/zmhu/flutter_gemini.git
+      ref: main
 
 dev_dependencies:
   flutter_test:

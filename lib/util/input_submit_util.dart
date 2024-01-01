@@ -1,7 +1,9 @@
 import 'dart:convert';
 // import 'dart:math';
+// import 'dart:math';
 
 import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 // import 'package:extended_image/extended_image.dart';
 import 'package:geek_chat/controller/chat_message_controller.dart';
 import 'package:geek_chat/controller/chat_session_controller.dart';
@@ -396,6 +398,118 @@ class InputSubmitUtil {
     }, onError: () {});
   }
 
+  submitGeminiModel(
+      ChatSessionController chatSessionController,
+      ChatMessageController chatMessageController,
+      SettingsServerController settingsServerController,
+      QuestionInputController questionInputController) {
+    String model = chatSessionController.currentSession.model;
+    AiModel aiModel = AppConstants.getAiModel(model);
+
+    /// 创建用户输入的Message
+    MessageModel userMessage = MessageModel(
+      msgId: const Uuid().v4(),
+      role: MessageRole.user.name,
+      content: questionInputController.inputText,
+      sId: chatSessionController.currentSession.sid,
+      model: chatSessionController.currentSession.model,
+      msgType: 1,
+      synced: false,
+      generating: false,
+      updated: getCurrentDateTime(),
+    );
+
+    /// add quotes in the user message
+    if (questionInputController.questionInputModel.quotedMessages.isNotEmpty) {
+      userMessage.quotes = [];
+      for (MessageModel msg
+          in questionInputController.questionInputModel.quotedMessages) {
+        userMessage.quotes!.add(msg.msgId);
+      }
+    }
+
+    Map<String, String>? headers;
+    String? baseUrl;
+
+    MessageModel targetMessage = MessageModel(
+      msgId: const Uuid().v4(),
+      role: MessageRole.assistant.name,
+      content: "",
+      sId: chatSessionController.currentSession.sid,
+      model: chatSessionController.currentSession.model,
+      msgType: 1,
+      synced: false,
+      updated: getCurrentDateTime() + 1,
+      generating: true,
+    );
+
+    String version = "v1";
+    if (settingsServerController.defaultServer.provider == "geekerchat") {
+      headers = {
+        "Authorization":
+            "Bearer ${settingsServerController.defaultServer.apiKey}"
+      };
+      baseUrl = "${settingsServerController.defaultServer.apiHost}/";
+      // baseUrl = "http://localhost:3008/";
+      version = "v1beta";
+    }
+    try {
+      //
+      Gemini.init(
+        apiKey: settingsServerController.defaultServer.apiKey,
+        baseURL: baseUrl,
+        version: version,
+        headers: headers,
+        // enableDebugging: true,
+        generationConfig: GenerationConfig(maxOutputTokens: 2048),
+      );
+      final gemini = Gemini.instance;
+      final res = gemini.streamChat(
+          getGeminiChatMessages(
+              chatMessageController.messages,
+              chatSessionController.currentSession,
+              userMessage,
+              aiModel,
+              questionInputController.questionInputModel.quotedMessages),
+          modelName: "models/${aiModel.modelName}");
+      chatMessageController.addMessage(userMessage);
+      chatMessageController.addMessage(targetMessage);
+      chatMessageController.update();
+      res.listen((event) {
+        String? content = event.content?.parts?.first.text;
+        if (content != null) {
+          targetMessage.content = "${targetMessage.content}$content";
+          targetMessage.streamContent = targetMessage.content;
+        }
+        // }
+      }, onDone: () {
+        //
+        targetMessage.closeStream();
+        chatMessageController.saveMessage(userMessage);
+        chatMessageController.saveMessage(targetMessage);
+        chatSessionController
+            .updateSessionLastEdit(chatSessionController.currentSession);
+        chatSessionController.update();
+      }, onError: (e) {
+        targetMessage.content = "$e";
+        targetMessage.closeStream();
+        logger.e(e);
+      });
+    } on Exception catch (e) {
+      logger.e("submit google model error: $e");
+      targetMessage.content = e.toString();
+      targetMessage.closeStream();
+    } finally {
+      // chatMessageController.addMessage(userMessage);
+      // chatMessageController.addMessage(targetMessage);
+      // chatMessageController.saveMessage(userMessage);
+      // chatMessageController.saveMessage(targetMessage);
+      // chatSessionController
+      //     .updateSessionLastEdit(chatSessionController.currentSession);
+      // chatMessageController.update();
+    }
+  }
+
   submitGoogleModel(
       ChatSessionController chatSessionController,
       ChatMessageController chatMessageController,
@@ -488,19 +602,60 @@ class InputSubmitUtil {
     }
   }
 
+  List<Content> getGeminiChatMessages(List<MessageModel> historyMessages,
+      SessionModel currentSession, MessageModel userMessage, AiModel aiModel,
+      [List<MessageModel>? quotedMessages]) {
+    List<Content> messages = [];
+    int maxInputTokens = 20000;
+    maxInputTokens = maxInputTokens -
+        numTokenCounter(aiModel.modelName, userMessage.content);
+    // String userMessageContent = userMessage.content;
+    List<Parts> parts = [];
+    if (quotedMessages != null && quotedMessages.isNotEmpty) {
+      for (MessageModel message in quotedMessages) {
+        // userMessageContent = "${message.content} \n $userMessageContent";
+        parts.add(Parts(text: message.content));
+      }
+      // messages.add(Content(parts: [Parts(text: userMessageContent)]));
+      parts.add(Parts(text: userMessage.content));
+      messages.add(Content(parts: parts, role: 'user'));
+      return messages;
+    }
+    int messageCount = 0;
+
+    for (int i = 0; i < historyMessages.length; i++) {
+      MessageModel message = historyMessages[i];
+      logger.d("message: ${message.content}");
+      maxInputTokens =
+          maxInputTokens - numTokenCounter(aiModel.modelName, message.content);
+      if (maxInputTokens > 0 &&
+          currentSession.maxContextMsgCount >= messageCount) {
+        if (message.role == MessageRole.assistant.name) {
+          if (i < (historyMessages.length - 1) &&
+              historyMessages[i + 1].role == MessageRole.user.name) {
+            messages.insert(0,
+                Content(parts: [Parts(text: message.content)], role: "model"));
+            messages.insert(
+                0,
+                Content(
+                    parts: [Parts(text: historyMessages[i + 1].content)],
+                    role: "user"));
+            i++;
+            messageCount += 2;
+          }
+        }
+      }
+    }
+    messages
+        .add(Content(parts: [Parts(text: userMessage.content)], role: "user"));
+    return messages;
+  }
+
   List<ChatMessage> getGoogleChatMessages(List<MessageModel> historyMessages,
       SessionModel currentSession, MessageModel userMessage, AiModel aiModel,
       [List<MessageModel>? quotedMessages]) {
     List<ChatMessage> messages = [];
     int maxInputTokens = 20000; //32760;
-    // messages.add(ChatMessage.humanText(currentSession.prompt.content));
-    // messages.add(ChatMessage.humanText("Hi"));
-    // messages.add(ChatMessage.ai("Hello! How can I assist you today?"));
-    // messages.add(ChatMessage.humanText(userMessage.content));
-    // if (historyMessages.isNotEmpty) {
-    //   historyMessages.first.role != "user";
-    //   historyMessages.removeAt(0);
-    // }
     String nextRole = "user";
     String currentRole = "";
     maxInputTokens = maxInputTokens -
@@ -518,6 +673,8 @@ class InputSubmitUtil {
     for (MessageModel message in historyMessages) {
       maxInputTokens =
           maxInputTokens - numTokenCounter(aiModel.modelName, message.content);
+      logger.d(
+          "maxInputTokens: $maxInputTokens , currentSession.maxContextMsgCount: ${currentSession.maxContextMsgCount}");
       if (maxInputTokens > 0 &&
           currentSession.maxContextMsgCount > messageCount) {
         if (message.role == nextRole) {
@@ -587,7 +744,7 @@ class InputSubmitUtil {
               settingsServerController, questionInputController);
           return;
         } else if (aiModel.aiType == AiType.google) {
-          await InputSubmitUtil.instance.submitGoogleModel(
+          await InputSubmitUtil.instance.submitGeminiModel(
               chatSessionController,
               chatMessageController,
               settingsServerController,
