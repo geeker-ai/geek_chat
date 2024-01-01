@@ -461,7 +461,7 @@ class InputSubmitUtil {
         version: version,
         headers: headers,
         // enableDebugging: true,
-        generationConfig: GenerationConfig(maxOutputTokens: 2048),
+        // generationConfig: GenerationConfig(maxOutputTokens: 2048),
       );
       final gemini = Gemini.instance;
       final res = gemini.streamChat(
@@ -606,7 +606,7 @@ class InputSubmitUtil {
       SessionModel currentSession, MessageModel userMessage, AiModel aiModel,
       [List<MessageModel>? quotedMessages]) {
     List<Content> messages = [];
-    int maxInputTokens = 20000;
+    int maxInputTokens = aiModel.modelMaxContextSize;
     maxInputTokens = maxInputTokens -
         numTokenCounter(aiModel.modelName, userMessage.content);
     // String userMessageContent = userMessage.content;

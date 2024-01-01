@@ -180,7 +180,7 @@ dependencies:
     # path: ../flutter_gemini
     git:
       url: https://github.com/zmhu/flutter_gemini.git
-      ref: main
+      ref: master
 
 dev_dependencies:
   flutter_test:
