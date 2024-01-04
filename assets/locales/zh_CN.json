@@ -1,5 +1,5 @@
 {
-    "appTitle": "GeekerChat",
+    "appTitle": "GeekChat",
     "Chat": "对话",
     "Prompts": "提示词",
     "Settings": "设置",
@@ -16,6 +16,8 @@
     "Traditional Chinese": "繁體中文",
     "Russian": "Русский",
     "Japanese": "日本語",
+    "Hindi": "हिन्दी",
+    "Spanish": "español",
     "English": "English",
     "Save": "保存",
     "Cancel": "取消",

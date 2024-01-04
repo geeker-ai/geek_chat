@@ -1,6 +1,6 @@
 # Geek Chat
 
-English | [简体中文](./docs/README_CN.md) | [Русский](./docs/README_RU.md) | [日本語](./docs/README_JP.md)
+English | [简体中文](./docs/README_CN.md) | [Русский](./docs/README_RU.md) | [日本語](./docs/README_JP.md) | [हिन्दी](./docs/README_HI.md) | [Español](./docs/README_ES.md)
 
 A helpful AI Co-pilot in your device.
 
@@ -105,7 +105,7 @@ Geek Chat is a cross-platform AI Client that supports MacOS, Windows, iPhone, iP
 - [x] OpenAI Offical API compatibility.
 - [x] Dark/Light Theme Mode.
 - [x] Talk with quoted messages.
-- [x] Multi Language support (English, 简体中文, 繁體中文, Русский, 日本語).
+- [x] Multi Language support (English, 简体中文, 繁體中文, Русский, 日本語, हिन्दी, Español).
 - [x] Prompt Library
 - [x] Azure OpenAI API compatibility
 - [x] Support Google Gemini AI
