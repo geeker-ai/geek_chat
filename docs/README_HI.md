@@ -28,10 +28,10 @@
 <table>
   <tr>
     <td>
-      <img src='./assets/screenshots/screenshot1.png' />
+      <img src='../assets/screenshots/screenshot1.png' />
     </td>
     <td>
-      <img src='./assets/screenshots/screenshot2.png' />
+      <img src='../assets/screenshots/screenshot2.png' />
     </td>
   </tr>
 </table>
@@ -41,16 +41,16 @@
 <table>
   <tr style="height: 40px">
     <td>
-      <img src='./assets/screenshots/screenshot3.jpeg' />
+      <img src='../assets/screenshots/screenshot3.jpeg' />
     </td>
     <td>
-      <img src='./assets/screenshots/screenshot4.jpeg' />
+      <img src='../assets/screenshots/screenshot4.jpeg' />
     </td>
     <td>
-      <img src='./assets/screenshots/screenshot5.jpeg' />
+      <img src='../assets/screenshots/screenshot5.jpeg' />
     </td>
     <td>
-      <img src='./assets/screenshots/screenshot6.jpeg' />
+      <img src='../assets/screenshots/screenshot6.jpeg' />
     </td>
   </tr>
 </table>
@@ -66,19 +66,19 @@
   <tr style="text-align: center">
     <td>
       <a href='https://github.com/geeker-ai/geek_chat/releases'>
-        <img src='./assets/android-color.svg' style="height:14px; width: 14px" />
+        <img src='../assets/android-color.svg' style="height:14px; width: 14px" />
         <b>APK</b>
       </a>
     </td>
     <td>
       <a href='https://github.com/geeker-ai/geek_chat/releases'>
-        <img src='./assets/apple-color.svg' style="height:15px; width: 15px" />
+        <img src='../assets/apple-color.svg' style="height:15px; width: 15px" />
         <b>DMG</b>
       </a>
     </td>
     <td>
       <a href='https://github.com/geeker-ai/geek_chat/releases'>
-        <img src='./assets/windows10-color.svg' style="height:14px; width: 14px" />
+        <img src='../assets/windows10-color.svg' style="height:14px; width: 14px" />
         <b>Windows</b>
       </a>
     </td>
