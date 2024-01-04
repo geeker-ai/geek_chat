@@ -1,6 +1,6 @@
 # Geek Chat
 
-[English](../README.md) | 简体中文 | [Русский](./README_RU.md) | [日本語](./README_JP.md)
+[English](../README.md) | 简体中文 | [Русский](./README_RU.md) | [日本語](./README_JP.md) | [हिन्दी](./README_HI.md) | [Español](./README_ES.md)
 
 您设备上一个有用的AI副驾驶。
 
@@ -95,7 +95,7 @@ Geek Chat是一个跨平台的AI客户端，支持MacOS、Windows、iPhone、iPa
 
 - [x] 与OpenAI官方API兼容。
 - [x] 可以引用消息进行对话。
-- [x] 支持多语言 (English, 简体中文, 繁體中文, Русский, 日本語).
+- [x] 支持多语言 (English, 简体中文, 繁體中文, Русский, 日本語, हिन्दी, Español).
 - [x] 提示词库
 - [x] 与Azure OpenAI API兼容
 - [x] 支持谷歌 Gemini AI

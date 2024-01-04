@@ -1,6 +1,6 @@
 # Geek Chat
 
-[English](../README.md) | [简体中文](./README_CN.md) | [Русский](./README_RU.md) | [日本語]
+[English](../README.md) | [简体中文](./README_CN.md)  | [Русский](./README_RU.md) | [日本語](./README_JP.md) | [हिन्दी](./README_HI.md) | [Español](./README_ES.md)
 
 あなたのデバイスの便利なAIコパイロット。
 
@@ -95,7 +95,7 @@ Geek ChatはクロスプラットフォームのAIクライアントで、MacOS�
 
 - [x] OpenAI公式APIと互換性あり。
 - [x] メッセージを引用して会話できる。
-- [x] 多言語サポート (English, 简体中文, 繁體中文, Русский) 。
+- [x] 多言語サポート (English, 简体中文, 繁體中文, Русский, 日本語, हिन्दी, Español) 。
 - [x] ヒントワードライブラリ
 - [x] Azure OpenAI APIと互換性あり
 - [x] Google Gemini AI をサポート

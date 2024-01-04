@@ -62,8 +62,21 @@ class AppConstants {
       languageName: "Japanese",
       languageCode: "ja",
       countryCode: "JP",
-      // scriptCode: "Hant",
       languageStr: "ja_JP",
+    ),
+    LocaleModel(
+      imageIcon: "🇮🇳",
+      languageName: "Hindi",
+      languageCode: "hi",
+      countryCode: "IN",
+      languageStr: "hi_IN",
+    ),
+    LocaleModel(
+      imageIcon: "🇪🇸",
+      languageName: "Spanish",
+      languageCode: "es",
+      countryCode: "ES",
+      languageStr: "es_ES",
     )
   ];
 
