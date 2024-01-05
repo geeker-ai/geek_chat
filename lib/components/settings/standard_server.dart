@@ -3,6 +3,7 @@ import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
+import 'package:markdown_widget/widget/markdown.dart';
 
 // ignore: must_be_immutable
 class StandardServerSettingsComponent extends StatelessWidget {
@@ -13,6 +14,9 @@ class StandardServerSettingsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (settingsServerController.defaultServer.apiHost.isEmpty) {
+      settingsServerController.defaultServer.apiHost = "https://api.openai.com";
+    }
     return GetBuilder<SettingsServerController>(builder: (controller) {
       return Wrap(
         children: [
@@ -51,6 +55,16 @@ class StandardServerSettingsComponent extends StatelessWidget {
               onChanged: (value) {
                 controller.defaultServer.apiKey = value.trim();
               },
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 20, top: 10, bottom: 10, right: 20),
+            // child: Text("https://ai.google.dev/"),
+            child: MarkdownWidget(
+              padding: EdgeInsets.all(0),
+              data:
+                  "Get a api key: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)",
+              shrinkWrap: true,
             ),
           ),
           Padding(

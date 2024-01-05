@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_chat/controller/settings.dart';
 import 'package:geek_chat/controller/settings_server_controller.dart';
-import 'package:geek_chat/util/app_constants.dart';
 import 'package:geek_chat/util/functions.dart';
 import 'package:get/get.dart';
 import 'package:markdown_widget/markdown_widget.dart';
