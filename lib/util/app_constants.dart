@@ -205,9 +205,21 @@ class AppConstants {
       aiType: AiType.google,
       modelType: ModelType.chat,
       temperature: 0.7,
+      maxContextSize: 12288,
+      modelMaxContextSize: 10000, //12288
+      disablePrompt: true,
+      // maxTokens: 0,
+    ),
+    AiModel(
+      modelName: 'gemini-pro-vision',
+      alias: ['gemini-pro-vision'],
+      aiType: AiType.google,
+      modelType: ModelType.chat,
+      temperature: 0.7,
       maxContextSize: 30000,
       modelMaxContextSize: 20000,
       disablePrompt: true,
+      enableImage: true,
       // maxTokens: 0,
     ),
   ];

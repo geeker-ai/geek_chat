@@ -49,7 +49,8 @@ int numTokenCounter(String model, String content) {
       model == "codechat-bison" ||
       model == "codechat-bison-32k" ||
       model == "chat-bison-32k" ||
-      model == "gemini-pro") {
+      model == "gemini-pro" ||
+      model == "gemini-pro-vision") {
     modelStr = "gpt-3.5-turbo";
   }
   final encoding = encodingForModel(modelStr);

@@ -646,8 +646,14 @@ class InputSubmitUtil {
         }
       }
     }
-    messages
-        .add(Content(parts: [Parts(text: userMessage.content)], role: "user"));
+    if (aiModel.enableImage != null && aiModel.enableImage == true) {
+      messages.add(
+          Content(parts: [Parts(text: userMessage.content)], role: "user"));
+    } else {
+      messages.add(
+          Content(parts: [Parts(text: userMessage.content)], role: "user"));
+    }
+
     return messages;
   }
 
